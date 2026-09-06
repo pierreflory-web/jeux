@@ -1,0 +1,17 @@
+{
+  "name": "Mes Jeux",
+  "short_name": "Mes Jeux",
+  "description": "Lanceur de jeux",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "background_color": "#1c130b",
+  "theme_color": "#1c130b",
+  "icons": [
+    {
+      "src": "apple-touch-icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

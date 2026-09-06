@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mes Jeux</title>
+<meta name="description" content="Lanceur de jeux">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Mes Jeux">
+<meta name="theme-color" content="#1c130b">
+<style>
+  :root {
+    --bg: #1c130b;
+    --bg-card: #2b1d12;
+    --bg-card-hover: #372617;
+    --border: #4a3520;
+    --gold: #d9a441;
+    --cream: #f0e2c8;
+    --muted: #a8906c;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    background-image: radial-gradient(ellipse at 50% -10%, #33221275 0%, transparent 60%);
+    color: var(--cream);
+    font-family: Georgia, 'Times New Roman', serif;
+    -webkit-font-smoothing: antialiased;
+    padding: max(24px, env(safe-area-inset-top)) 20px max(24px, env(safe-area-inset-bottom));
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  header {
+    text-align: center;
+    margin: 28px 0 36px;
+  }
+  .star {
+    font-size: 34px;
+    display: block;
+    margin-bottom: 10px;
+  }
+  h1 {
+    margin: 0;
+    font-size: 30px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 600;
+  }
+  header p {
+    margin: 10px 0 0;
+    color: var(--muted);
+    font-style: italic;
+    font-size: 15px;
+  }
+  .rule {
+    width: 160px;
+    border: 0;
+    border-top: 1px solid var(--border);
+    margin: 18px auto 0;
+    position: relative;
+  }
+  main {
+    width: 100%;
+    max-width: 460px;
+    display: grid;
+    gap: 18px;
+  }
+  .game {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px 22px;
+    transition: background .15s ease, transform .1s ease;
+  }
+  .game:active { transform: scale(.98); background: var(--bg-card-hover); }
+  @media (hover: hover) {
+    .game:hover { background: var(--bg-card-hover); }
+  }
+  .game .emoji {
+    font-size: 40px;
+    float: left;
+    margin: 2px 18px 0 0;
+    line-height: 1;
+  }
+  .game h2 {
+    margin: 0 0 6px;
+    font-size: 20px;
+    color: var(--gold);
+    font-weight: 600;
+  }
+  .game p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 14.5px;
+    line-height: 1.45;
+  }
+  .game .tag {
+    display: inline-block;
+    margin-top: 10px;
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--bg);
+    background: var(--gold);
+    border-radius: 4px;
+    padding: 3px 9px;
+    font-family: -apple-system, sans-serif;
+    font-weight: 700;
+  }
+  footer {
+    margin-top: auto;
+    padding-top: 40px;
+    color: #6b573d;
+    font-size: 12px;
+    font-style: italic;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+  <header>
+    <span class="star">⭐️</span>
+    <h1>Mes Jeux</h1>
+    <p>Choisissez votre partie, étranger…</p>
+    <hr class="rule">
+  </header>
+
+  <main id="games"></main>
+
+  <footer>Ajouté à l'écran d'accueil, ce saloon est toujours ouvert.</footer>
+
+<script>
+  // Pour ajouter un jeu : ajouter une entrée à cette liste.
+  const GAMES = [
+    {
+      title: "La Traque de Mac Blain",
+      emoji: "🤠",
+      tag: "Western",
+      description: "Poussière, saloons et hors-la-loi : retrouvez Mac Blain avant qu'il ne quitte la ville.",
+      url: "https://pierreflory-web.github.io/cowboy-city/"
+    },
+    {
+      title: "Quest — L'enquête",
+      emoji: "🔎",
+      tag: "Enquête",
+      description: "Interrogez, déduisez, accusez : une enquête où chaque détail compte.",
+      url: "https://pierreflory-web.github.io/quest/"
+    }
+  ];
+
+  document.getElementById("games").innerHTML = GAMES.map(g => `
+    <a class="game" href="${g.url}">
+      <span class="emoji">${g.emoji}</span>
+      <h2>${g.title}</h2>
+      <p>${g.description}</p>
+      <span class="tag">${g.tag}</span>
+    </a>`).join("");
+</script>
+</body>
+</html>
