@@ -5,8 +5,8 @@
   "start_url": ".",
   "scope": ".",
   "display": "standalone",
-  "background_color": "#1c130b",
-  "theme_color": "#1c130b",
+  "background_color": "#2a1445",
+  "theme_color": "#2a1445",
   "icons": [
     {
       "src": "apple-touch-icon.png",

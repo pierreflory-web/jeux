@@ -11,23 +11,27 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Mes Jeux">
-<meta name="theme-color" content="#1c130b">
+<meta name="theme-color" content="#2a1445">
 <style>
   :root {
-    --bg: #1c130b;
-    --bg-card: #2b1d12;
-    --bg-card-hover: #372617;
-    --border: #4a3520;
-    --gold: #d9a441;
-    --cream: #f0e2c8;
-    --muted: #a8906c;
+    --bg: #2a1445;
+    --bg-card: #331d5c;
+    --bg-card-hover: #3c2469;
+    --border: #5a3d94;
+    --gold: #ffd27a;
+    --cream: #f0eaff;
+    --muted: #c9b3e8;
   }
   * { box-sizing: border-box; }
   html, body { height: 100%; }
   body {
     margin: 0;
     background: var(--bg);
-    background-image: radial-gradient(ellipse at 50% -10%, #33221275 0%, transparent 60%);
+    background-image:
+      radial-gradient(circle at 30% 22%, rgba(255, 79, 216, 0.22) 0%, transparent 42%),
+      radial-gradient(circle at 82% 72%, rgba(61, 225, 232, 0.14) 0%, transparent 45%),
+      linear-gradient(135deg, #2a1445 0%, #4b2a8c 62%, #6d3aa0 100%);
+    background-attachment: fixed;
     color: var(--cream);
     font-family: Georgia, 'Times New Roman', serif;
     -webkit-font-smoothing: antialiased;
@@ -35,16 +39,36 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    position: relative;
+  }
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      radial-gradient(1.6px 1.6px at 22px 34px, #ffffff, transparent),
+      radial-gradient(1.3px 1.3px at 120px 90px, #ffffffcc, transparent),
+      radial-gradient(1.8px 1.8px at 200px 22px, #ffffff, transparent),
+      radial-gradient(1.2px 1.2px at 260px 140px, #ffffffbb, transparent),
+      radial-gradient(1.5px 1.5px at 66px 190px, #ffffffdd, transparent),
+      radial-gradient(1.2px 1.2px at 170px 230px, #ffffffaa, transparent),
+      radial-gradient(1.7px 1.7px at 240px 260px, #ffffff, transparent);
+    background-repeat: repeat;
+    background-size: 280px 290px;
+    opacity: .8;
   }
   header {
     text-align: center;
     margin: 28px 0 36px;
   }
-  .star {
-    font-size: 34px;
+  .stars {
     display: block;
     margin-bottom: 10px;
+    letter-spacing: 12px;
   }
+  .stars span { font-size: 26px; vertical-align: middle; }
+  .stars span:nth-child(2) { font-size: 38px; }
   h1 {
     margin: 0;
     font-size: 30px;
@@ -124,7 +148,7 @@
   footer {
     margin-top: auto;
     padding-top: 40px;
-    color: #6b573d;
+    color: #8a76b8;
     font-size: 12px;
     font-style: italic;
     text-align: center;
@@ -133,7 +157,7 @@
 </head>
 <body>
   <header>
-    <span class="star">⭐️</span>
+    <span class="stars"><span>⭐️</span><span>⭐️</span><span>⭐️</span></span>
     <h1>Mes Jeux</h1>
     <p>Choisissez votre partie, étranger…</p>
     <hr class="rule">
