@@ -86,11 +86,15 @@
   @media (hover: hover) {
     .game:hover { background: var(--bg-card-hover); }
   }
-  .game .emoji {
-    font-size: 40px;
+  .game .icon {
+    width: 58px;
+    height: 58px;
+    border-radius: 13px;
+    border: 1px solid var(--border);
     float: left;
-    margin: 2px 18px 0 0;
-    line-height: 1;
+    margin: 2px 18px 6px 0;
+    object-fit: cover;
+    background: var(--bg);
   }
   .game h2 {
     margin: 0 0 6px;
@@ -144,14 +148,14 @@
   const GAMES = [
     {
       title: "La Traque de Mac Blain",
-      emoji: "🤠",
+      icon: "https://pierreflory-web.github.io/cowboy-city/icons/icon-192.png",
       tag: "Western",
       description: "Poussière, saloons et hors-la-loi : retrouvez Mac Blain avant qu'il ne quitte la ville.",
       url: "https://pierreflory-web.github.io/cowboy-city/"
     },
     {
       title: "Quest — L'enquête",
-      emoji: "🔎",
+      icon: "https://pierreflory-web.github.io/quest/icons/icon-192.png",
       tag: "Enquête",
       description: "Interrogez, déduisez, accusez : une enquête où chaque détail compte.",
       url: "https://pierreflory-web.github.io/quest/"
@@ -160,7 +164,7 @@
 
   document.getElementById("games").innerHTML = GAMES.map(g => `
     <a class="game" href="${g.url}">
-      <span class="emoji">${g.emoji}</span>
+      <img class="icon" src="${g.icon}" alt="">
       <h2>${g.title}</h2>
       <p>${g.description}</p>
       <span class="tag">${g.tag}</span>
