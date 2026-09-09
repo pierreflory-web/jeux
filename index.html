@@ -21,9 +21,11 @@
     --gold: #ffd27a;
     --cream: #f0eaff;
     --muted: #c9b3e8;
+    --dim: #8a76b8;
   }
   * { box-sizing: border-box; }
-  html, body { height: 100%; }
+  [hidden] { display: none !important; }
+  html, body { min-height: 100%; }
   body {
     margin: 0;
     background: var(--bg);
@@ -35,11 +37,6 @@
     color: var(--cream);
     font-family: Georgia, 'Times New Roman', serif;
     -webkit-font-smoothing: antialiased;
-    padding: max(24px, env(safe-area-inset-top)) 20px max(24px, env(safe-area-inset-bottom));
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: relative;
   }
   body::before {
     content: "";
@@ -58,15 +55,15 @@
     background-size: 280px 290px;
     opacity: .8;
   }
-  header {
-    text-align: center;
-    margin: 28px 0 36px;
+  .screen {
+    position: relative;
+    min-height: 100dvh;
+    padding: max(24px, env(safe-area-inset-top)) 20px max(24px, env(safe-area-inset-bottom));
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
-  .stars {
-    display: block;
-    margin-bottom: 10px;
-    letter-spacing: 12px;
-  }
+  .stars { display: block; margin-bottom: 10px; letter-spacing: 12px; text-align: center; }
   .stars span { font-size: 26px; vertical-align: middle; }
   .stars span:nth-child(2) { font-size: 38px; }
   h1 {
@@ -76,26 +73,156 @@
     text-transform: uppercase;
     color: var(--gold);
     font-weight: 600;
+    text-align: center;
   }
-  header p {
-    margin: 10px 0 0;
-    color: var(--muted);
-    font-style: italic;
-    font-size: 15px;
-  }
-  .rule {
-    width: 160px;
+  .subtitle { margin: 10px 0 0; color: var(--muted); font-style: italic; font-size: 15px; text-align: center; }
+  .rule { width: 160px; border: 0; border-top: 1px solid var(--border); margin: 18px auto 0; }
+  .btn {
+    display: block;
+    width: 100%;
     border: 0;
-    border-top: 1px solid var(--border);
-    margin: 18px auto 0;
-    position: relative;
+    border-radius: 16px;
+    padding: 16px;
+    font-family: inherit;
+    font-size: 19px;
+    font-weight: bold;
+    background: var(--gold);
+    color: var(--bg);
+    cursor: pointer;
   }
-  main {
+  .btn:active { transform: scale(.98); }
+  .btn[disabled] { opacity: .5; }
+  .btn-ghost {
+    background: none;
+    border: 0;
+    color: var(--muted);
+    font-family: inherit;
+    font-size: 15px;
+    font-style: italic;
+    cursor: pointer;
+    padding: 10px;
+  }
+  .field {
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--cream);
+    color: #2a1445;
+    font-family: inherit;
+    font-size: 19px;
+    padding: 14px 16px;
+  }
+  select.field { appearance: none; }
+  .msg { min-height: 22px; margin: 10px 0 0; color: #ff9db0; font-size: 15px; text-align: center; }
+
+  /* Qui joue ? */
+  .players-grid {
     width: 100%;
     max-width: 460px;
     display: grid;
-    gap: 18px;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-top: 26px;
   }
+  .player-card {
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    background: var(--bg-card);
+    color: var(--cream);
+    font-family: inherit;
+    padding: 18px 8px 14px;
+    text-align: center;
+    cursor: pointer;
+  }
+  .player-card:active { transform: scale(.97); background: var(--bg-card-hover); }
+  .player-card .pa { font-size: 44px; display: block; line-height: 1.2; }
+  .player-card .pn { font-size: 19px; font-weight: bold; display: block; margin-top: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .player-card.new {
+    background: none;
+    border: 2px dashed var(--gold);
+    color: var(--gold);
+  }
+  .player-card.new .pa { font-size: 38px; }
+  .player-card.new .pn { font-weight: normal; font-size: 17px; }
+
+  /* Pavé PIN */
+  .pin-avatar { font-size: 54px; text-align: center; margin-top: 8px; }
+  .pin-title { font-size: 24px; font-weight: bold; text-align: center; margin: 10px 0 4px; }
+  .pin-sub { color: var(--muted); text-align: center; font-size: 17px; margin: 0; }
+  .pin-dots { display: flex; gap: 18px; justify-content: center; margin: 22px 0 6px; }
+  .pin-dots i {
+    width: 20px; height: 20px; border-radius: 50%;
+    border: 2px solid var(--dim); background: none;
+  }
+  .pin-dots i.on { background: var(--gold); border-color: var(--gold); }
+  .pin-dots.shake { animation: shake .35s; }
+  @keyframes shake { 20%{transform:translateX(-9px)} 40%{transform:translateX(8px)} 60%{transform:translateX(-6px)} 80%{transform:translateX(4px)} }
+  .pad {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    width: 100%;
+    max-width: 340px;
+    margin-top: 16px;
+  }
+  .pad button {
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: var(--bg-card);
+    color: var(--cream);
+    font-family: inherit;
+    font-size: 26px;
+    padding: 16px 0;
+    cursor: pointer;
+  }
+  .pad button:active { background: var(--bg-card-hover); transform: scale(.96); }
+  .pad button.ghost { background: none; border-color: transparent; }
+
+  /* Bandeau joueur */
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    width: 100vw;
+    margin: calc(-1 * max(24px, env(safe-area-inset-top))) -20px 0;
+    padding: max(12px, env(safe-area-inset-top)) 16px 12px;
+    background: #22103acc;
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .topbar .avatar-btn {
+    position: relative;
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    border: 2.5px solid var(--gold);
+    background: var(--bg-card);
+    font-size: 30px;
+    cursor: pointer;
+    flex: none;
+  }
+  .topbar .avatar-btn::after {
+    content: "✏️";
+    position: absolute;
+    right: -6px; bottom: -4px;
+    font-size: 14px;
+    background: var(--gold);
+    border-radius: 50%;
+    width: 22px; height: 22px;
+    line-height: 22px;
+  }
+  .topbar .who { flex: 1; min-width: 0; }
+  .topbar .who b { font-size: 19px; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .topbar .who small { color: var(--gold); font-size: 15px; }
+  .topbar .switch {
+    background: none; border: 0; color: var(--dim);
+    font-family: inherit; font-size: 13px; font-style: italic;
+    cursor: pointer; text-align: right; line-height: 1.3; flex: none;
+  }
+
+  /* Jeux */
+  main.games { width: 100%; max-width: 460px; display: grid; gap: 18px; }
   .game {
     display: block;
     text-decoration: none;
@@ -107,12 +234,9 @@
     transition: background .15s ease, transform .1s ease;
   }
   .game:active { transform: scale(.98); background: var(--bg-card-hover); }
-  @media (hover: hover) {
-    .game:hover { background: var(--bg-card-hover); }
-  }
+  @media (hover: hover) { .game:hover { background: var(--bg-card-hover); } }
   .game .icon {
-    width: 58px;
-    height: 58px;
+    width: 58px; height: 58px;
     border-radius: 13px;
     border: 1px solid var(--border);
     float: left;
@@ -120,18 +244,8 @@
     object-fit: cover;
     background: var(--bg);
   }
-  .game h2 {
-    margin: 0 0 6px;
-    font-size: 20px;
-    color: var(--gold);
-    font-weight: 600;
-  }
-  .game p {
-    margin: 0;
-    color: var(--muted);
-    font-size: 14.5px;
-    line-height: 1.45;
-  }
+  .game h2 { margin: 0 0 6px; font-size: 20px; color: var(--gold); font-weight: 600; }
+  .game p { margin: 0; color: var(--muted); font-size: 14.5px; line-height: 1.45; }
   .game .tag {
     display: inline-block;
     margin-top: 10px;
@@ -153,21 +267,229 @@
     font-style: italic;
     text-align: center;
   }
+  .fab {
+    position: fixed;
+    right: 20px;
+    bottom: max(24px, env(safe-area-inset-bottom));
+    width: 68px; height: 68px;
+    border-radius: 50%;
+    border: 0;
+    background: var(--gold);
+    font-size: 34px;
+    cursor: pointer;
+    box-shadow: 0 6px 20px #00000055;
+    z-index: 6;
+  }
+  .fab:active { transform: scale(.94); }
+
+  /* Classement */
+  .board-head { display: flex; align-items: center; width: 100%; max-width: 460px; }
+  .board-head .back { background: none; border: 0; color: var(--muted); font-size: 26px; cursor: pointer; padding: 6px 12px 6px 0; }
+  .board-head h1 { flex: 1; font-size: 24px; }
+  .podium { display: flex; align-items: flex-end; justify-content: center; gap: 10px; margin: 26px 0 8px; width: 100%; max-width: 460px; }
+  .pod { text-align: center; flex: 1; }
+  .pod .pav {
+    border-radius: 50%;
+    background: var(--bg-card);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .pod .pnm { font-weight: bold; margin: 8px 0; font-size: 17px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .pod .blk {
+    border-radius: 10px 10px 0 0;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+  }
+  .pod .rk { font-weight: bold; font-size: 26px; }
+  .pod .pt { font-size: 14px; color: var(--muted); }
+  .pod.p1 .pav { width: 78px; height: 78px; font-size: 42px; border: 3px solid var(--gold); }
+  .pod.p1 .blk { height: 96px; background: #4b2a8c; border-color: var(--gold); }
+  .pod.p1 .rk, .pod.p1 .pt { color: var(--gold); }
+  .pod.p2 .pav { width: 64px; height: 64px; font-size: 34px; border: 3px solid #c0c8d8; }
+  .pod.p2 .blk { height: 78px; }
+  .pod.p2 .rk { color: #c0c8d8; }
+  .pod.p3 .pav { width: 58px; height: 58px; font-size: 30px; border: 3px solid #c98a5a; }
+  .pod.p3 .blk { height: 64px; }
+  .pod.p3 .rk { color: #c98a5a; }
+  .crown { font-size: 26px; height: 30px; }
+  .board-list { width: 100%; max-width: 460px; display: grid; gap: 10px; margin-top: 18px; }
+  .brow {
+    display: flex; align-items: center; gap: 12px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--bg-card);
+    padding: 12px 16px;
+    font-size: 17px;
+  }
+  .brow .rk { width: 24px; color: var(--muted); font-weight: bold; }
+  .brow .av { font-size: 24px; }
+  .brow .nm { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .brow .pt { color: var(--muted); }
+  .brow.me { border-color: var(--gold); background: #3c2469; }
+  .brow.me .rk, .brow.me .nm, .brow.me .pt { color: var(--gold); font-weight: bold; }
+
+  /* Formulaire nouveau joueur */
+  .form { width: 100%; max-width: 400px; display: grid; gap: 16px; margin-top: 22px; }
+  .form label { font-size: 16px; color: var(--muted); }
+  .avatar-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 8px;
+  }
+  .avatar-grid button {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--bg-card);
+    font-size: 26px;
+    padding: 8px 0;
+    cursor: pointer;
+  }
+  .avatar-grid button.sel { border: 2.5px solid var(--gold); background: var(--bg-card-hover); }
+
+  /* Modal avatar */
+  .modal {
+    position: fixed; inset: 0; z-index: 20;
+    background: #12081fd9;
+    display: flex; align-items: center; justify-content: center;
+    padding: 24px;
+  }
+  .modal .box {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 22px;
+    width: 100%; max-width: 380px;
+  }
+  .modal h2 { margin: 0 0 16px; font-size: 20px; color: var(--gold); text-align: center; }
+
+  .center-narrow { width: 100%; max-width: 400px; display: flex; flex-direction: column; align-items: center; }
+  .spin { color: var(--muted); font-style: italic; text-align: center; margin-top: 40vh; }
 </style>
 </head>
 <body>
-  <header>
+
+<!-- Chargement -->
+<div id="scr-load" class="screen"><p class="spin">Un instant, étranger…</p></div>
+
+<!-- Qui joue ? -->
+<div id="scr-who" class="screen" hidden>
+  <header style="margin:28px 0 6px;">
     <span class="stars"><span>⭐️</span><span>⭐️</span><span>⭐️</span></span>
     <h1>Mes Jeux</h1>
-    <p>Choisissez votre partie, étranger…</p>
+    <p class="subtitle">Qui joue ?</p>
     <hr class="rule">
   </header>
+  <div class="players-grid" id="playersGrid"></div>
+  <p class="msg" id="whoMsg"></p>
+</div>
 
-  <main id="games"></main>
+<!-- Code secret -->
+<div id="scr-pin" class="screen" hidden>
+  <div class="center-narrow" style="margin-top:5vh;">
+    <div class="pin-avatar" id="pinAvatar">🙂</div>
+    <p class="pin-title" id="pinTitle">Salut !</p>
+    <p class="pin-sub" id="pinSub">Ton code secret :</p>
+    <div class="pin-dots" id="pinDots"><i></i><i></i><i></i><i></i></div>
+    <p class="msg" id="pinMsg"></p>
+    <div class="pad" id="pinPad"></div>
+    <button class="btn-ghost" id="pinForgot" onclick="startForgot()">Code oublié ?</button>
+    <button class="btn-ghost" onclick="showWho()">← retour</button>
+  </div>
+</div>
 
+<!-- Nouveau joueur -->
+<div id="scr-new" class="screen" hidden>
+  <header style="margin:18px 0 0;">
+    <h1 style="font-size:24px;">Nouveau joueur</h1>
+  </header>
+  <div class="form">
+    <div>
+      <label for="newPseudo">Ton pseudo</label>
+      <input class="field" id="newPseudo" maxlength="20" autocomplete="off" placeholder="Léo">
+    </div>
+    <div>
+      <label>Ton avatar</label>
+      <div class="avatar-grid" id="newAvatars"></div>
+    </div>
+    <div>
+      <label for="newQuestion">Ta question secrète (si tu oublies ton code)</label>
+      <select class="field" id="newQuestion"></select>
+    </div>
+    <div>
+      <label for="newAnswer">Ta réponse</label>
+      <input class="field" id="newAnswer" maxlength="40" autocomplete="off" placeholder="le renard">
+    </div>
+    <p class="msg" id="newMsg"></p>
+    <button class="btn" onclick="submitNew()">Choisir mon code secret →</button>
+    <button class="btn-ghost" onclick="showWho()">← retour</button>
+  </div>
+</div>
+
+<!-- Question secrète (code oublié) -->
+<div id="scr-forgot" class="screen" hidden>
+  <div class="center-narrow" style="margin-top:6vh;">
+    <div class="pin-avatar" id="fgAvatar">🙂</div>
+    <p class="pin-title" id="fgTitle">Pas de panique !</p>
+    <p class="pin-sub">Réponds à ta question secrète :</p>
+    <p style="margin:18px 0 0; font-size:19px; color:var(--gold); font-weight:bold; text-align:center;" id="fgQuestion"></p>
+    <div class="form" style="margin-top:18px;">
+      <input class="field" id="fgAnswer" maxlength="40" autocomplete="off" placeholder="ta réponse">
+      <p class="msg" id="fgMsg"></p>
+      <button class="btn" onclick="submitForgot()">Valider</button>
+      <button class="btn-ghost" onclick="showWho()">← retour</button>
+    </div>
+  </div>
+</div>
+
+<!-- Page principale -->
+<div id="scr-main" class="screen" hidden>
+  <div class="topbar">
+    <button class="avatar-btn" id="meAvatar" onclick="openAvatarModal()">🙂</button>
+    <div class="who">
+      <b id="meName">Salut !</b>
+      <small id="mePoints">⭐ 0 point</small>
+    </div>
+    <button class="switch" onclick="logout()">changer<br>de joueur</button>
+  </div>
+  <header style="margin:26px 0 32px;">
+    <span class="stars"><span>⭐️</span><span>⭐️</span><span>⭐️</span></span>
+    <h1>Mes Jeux</h1>
+    <p class="subtitle">Choisissez votre partie, étranger…</p>
+    <hr class="rule">
+  </header>
+  <main class="games" id="games"></main>
   <footer>Bonne partie à toi</footer>
+  <button class="fab" onclick="showBoard()" title="Classement">🏆</button>
+</div>
+
+<!-- Classement -->
+<div id="scr-board" class="screen" hidden>
+  <div class="board-head">
+    <button class="back" onclick="showMain()">←</button>
+    <h1>🏆 Classement</h1>
+  </div>
+  <div class="podium" id="podium"></div>
+  <div class="board-list" id="boardList"></div>
+  <p class="subtitle" style="margin-top:26px;">Les points se gagnent en jouant aux jeux</p>
+</div>
+
+<!-- Modal avatar -->
+<div class="modal" id="avatarModal" hidden>
+  <div class="box">
+    <h2>Choisis ton avatar</h2>
+    <div class="avatar-grid" id="modalAvatars"></div>
+    <button class="btn-ghost" style="width:100%;margin-top:14px;" onclick="closeAvatarModal()">annuler</button>
+  </div>
+</div>
 
 <script>
+  // ——— Configuration ———
+  const SB_URL = "https://xmuohrglecqtpoyzssfj.supabase.co/rest/v1";
+  const SB_KEY = "sb_publishable_Y9EMQFz64Vt0n1GAs9wv1A_ciDRgNVz";
+  const SESSION_KEY = "mesjeux_session";
+
   // Pour ajouter un jeu : ajouter une entrée à cette liste.
   const GAMES = [
     {
@@ -186,13 +508,314 @@
     }
   ];
 
-  document.getElementById("games").innerHTML = GAMES.map(g => `
+  const AVATARS = ["🦊","🐼","🐸","🦄","🐯","🐵","🐨","🐰","🐹","🐻","🐷","🐮",
+                   "🦁","🐶","🐱","🦉","🐢","🐙","🦋","🐝","🤠","🤖","👑","⚡️"];
+
+  const QUESTIONS = [
+    "Quel est ton animal préféré ?",
+    "Quelle est ta couleur préférée ?",
+    "Quel est ton plat préféré ?",
+    "Quel est le prénom de ton doudou ?",
+    "Quelle est ta glace préférée ?",
+    "Quel est le prénom de ton meilleur ami ?"
+  ];
+
+  // ——— Accès Supabase (REST) ———
+  async function sb(path, options = {}) {
+    const res = await fetch(SB_URL + path, {
+      ...options,
+      headers: {
+        "apikey": SB_KEY,
+        "Authorization": "Bearer " + SB_KEY,
+        "Content-Type": "application/json",
+        ...(options.headers || {})
+      }
+    });
+    if (!res.ok) throw new Error("supabase " + res.status + " " + await res.text());
+    return res.status === 204 ? null : res.json();
+  }
+  const fetchPlayers = () => sb("/players?select=id,pseudo,avatar,points&order=points.desc,pseudo.asc");
+  const fetchPlayer  = id => sb(`/players?select=*&id=eq.${id}`).then(r => r[0]);
+  const findPseudo   = p  => sb(`/players?select=id&pseudo=ilike.${encodeURIComponent(p.replaceAll("%","").replaceAll("*",""))}`);
+  const insertPlayer = row => sb("/players", { method: "POST", body: JSON.stringify(row), headers: { "Prefer": "return=representation" } }).then(r => r[0]);
+  const updatePlayer = (id, patch) => sb(`/players?id=eq.${id}`, { method: "PATCH", body: JSON.stringify(patch) });
+
+  // ——— Utilitaires ———
+  async function sha256(text) {
+    const data = new TextEncoder().encode(text);
+    const buf = await crypto.subtle.digest("SHA-256", data);
+    return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, "0")).join("");
+  }
+  const hashPin = (pseudo, pin) => sha256("pin:" + pseudo.toLowerCase() + ":" + pin);
+  const normAnswer = a => a.trim().toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, "").replace(/\s+/g, " ");
+  const hashAnswer = (pseudo, a) => sha256("rep:" + pseudo.toLowerCase() + ":" + normAnswer(a));
+
+  const $ = id => document.getElementById(id);
+  const SCREENS = ["scr-load","scr-who","scr-pin","scr-new","scr-forgot","scr-main","scr-board"];
+  function show(id) { SCREENS.forEach(s => $(s).hidden = (s !== id)); window.scrollTo(0, 0); }
+
+  function getSession() {
+    try { return JSON.parse(localStorage.getItem(SESSION_KEY)); } catch { return null; }
+  }
+  function setSession(s) {
+    try { s ? localStorage.setItem(SESSION_KEY, JSON.stringify(s)) : localStorage.removeItem(SESSION_KEY); } catch {}
+  }
+
+  // ——— État ———
+  let players = [];          // liste publique {id, pseudo, avatar, points}
+  let selected = null;       // joueur choisi sur l'écran « Qui joue ? »
+  let me = null;             // joueur connecté (ligne complète)
+  let pin = "";              // saisie en cours
+  let pinMode = "login";     // login | create | create2 | reset | reset2
+  let pinFirst = "";         // 1re saisie en création/réinitialisation
+  let draft = null;          // nouveau profil en cours
+
+  // ——— Écran « Qui joue ? » ———
+  async function showWho() {
+    show("scr-who");
+    $("whoMsg").textContent = "";
+    $("playersGrid").innerHTML = "<p class='subtitle' style='grid-column:1/-1'>Chargement…</p>";
+    try {
+      players = await fetchPlayers();
+    } catch (e) {
+      players = [];
+      $("whoMsg").textContent = "Impossible de joindre le serveur. Vérifie ta connexion.";
+    }
+    const cards = players.map(p => `
+      <button class="player-card" onclick="pickPlayer('${p.id}')">
+        <span class="pa">${p.avatar}</span><span class="pn">${esc(p.pseudo)}</span>
+      </button>`).join("");
+    $("playersGrid").innerHTML = cards + `
+      <button class="player-card new" onclick="showNew()">
+        <span class="pa">+</span><span class="pn">Nouveau joueur</span>
+      </button>`;
+  }
+  const esc = s => s.replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
+
+  function pickPlayer(id) {
+    selected = players.find(p => p.id === id);
+    if (!selected) return;
+    pinMode = "login";
+    openPin(selected.avatar, `Salut ${selected.pseudo} !`, "Ton code secret :", true);
+  }
+
+  // ——— Pavé PIN ———
+  function openPin(avatar, title, sub, withForgot) {
+    pin = "";
+    $("pinAvatar").textContent = avatar;
+    $("pinTitle").textContent = title;
+    $("pinSub").textContent = sub;
+    $("pinMsg").textContent = "";
+    $("pinForgot").hidden = !withForgot;
+    renderDots();
+    show("scr-pin");
+  }
+  function renderDots() {
+    [...$("pinDots").children].forEach((d, i) => d.className = i < pin.length ? "on" : "");
+  }
+  function buildPad() {
+    const keys = ["1","2","3","4","5","6","7","8","9","","0","⌫"];
+    $("pinPad").innerHTML = keys.map(k =>
+      k === "" ? "<button class='ghost' disabled></button>"
+               : `<button onclick="tapPad('${k}')">${k}</button>`).join("");
+  }
+  async function tapPad(k) {
+    $("pinMsg").textContent = "";
+    if (k === "⌫") { pin = pin.slice(0, -1); renderDots(); return; }
+    if (pin.length >= 4) return;
+    pin += k;
+    renderDots();
+    if (pin.length === 4) await pinComplete();
+  }
+  function pinError(msg) {
+    pin = "";
+    renderDots();
+    $("pinMsg").textContent = msg;
+    const d = $("pinDots");
+    d.classList.remove("shake"); void d.offsetWidth; d.classList.add("shake");
+  }
+
+  async function pinComplete() {
+    if (pinMode === "login") {
+      try {
+        const row = await fetchPlayer(selected.id);
+        if (row && row.pin_hash === await hashPin(row.pseudo, pin)) return login(row);
+        pinError("Ce n'est pas le bon code… réessaie !");
+      } catch { pinError("Petit souci de connexion, réessaie."); }
+
+    } else if (pinMode === "create") {
+      pinFirst = pin;
+      pinMode = "create2";
+      openPin(draft.avatar, "Encore une fois !", "Retape ton code pour confirmer :", false);
+
+    } else if (pinMode === "create2") {
+      if (pin !== pinFirst) { pinMode = "create"; openPin(draft.avatar, `Salut ${draft.pseudo} !`, "Choisis ton code secret :", false); pinError("Les deux codes étaient différents, on recommence."); return; }
+      try {
+        const row = await insertPlayer({
+          pseudo: draft.pseudo,
+          avatar: draft.avatar,
+          question: draft.question,
+          answer_hash: await hashAnswer(draft.pseudo, draft.answer),
+          pin_hash: await hashPin(draft.pseudo, pin)
+        });
+        login(row);
+      } catch { pinError("Impossible de créer le profil, réessaie."); }
+
+    } else if (pinMode === "reset") {
+      pinFirst = pin;
+      pinMode = "reset2";
+      openPin(selected.avatar, "Encore une fois !", "Retape ton nouveau code :", false);
+
+    } else if (pinMode === "reset2") {
+      if (pin !== pinFirst) { pinMode = "reset"; openPin(selected.avatar, "C'est bien toi !", "Choisis ton nouveau code secret :", false); pinError("Les deux codes étaient différents, on recommence."); return; }
+      try {
+        await updatePlayer(selected.id, { pin_hash: await hashPin(selected.pseudo, pin) });
+        const row = await fetchPlayer(selected.id);
+        login(row);
+      } catch { pinError("Impossible d'enregistrer, réessaie."); }
+    }
+  }
+
+  // ——— Nouveau joueur ———
+  function showNew() {
+    draft = { avatar: AVATARS[0] };
+    $("newPseudo").value = "";
+    $("newAnswer").value = "";
+    $("newMsg").textContent = "";
+    $("newQuestion").innerHTML = QUESTIONS.map(q => `<option>${q}</option>`).join("");
+    const onPick = a => { draft.avatar = a; renderAvatarGrid($("newAvatars"), a, onPick); };
+    renderAvatarGrid($("newAvatars"), AVATARS[0], onPick);
+    show("scr-new");
+  }
+  function renderAvatarGrid(el, sel, onPick) {
+    el.innerHTML = AVATARS.map(a => `<button class="${a === sel ? "sel" : ""}" data-a="${a}">${a}</button>`).join("");
+    [...el.children].forEach(b => b.onclick = () => onPick(b.dataset.a));
+  }
+  async function submitNew() {
+    const pseudo = $("newPseudo").value.trim();
+    const answer = $("newAnswer").value.trim();
+    const question = $("newQuestion").value;
+    if (pseudo.length < 2) return $("newMsg").textContent = "Il faut un pseudo d'au moins 2 lettres.";
+    if (!answer) return $("newMsg").textContent = "Il faut une réponse à ta question secrète.";
+    $("newMsg").textContent = "Vérification…";
+    try {
+      const dup = await findPseudo(pseudo);
+      if (dup.length) return $("newMsg").textContent = "Ce pseudo est déjà pris !";
+    } catch { return $("newMsg").textContent = "Petit souci de connexion, réessaie."; }
+    draft = { ...draft, pseudo, question, answer };
+    pinMode = "create";
+    openPin(draft.avatar, `Salut ${draft.pseudo} !`, "Choisis ton code secret :", false);
+  }
+
+  // ——— Code oublié ———
+  function startForgot() {
+    $("fgAvatar").textContent = selected.avatar;
+    $("fgTitle").textContent = `Pas de panique, ${selected.pseudo} !`;
+    $("fgAnswer").value = "";
+    $("fgMsg").textContent = "";
+    $("fgQuestion").textContent = "…";
+    show("scr-forgot");
+    fetchPlayer(selected.id)
+      .then(row => { selected = { ...selected, ...row }; $("fgQuestion").textContent = row.question || "(aucune question enregistrée)"; })
+      .catch(() => $("fgMsg").textContent = "Petit souci de connexion, réessaie.");
+  }
+  async function submitForgot() {
+    const a = $("fgAnswer").value;
+    if (!a.trim()) return;
+    if (!selected.answer_hash) return $("fgMsg").textContent = "Pas de question secrète pour ce profil.";
+    if (await hashAnswer(selected.pseudo, a) === selected.answer_hash) {
+      pinMode = "reset";
+      openPin(selected.avatar, "C'est bien toi !", "Choisis ton nouveau code secret :", false);
+    } else {
+      $("fgMsg").textContent = "Ce n'est pas la bonne réponse… réessaie !";
+    }
+  }
+
+  // ——— Connexion / page principale ———
+  function login(row) {
+    me = row;
+    setSession({ id: row.id, pseudo: row.pseudo, avatar: row.avatar, points: row.points });
+    showMain();
+  }
+  function logout() {
+    me = null;
+    setSession(null);
+    showWho();
+  }
+  function showMain() {
+    $("meAvatar").textContent = me.avatar;
+    $("meName").textContent = `Salut ${me.pseudo} !`;
+    $("mePoints").textContent = `⭐ ${me.points} point${me.points > 1 ? "s" : ""}`;
+    show("scr-main");
+  }
+
+  // ——— Avatar ———
+  function openAvatarModal() {
+    renderAvatarGrid($("modalAvatars"), me.avatar, pickAvatar);
+    $("avatarModal").hidden = false;
+  }
+  function closeAvatarModal() { $("avatarModal").hidden = true; }
+  async function pickAvatar(a) {
+    closeAvatarModal();
+    const before = me.avatar;
+    me.avatar = a;
+    showMain();
+    try {
+      await updatePlayer(me.id, { avatar: a });
+      setSession({ id: me.id, pseudo: me.pseudo, avatar: a, points: me.points });
+    } catch { me.avatar = before; showMain(); }
+  }
+
+  // ——— Classement ———
+  async function showBoard() {
+    show("scr-board");
+    $("podium").innerHTML = "";
+    $("boardList").innerHTML = "<p class='subtitle'>Chargement…</p>";
+    let list;
+    try { list = await fetchPlayers(); }
+    catch { $("boardList").innerHTML = "<p class='msg'>Impossible de charger le classement.</p>"; return; }
+    const top = list.slice(0, 3);
+    const slots = [ { p: top[1], cls: "p2", rk: 2 }, { p: top[0], cls: "p1", rk: 1 }, { p: top[2], cls: "p3", rk: 3 } ];
+    $("podium").innerHTML = slots.map(s => !s.p ? "<div class='pod'></div>" : `
+      <div class="pod ${s.cls}">
+        <div class="crown">${s.rk === 1 ? "👑" : ""}</div>
+        <span class="pav">${s.p.avatar}</span>
+        <div class="pnm">${esc(s.p.pseudo)}${me && s.p.id === me.id ? " (toi)" : ""}</div>
+        <div class="blk"><span class="rk">${s.rk}</span><span class="pt">${s.p.points} pts</span></div>
+      </div>`).join("");
+    $("boardList").innerHTML = list.slice(3).map((p, i) => `
+      <div class="brow ${me && p.id === me.id ? "me" : ""}">
+        <span class="rk">${i + 4}</span>
+        <span class="av">${p.avatar}</span>
+        <span class="nm">${esc(p.pseudo)}${me && p.id === me.id ? " (toi)" : ""}</span>
+        <span class="pt">${p.points} pts</span>
+      </div>`).join("");
+  }
+
+  // ——— Jeux ———
+  $("games").innerHTML = GAMES.map(g => `
     <a class="game" href="${g.url}">
       <img class="icon" src="${g.icon}" alt="">
       <h2>${g.title}</h2>
       <p>${g.description}</p>
       <span class="tag">${g.tag}</span>
     </a>`).join("");
+
+  // ——— Démarrage ———
+  buildPad();
+  (async function start() {
+    const s = getSession();
+    if (!s) return showWho();
+    me = s;
+    showMain(); // affichage immédiat, puis rafraîchissement des points
+    try {
+      const row = await fetchPlayer(s.id);
+      if (!row) return logout();
+      me = row;
+      setSession({ id: row.id, pseudo: row.pseudo, avatar: row.avatar, points: row.points });
+      showMain();
+    } catch {}
+  })();
 </script>
 </body>
 </html>
