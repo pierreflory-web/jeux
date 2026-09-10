@@ -1052,6 +1052,23 @@
       <span class="tag">${g.tag}</span>
     </a>`).join("");
 
+  // ——— Rafraîchissement au retour sur la page (retour d'un jeu, réveil de l'app) ———
+  async function refreshMe() {
+    const s = getSession();
+    if (!s || !me) return;
+    try {
+      let row = await fetchPlayer(s.id);
+      if (!row) return;
+      row = await touchDay(row);
+      me = row;
+      setSession({ id: row.id, pseudo: row.pseudo, avatar: row.avatar, points: row.points });
+      if (!$("scr-main").hidden) showMain();
+      if (!$("scr-board").hidden) showBoard();
+    } catch {}
+  }
+  window.addEventListener("pageshow", e => { if (e.persisted) refreshMe(); });
+  document.addEventListener("visibilitychange", () => { if (!document.hidden) refreshMe(); });
+
   // ——— Démarrage ———
   buildPad();
   (async function start() {
