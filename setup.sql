@@ -9,6 +9,11 @@ create table public.players (
   question text not null default '',
   answer_hash text not null default '',
   points integer not null default 0,
+  wins jsonb not null default '{}',
+  coins integer not null default 0,
+  days integer not null default 0,
+  last_day text not null default '',
+  avatars jsonb not null default '[]',
   created_at timestamptz not null default now()
 );
 

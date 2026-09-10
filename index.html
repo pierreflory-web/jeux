@@ -360,9 +360,73 @@
     border: 1px solid var(--border);
     border-radius: 20px;
     padding: 22px;
-    width: 100%; max-width: 380px;
+    width: 100%; max-width: 400px;
+    max-height: 88dvh;
+    overflow-y: auto;
   }
   .modal h2 { margin: 0 0 16px; font-size: 20px; color: var(--gold); text-align: center; }
+  .solde { text-align: center; color: var(--muted); font-size: 15px; margin: -8px 0 4px; }
+  .sect { margin: 20px 0 2px; font-size: 15px; color: var(--muted); }
+  .sect.fid { color: #2ee6a8; }
+  .shop-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 8px; }
+  .shop-grid .it { text-align: center; }
+  .shop-grid .it button {
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--bg-card);
+    font-size: 24px;
+    padding: 8px 0;
+    cursor: pointer;
+  }
+  .shop-grid .it button.locked { background: #241335; border-style: dashed; }
+  .shop-grid .it button.sel { border: 2.5px solid var(--gold); background: var(--bg-card-hover); }
+  .shop-grid .it small {
+    display: block; color: var(--dim); font-size: 11px; margin-top: 3px;
+    font-family: -apple-system, sans-serif;
+  }
+  .fid-hint {
+    margin-top: 12px; padding: 10px 14px; border-radius: 12px;
+    background: #153c30; border: 1px solid #2ee6a8;
+    color: #2ee6a8; font-size: 14px; text-align: center;
+  }
+  .coffre-card {
+    margin-top: 10px; padding: 14px; border-radius: 16px;
+    background: var(--bg-card-hover); border: 1.5px solid var(--gold);
+    display: flex; align-items: center; gap: 14px;
+  }
+  .coffre-card svg { flex: none; }
+  .coffre-card .t b { color: var(--gold); font-size: 17px; display: block; }
+  .coffre-card .t span { color: var(--muted); font-size: 13px; display: block; margin: 4px 0 8px; }
+  .coffre-card .t button {
+    border: 0; border-radius: 8px; background: var(--gold); color: var(--bg);
+    font-family: inherit; font-weight: bold; font-size: 14px; padding: 7px 14px; cursor: pointer;
+  }
+  .coffre-card .t button[disabled] { opacity: .55; }
+  .confirmbar {
+    position: sticky; bottom: -22px; margin: 16px -4px -6px; padding: 12px 4px 14px;
+    background: var(--bg);
+    display: flex; gap: 10px; align-items: center;
+  }
+  .confirmbar .btn { flex: 1; padding: 12px; font-size: 16px; }
+  .confirmbar .btn-ghost { flex: none; }
+  @keyframes chestshake {
+    0%,100% { transform: rotate(0); }
+    20% { transform: rotate(-7deg); } 40% { transform: rotate(6deg); }
+    60% { transform: rotate(-5deg); } 80% { transform: rotate(4deg); }
+  }
+  .chest-shake { animation: chestshake .5s ease-in-out 2; transform-origin: 50% 80%; }
+  .reveal { text-align: center; }
+  .reveal .medaillon {
+    width: 130px; height: 130px; border-radius: 50%;
+    background: var(--bg-card); border: 4px solid var(--gold);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 72px; margin: 14px auto;
+  }
+  .reveal .rarete {
+    display: inline-block; padding: 7px 20px; border-radius: 10px;
+    font-weight: bold; font-size: 17px; letter-spacing: 1px;
+  }
 
   .center-narrow { width: 100%; max-width: 400px; display: flex; flex-direction: column; align-items: center; }
   .spin { color: var(--muted); font-style: italic; text-align: center; margin-top: 40vh; }
@@ -475,13 +539,14 @@
   <p class="subtitle" style="margin-top:26px;">Les points se gagnent en jouant aux jeux</p>
 </div>
 
-<!-- Modal avatar -->
+<!-- Modal boutique -->
 <div class="modal" id="avatarModal" hidden>
-  <div class="box">
-    <h2>Choisis ton avatar</h2>
-    <div class="avatar-grid" id="modalAvatars"></div>
-    <button class="btn-ghost" style="width:100%;margin-top:14px;" onclick="closeAvatarModal()">annuler</button>
-  </div>
+  <div class="box" id="boutiqueBox"></div>
+</div>
+
+<!-- Modal coffre / fanfare -->
+<div class="modal" id="revealModal" hidden>
+  <div class="box reveal" id="revealBox"></div>
 </div>
 
 <script>
@@ -508,8 +573,38 @@
     }
   ];
 
-  const AVATARS = ["🦊","🐼","🐸","🦄","🐯","🐵","🐨","🐰","🐹","🐻","🐷","🐮",
-                   "🦁","🐶","🐱","🦉","🐢","🐙","🦋","🐝","🤠","🤖","👑","⚡️"];
+  // ——— Catalogue des avatars ———
+  const DEPART = ["🦊","🐼","🐸","🦄","🐯","🐨"];
+  const FIDELITE = [
+    { days: 3,  avatars: ["🐶","🐱"] },
+    { days: 7,  avatars: ["🐹","🦉"] },
+    { days: 10, avatars: ["🐬","🦜"] },
+    { days: 20, avatars: ["🐺","🦅"] },
+    { days: 50, avatars: ["🦚","🌟"] }
+  ];
+  const BOUTIQUE = [
+    { nom: "À débloquer", prix: 20,
+      avatars: ["🦁","🐵","🐻","🐷","🐮","🐰","🐭","🐣","🐧","🐦","🦆","🦢","🐴","🦓","🦒","🐘","🦏","🐪","🐢","🐍","🦎","🐙","🦑","🦀"] },
+    { nom: "Rares", prix: 50,
+      avatars: ["🤠","🤖","🧙","🦸","🥷","🧛","🧟","🦇","🧚","🧜‍♀️","👻","🎃","🤡","🏴‍☠️","⚡️","🌈","🍕","🍩","🍦","🎸","🎮","⚽️","🏀","🎯","🛸","🦈"] },
+    { nom: "Légendaires", prix: 100,
+      avatars: ["🐉","🦖","👽","🚀","🔥","👑","💎","🏆","🎩","🗿","⚔️","🐳"] },
+    { nom: "Mythiques", prix: 200,
+      avatars: ["🪐","🧞","🔱","🦕","🧿","🌌"] }
+  ];
+  function ownedAvatars(row) {
+    const days = row.days || 0;
+    const owned = DEPART.concat(
+      FIDELITE.filter(f => f.days <= days).flatMap(f => f.avatars),
+      row.avatars || [],
+      row.avatar ? [row.avatar] : []
+    );
+    return [...new Set(owned)];
+  }
+  function today() {
+    const d = new Date();
+    return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+  }
 
   const QUESTIONS = [
     "Quel est ton animal préféré ?",
@@ -678,17 +773,17 @@
 
   // ——— Nouveau joueur ———
   function showNew() {
-    draft = { avatar: AVATARS[0] };
+    draft = { avatar: DEPART[0] };
     $("newPseudo").value = "";
     $("newAnswer").value = "";
     $("newMsg").textContent = "";
     $("newQuestion").innerHTML = QUESTIONS.map(q => `<option>${q}</option>`).join("");
-    const onPick = a => { draft.avatar = a; renderAvatarGrid($("newAvatars"), a, onPick); };
-    renderAvatarGrid($("newAvatars"), AVATARS[0], onPick);
+    const onPick = a => { draft.avatar = a; renderAvatarGrid($("newAvatars"), DEPART, a, onPick); };
+    renderAvatarGrid($("newAvatars"), DEPART, DEPART[0], onPick);
     show("scr-new");
   }
-  function renderAvatarGrid(el, sel, onPick) {
-    el.innerHTML = AVATARS.map(a => `<button class="${a === sel ? "sel" : ""}" data-a="${a}">${a}</button>`).join("");
+  function renderAvatarGrid(el, list, sel, onPick) {
+    el.innerHTML = list.map(a => `<button class="${a === sel ? "sel" : ""}" data-a="${a}">${a}</button>`).join("");
     [...el.children].forEach(b => b.onclick = () => onPick(b.dataset.a));
   }
   async function submitNew() {
@@ -732,9 +827,11 @@
   }
 
   // ——— Connexion / page principale ———
-  function login(row) {
+  async function login(row) {
     me = row;
     setSession({ id: row.id, pseudo: row.pseudo, avatar: row.avatar, points: row.points });
+    showMain();
+    me = await touchDay(me);
     showMain();
   }
   function logout() {
@@ -745,25 +842,179 @@
   function showMain() {
     $("meAvatar").textContent = me.avatar;
     $("meName").textContent = `Salut ${me.pseudo} !`;
-    $("mePoints").textContent = `⭐ ${me.points} point${me.points > 1 ? "s" : ""}`;
+    $("mePoints").textContent = `⭐ ${me.points} pts · 🪙 ${me.coins || 0} · 📅 ${me.days || 0} j`;
     show("scr-main");
   }
 
-  // ——— Avatar ———
-  function openAvatarModal() {
-    renderAvatarGrid($("modalAvatars"), me.avatar, pickAvatar);
-    $("avatarModal").hidden = false;
+  // ——— Jours de jeu et fidélité ———
+  async function touchDay(row) {
+    const t = today();
+    if (row.last_day === t) return row;
+    const before = row.days || 0;
+    const days = before + 1;
+    try { await updatePlayer(row.id, { days, last_day: t }); } catch { return row; }
+    const nouveaux = FIDELITE.filter(f => f.days > before && f.days <= days).flatMap(f => f.avatars);
+    if (nouveaux.length) setTimeout(() => fanfare(days, nouveaux), 600);
+    return { ...row, days, last_day: t };
   }
+  function fanfare(days, avatars) {
+    $("revealBox").innerHTML = `
+      <div style="font-size:34px;">🎉 ✨ 🎉</div>
+      <h2 style="margin:10px 0 4px;">${days} jours de jeu !</h2>
+      <p style="color:var(--muted);margin:0;">Nouvel avatar débloqué :</p>
+      <div class="medaillon" style="font-size:${avatars.length > 1 ? 44 : 72}px;letter-spacing:4px;">${avatars.join("")}</div>
+      <p style="color:var(--cream);margin:0 0 16px;">Il${avatars.length > 1 ? "s" : ""} t'attend${avatars.length > 1 ? "ent" : ""} dans ta collection !</p>
+      <button class="btn" onclick="closeReveal()">Génial !</button>`;
+    $("revealModal").hidden = false;
+  }
+  function closeReveal() { $("revealModal").hidden = true; }
+
+  // ——— Boutique ———
+  const COFFRE_PRIX = 40;
+  const COFFRE_SVG = `<svg viewBox="-80 -70 160 130" width="86" height="70">
+    <path d="M-70 -18 Q-70 -58 0 -58 Q70 -58 70 -18 L70 -14 L-70 -14 Z" fill="#9a5c2e" stroke="#4a2a10" stroke-width="4"/>
+    <rect x="-70" y="-14" width="140" height="62" rx="8" fill="#7d4620" stroke="#4a2a10" stroke-width="4"/>
+    <rect x="-74" y="-18" width="148" height="10" rx="5" fill="#e8b04b" stroke="#4a2a10" stroke-width="3"/>
+    <rect x="-52" y="-56" width="12" height="102" fill="#e8b04b" stroke="#4a2a10" stroke-width="3"/>
+    <rect x="40" y="-56" width="12" height="102" fill="#e8b04b" stroke="#4a2a10" stroke-width="3"/>
+    <rect x="-12" y="-24" width="24" height="30" rx="5" fill="#e8b04b" stroke="#4a2a10" stroke-width="3"/>
+    <circle cx="0" cy="-9" r="5" fill="#4a2a10"/>
+    <path d="M0 -9 L0 0" stroke="#4a2a10" stroke-width="4" stroke-linecap="round"/>
+  </svg>`;
+  const RARETES = { 0: ["Ménagerie", "#c9b3e8"], 1: ["RARE !", "#c98a5a"], 2: ["LÉGENDAIRE !", "#ffd27a"], 3: ["MYTHIQUE !", "#ff9dd6"] };
+  let panier = null; // {avatar, prix}
+
+  function openAvatarModal() { panier = null; renderBoutique(); $("avatarModal").hidden = false; }
   function closeAvatarModal() { $("avatarModal").hidden = true; }
-  async function pickAvatar(a) {
-    closeAvatarModal();
+
+  function manquants() {
+    const owned = ownedAvatars(me);
+    return BOUTIQUE.map(t => t.avatars.filter(a => !owned.includes(a)));
+  }
+
+  function renderBoutique() {
+    const owned = ownedAvatars(me);
+    const days = me.days || 0;
+    const coins = me.coins || 0;
+    let html = `<h2>Ta collection &amp; la boutique</h2>
+      <p class="solde">🪙 ${coins} pièce${coins > 1 ? "s" : ""} · 📅 ${days} jour${days > 1 ? "s" : ""} de jeu</p>
+      <p class="sect">Tes avatars — touche pour choisir</p>
+      <div class="shop-grid">` +
+      owned.map(a => `<div class="it"><button class="${a === me.avatar ? "sel" : ""}" onclick="chooseAvatar('${a}')">${a}</button></div>`).join("") +
+      `</div>`;
+
+    const fidLocked = FIDELITE.filter(f => f.days > days);
+    if (fidLocked.length) {
+      html += `<p class="sect fid">Fidélité — offerts selon tes jours de jeu</p><div class="shop-grid">` +
+        fidLocked.flatMap(f => f.avatars.map(a =>
+          `<div class="it"><button class="locked" disabled>${a}</button><small>🔒 ${f.days} j</small></div>`)).join("") +
+        `</div>
+        <div class="fid-hint">Plus que ${fidLocked[0].days - days} jour${fidLocked[0].days - days > 1 ? "s" : ""} de jeu pour débloquer ${fidLocked[0].avatars.join(" et ")} !</div>`;
+    }
+
+    const manq = manquants();
+    const resteTotal = manq.reduce((a, l) => a + l.length, 0);
+    if (resteTotal) {
+      html += `<p class="sect">Le coffre mystère</p>
+        <div class="coffre-card">${COFFRE_SVG}
+          <div class="t"><b>Coffre mystère</b>
+            <span>Un avatar surprise parmi ceux que tu n'as pas encore !</span>
+            <button ${coins < COFFRE_PRIX ? "disabled" : ""} onclick="openChest()">
+              ${coins < COFFRE_PRIX ? "Encore " + (COFFRE_PRIX - coins) + " 🪙…" : "Ouvrir — " + COFFRE_PRIX + " 🪙"}
+            </button>
+          </div>
+        </div>`;
+    }
+
+    BOUTIQUE.forEach((tier, i) => {
+      const dispo = manq[i];
+      if (!dispo.length) return;
+      html += `<p class="sect" style="color:${RARETES[i][1]}">${tier.nom} — ${tier.prix} pièces 🪙</p><div class="shop-grid">` +
+        dispo.map(a => `<div class="it"><button class="locked" onclick="preparerAchat('${a}',${tier.prix})">${a}</button><small>${tier.prix} 🪙</small></div>`).join("") +
+        `</div>`;
+    });
+
+    if (panier) {
+      const manque = (me.coins || 0) < panier.prix;
+      html += `<div class="confirmbar">` + (manque
+        ? `<span style="color:#ff9db0;font-size:15px;flex:1;text-align:center;">Il te manque ${panier.prix - (me.coins || 0)} pièce${panier.prix - (me.coins || 0) > 1 ? "s" : ""} pour ${panier.avatar} — retourne jouer !</span>
+           <button class="btn-ghost" onclick="panier=null;renderBoutique()">ok</button>`
+        : `<button class="btn" onclick="acheter()">Acheter ${panier.avatar} pour ${panier.prix} 🪙</button>
+           <button class="btn-ghost" onclick="panier=null;renderBoutique()">non</button>`) +
+        `</div>`;
+    }
+
+    html += `<button class="btn-ghost" style="width:100%;margin-top:14px;" onclick="closeAvatarModal()">fermer</button>`;
+    $("boutiqueBox").innerHTML = html;
+  }
+
+  function preparerAchat(avatar, prix) {
+    panier = { avatar, prix };
+    renderBoutique();
+    const box = $("boutiqueBox");
+    box.scrollTop = box.scrollHeight;
+  }
+
+  async function chooseAvatar(a) {
     const before = me.avatar;
     me.avatar = a;
     showMain();
+    renderBoutique();
     try {
       await updatePlayer(me.id, { avatar: a });
       setSession({ id: me.id, pseudo: me.pseudo, avatar: a, points: me.points });
-    } catch { me.avatar = before; showMain(); }
+    } catch { me.avatar = before; showMain(); renderBoutique(); }
+  }
+
+  async function acheter() {
+    if (!panier || (me.coins || 0) < panier.prix) return;
+    const a = panier.avatar;
+    const nouveauxCoins = (me.coins || 0) - panier.prix;
+    const nouveauxAvatars = [...new Set([...(me.avatars || []), a])];
+    try {
+      await updatePlayer(me.id, { coins: nouveauxCoins, avatars: nouveauxAvatars, avatar: a });
+      me = { ...me, coins: nouveauxCoins, avatars: nouveauxAvatars, avatar: a };
+      setSession({ id: me.id, pseudo: me.pseudo, avatar: a, points: me.points });
+      panier = null;
+      showMain();
+      renderBoutique();
+    } catch { panier = null; renderBoutique(); }
+  }
+
+  // ——— Coffre mystère ———
+  const COFFRE_POIDS = [60, 30, 8, 2];
+  async function openChest() {
+    if ((me.coins || 0) < COFFRE_PRIX) return;
+    const manq = manquants();
+    const tiers = manq.map((l, i) => ({ i, l })).filter(t => t.l.length);
+    if (!tiers.length) return;
+    const totalPoids = tiers.reduce((a, t) => a + COFFRE_POIDS[t.i], 0);
+    let r = Math.random() * totalPoids;
+    let choix = tiers[0];
+    for (const t of tiers) { r -= COFFRE_POIDS[t.i]; if (r <= 0) { choix = t; break; } }
+    const avatar = choix.l[Math.floor(Math.random() * choix.l.length)];
+    const nouveauxCoins = (me.coins || 0) - COFFRE_PRIX;
+    const nouveauxAvatars = [...new Set([...(me.avatars || []), avatar])];
+    try {
+      await updatePlayer(me.id, { coins: nouveauxCoins, avatars: nouveauxAvatars });
+      me = { ...me, coins: nouveauxCoins, avatars: nouveauxAvatars };
+    } catch { return; }
+
+    // suspense…
+    $("revealBox").innerHTML = `
+      <h2 style="margin:6px 0 18px;">Le coffre s'ouvre…</h2>
+      <div class="chest-shake" style="display:inline-block;">${COFFRE_SVG.replace('width="86" height="70"', 'width="150" height="122"')}</div>`;
+    $("revealModal").hidden = false;
+    setTimeout(() => {
+      const [nom, couleur] = RARETES[choix.i];
+      $("revealBox").innerHTML = `
+        <div style="font-size:30px;">✨ ✨ ✨</div>
+        <div class="medaillon">${avatar}</div>
+        <span class="rarete" style="background:${couleur};color:var(--bg);">${nom}</span>
+        <p style="color:var(--cream);margin:14px 0 4px;">${avatar} rejoint ta collection !</p>
+        <p style="color:var(--muted);font-size:14px;margin:0 0 16px;">Il te reste ${me.coins} pièce${me.coins > 1 ? "s" : ""} 🪙</p>
+        <button class="btn" onclick="closeReveal();renderBoutique();showMain();$('avatarModal').hidden=false;">Super !</button>`;
+    }, 1300);
   }
 
   // ——— Classement ———
@@ -809,8 +1060,9 @@
     me = s;
     showMain(); // affichage immédiat, puis rafraîchissement des points
     try {
-      const row = await fetchPlayer(s.id);
+      let row = await fetchPlayer(s.id);
       if (!row) return logout();
+      row = await touchDay(row);
       me = row;
       setSession({ id: row.id, pseudo: row.pseudo, avatar: row.avatar, points: row.points });
       showMain();
