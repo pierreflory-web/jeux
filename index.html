@@ -428,6 +428,77 @@
     font-weight: bold; font-size: 17px; letter-spacing: 1px;
   }
 
+  /* Cartes quotidiennes (défi + mini-jeu) */
+  .daily {
+    width: 100%; max-width: 460px;
+    border-radius: 16px;
+    padding: 14px 18px;
+    margin-top: 14px;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .daily .em { font-size: 30px; flex: none; }
+  .daily .tx { flex: 1; min-width: 0; }
+  .daily .tx b { display: block; font-size: 16px; }
+  .daily .tx span { display: block; font-size: 14px; margin-top: 3px; }
+  .daily.defi { background: #3d1f5e; border: 2px solid #ff9dd6; }
+  .daily.defi b { color: #ff9dd6; }
+  .daily.defi span { color: #e8d9f5; }
+  .daily.mini { background: #153c30; border: 2px solid #2ee6a8; }
+  .daily.mini b { color: #2ee6a8; }
+  .daily.mini span { color: #c9e8dd; }
+  .daily.mini button {
+    border: 0; border-radius: 10px; background: #2ee6a8; color: #0d2a1c;
+    font-family: inherit; font-weight: bold; font-size: 15px;
+    padding: 10px 16px; cursor: pointer; flex: none;
+  }
+  .daily.mini button.fait { background: none; border: 1px solid #2ee6a8; color: #2ee6a8; font-weight: normal; font-style: italic; }
+
+  /* Onglets classement */
+  .tabs { display: flex; gap: 10px; width: 100%; max-width: 460px; margin-top: 14px; }
+  .tabs button {
+    flex: 1; padding: 12px; border-radius: 12px;
+    border: 1px solid var(--border); background: var(--bg-card);
+    color: var(--muted); font-family: inherit; font-size: 16px; cursor: pointer;
+  }
+  .tabs button.on { background: var(--gold); color: var(--bg); font-weight: bold; border-color: var(--gold); }
+  .brow .gift {
+    flex: none; width: 36px; height: 36px; border-radius: 50%;
+    border: 1px solid var(--border); background: var(--bg-card-hover);
+    font-size: 17px; cursor: pointer;
+  }
+  .gift-bar {
+    width: 100%; max-width: 460px; margin-top: 16px;
+    border: 2px solid #ff9dd6; border-radius: 16px; background: #3d1f5e;
+    padding: 16px; text-align: center;
+  }
+  .gift-bar b { color: #ff9dd6; font-size: 17px; }
+  .gift-bar .montants { display: flex; gap: 10px; margin-top: 12px; }
+  .gift-bar .montants button {
+    flex: 1; padding: 12px; border-radius: 10px;
+    border: 1px solid var(--border); background: var(--bg-card);
+    color: var(--muted); font-family: inherit; font-size: 16px; cursor: pointer;
+  }
+  .gift-bar .montants button:not([disabled]):active { background: var(--gold); color: var(--bg); }
+  .gift-bar .montants button[disabled] { opacity: .4; }
+  .gift-bar .msg2 { color: #e8d9f5; font-size: 13.5px; font-style: italic; margin: 10px 0 0; }
+
+  /* Badges */
+  .badges-grid {
+    width: 100%; max-width: 460px;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+    margin-top: 20px;
+  }
+  .badge {
+    border-radius: 16px; padding: 14px 6px; text-align: center;
+    background: var(--bg-card-hover); border: 2px solid var(--gold);
+  }
+  .badge .be { font-size: 36px; display: block; }
+  .badge .bn { font-size: 13px; font-weight: bold; color: var(--cream); display: block; margin-top: 8px; }
+  .badge .bd { font-size: 11px; color: var(--muted); display: block; margin-top: 4px; font-style: italic; }
+  .badge.verrou { background: #241335; border: 2px dashed var(--border); }
+  .badge.verrou .be { opacity: .35; }
+  .badge.verrou .bn { color: var(--dim); font-weight: normal; }
+
   .center-narrow { width: 100%; max-width: 400px; display: flex; flex-direction: column; align-items: center; }
   .spin { color: var(--muted); font-style: italic; text-align: center; margin-top: 40vh; }
 </style>
@@ -511,13 +582,15 @@
 <div id="scr-main" class="screen" hidden>
   <div class="topbar">
     <button class="avatar-btn" id="meAvatar" onclick="openAvatarModal()">🙂</button>
-    <div class="who">
+    <div class="who" onclick="showBadges()" style="cursor:pointer;">
       <b id="meName">Salut !</b>
       <small id="mePoints">⭐ 0 point</small>
     </div>
     <button class="switch" onclick="logout()">changer<br>de joueur</button>
   </div>
-  <header style="margin:26px 0 32px;">
+  <div class="daily" id="defiCard"></div>
+  <div class="daily" id="miniCard"></div>
+  <header style="margin:20px 0 28px;">
     <span class="stars"><span>⭐️</span><span>⭐️</span><span>⭐️</span></span>
     <h1>Mes Jeux</h1>
     <p class="subtitle">Choisissez votre partie, étranger…</p>
@@ -534,9 +607,34 @@
     <button class="back" onclick="showMain()">←</button>
     <h1>🏆 Classement</h1>
   </div>
+  <div class="tabs">
+    <button id="tabSemaine" class="on" onclick="boardTab('semaine')">Cette semaine</button>
+    <button id="tabGeneral" onclick="boardTab('general')">Général</button>
+  </div>
+  <p class="subtitle" id="boardSub" style="margin:10px 0 0;"></p>
   <div class="podium" id="podium"></div>
   <div class="board-list" id="boardList"></div>
+  <div id="giftBar"></div>
   <p class="subtitle" style="margin-top:26px;">Les points se gagnent en jouant aux jeux</p>
+</div>
+
+<!-- Mini-jeu du jour -->
+<div id="scr-mini" class="screen" hidden>
+  <div class="board-head">
+    <button class="back" onclick="showMain()">←</button>
+    <h1 id="mjTitre">Mini-jeu</h1>
+  </div>
+  <div id="mjZone" style="width:100%;max-width:460px;"></div>
+</div>
+
+<!-- Badges -->
+<div id="scr-badges" class="screen" hidden>
+  <div class="board-head">
+    <button class="back" onclick="showMain()">←</button>
+    <h1>🎖️ Tes badges</h1>
+  </div>
+  <p class="subtitle" id="badgesSub" style="margin:4px 0 0;"></p>
+  <div class="badges-grid" id="badgesGrid"></div>
 </div>
 
 <!-- Modal boutique -->
@@ -549,6 +647,8 @@
   <div class="box reveal" id="revealBox"></div>
 </div>
 
+<script src="points.js"></script>
+<script src="minijeux.js"></script>
 <script>
   // ——— Configuration ———
   const SB_URL = "https://xmuohrglecqtpoyzssfj.supabase.co/rest/v1";
@@ -584,7 +684,8 @@
   ];
   const BOUTIQUE = [
     { nom: "À débloquer", prix: 20,
-      avatars: ["🦁","🐵","🐻","🐷","🐮","🐰","🐭","🐣","🐧","🐦","🦆","🦢","🐴","🦓","🦒","🐘","🦏","🐪","🐢","🐍","🦎","🐙","🦑","🦀"] },
+      avatars: ["🦁","🐵","🐻","🐷","🐮","🐰","🐭","🐣","🐧","🐦","🦆","🦢","🐴","🦓","🦒","🐘","🦏","🐪","🐢","🐍","🦎","🐙","🦑","🦀",
+                "❤️","🧡","💛","💚","💙","🩵","💜","🩷"] },
     { nom: "Rares", prix: 50,
       avatars: ["🤠","🤖","🧙","🦸","🥷","🧛","🧟","🦇","🧚","🧜‍♀️","👻","🎃","🤡","🏴‍☠️","⚡️","🌈","🍕","🍩","🍦","🎸","🎮","⚽️","🏀","🎯","🛸","🦈"] },
     { nom: "Légendaires", prix: 100,
@@ -629,7 +730,7 @@
     if (!res.ok) throw new Error("supabase " + res.status + " " + await res.text());
     return res.status === 204 ? null : res.json();
   }
-  const fetchPlayers = () => sb("/players?select=id,pseudo,avatar,points&order=points.desc,pseudo.asc");
+  const fetchPlayers = () => sb("/players?select=id,pseudo,avatar,points,week_points,week_id,badges&order=points.desc,pseudo.asc");
   const fetchPlayer  = id => sb(`/players?select=*&id=eq.${id}`).then(r => r[0]);
   const findPseudo   = p  => sb(`/players?select=id&pseudo=ilike.${encodeURIComponent(p.replaceAll("%","").replaceAll("*",""))}`);
   const insertPlayer = row => sb("/players", { method: "POST", body: JSON.stringify(row), headers: { "Prefer": "return=representation" } }).then(r => r[0]);
@@ -646,7 +747,7 @@
   const hashAnswer = (pseudo, a) => sha256("rep:" + pseudo.toLowerCase() + ":" + normAnswer(a));
 
   const $ = id => document.getElementById(id);
-  const SCREENS = ["scr-load","scr-who","scr-pin","scr-new","scr-forgot","scr-main","scr-board"];
+  const SCREENS = ["scr-load","scr-who","scr-pin","scr-new","scr-forgot","scr-main","scr-board","scr-mini","scr-badges"];
   function show(id) { SCREENS.forEach(s => $(s).hidden = (s !== id)); window.scrollTo(0, 0); }
 
   function getSession() {
@@ -843,7 +944,66 @@
     $("meAvatar").textContent = me.avatar;
     $("meName").textContent = `Salut ${me.pseudo} !`;
     $("mePoints").textContent = `⭐ ${me.points} pts · 🪙 ${me.coins || 0} · 📅 ${me.days || 0} j`;
+    const defi = MesJeux.defiDuJour();
+    $("defiCard").className = "daily defi";
+    $("defiCard").innerHTML = `<span class="em">🎯</span><span class="tx"><b>Défi du jour</b><span>${defi.label}<br><b style="display:inline;color:#ffd27a;">Récompense : ${defi.texte}</b></span></span>`;
+    const mj = MiniJeux.jeuDuJour();
+    const fait = (me.wins || {}).mini === MesJeux.today();
+    $("miniCard").className = "daily mini";
+    $("miniCard").innerHTML = `<span class="em">${mj.emoji}</span><span class="tx"><b>${mj.nom}</b><span>${fait ? "Réussi aujourd'hui — bravo !" : "Ton mini-jeu du jour t'attend !"}</span></span>
+      <button class="${fait ? "fait" : ""}" onclick="showMini()">${fait ? "rejouer" : "Jouer"}</button>`;
     show("scr-main");
+  }
+
+  // ——— Mini-jeu du jour ———
+  function showMini() {
+    const mj = MiniJeux.jeuDuJour();
+    $("mjTitre").textContent = `${mj.emoji} ${mj.nom}`;
+    $("mjZone").innerHTML = "";
+    show("scr-mini");
+    MiniJeux.lancer($("mjZone"), miniFini);
+  }
+  async function miniFini(success, customLines) {
+    if (!success) return;
+    const dejaFait = (me.wins || {}).mini === MesJeux.today();
+    if (!dejaFait) {
+      await MesJeux.award("mini", customLines || [[15, "Mini-jeu du jour réussi"]]);
+      const stats = { ...(me.stats || {}) };
+      stats.mj = (stats.mj || 0) + 1;
+      try { await updatePlayer(me.id, { stats }); } catch {}
+      me = { ...me, stats };
+      if (stats.mj >= 10) accorderBadge("habitue");
+      await refreshMe();
+    }
+  }
+
+  // ——— Badges ———
+  async function accorderBadge(id) {
+    const badges = (me.badges || []).slice();
+    if (badges.includes(id)) return;
+    badges.push(id);
+    try { await updatePlayer(me.id, { badges }); } catch { return; }
+    me = { ...me, badges };
+    const [em, nom] = MesJeux.BADGES[id];
+    $("revealBox").innerHTML = `
+      <div style="font-size:34px;">🎖️ ✨ 🎖️</div>
+      <h2 style="margin:10px 0 4px;">Nouveau badge !</h2>
+      <div class="medaillon">${em}</div>
+      <p style="color:var(--gold);font-size:20px;font-weight:bold;margin:0 0 16px;">${nom}</p>
+      <button class="btn" onclick="closeReveal()">Génial !</button>`;
+    $("revealModal").hidden = false;
+  }
+  function showBadges() {
+    const acquis = me.badges || [];
+    const tous = Object.entries(MesJeux.BADGES);
+    $("badgesSub").textContent = `${acquis.length} sur ${tous.length} — continue, shérif !`;
+    $("badgesGrid").innerHTML = tous.map(([id, [em, nom, desc]]) => `
+      <div class="badge ${acquis.includes(id) ? "" : "verrou"}">
+        <span class="be">${em}</span>
+        <span class="bn">${nom}</span>
+        <span class="bd">${desc}</span>
+      </div>`).join("");
+    show("scr-badges");
   }
 
   // ——— Jours de jeu et fidélité ———
@@ -855,6 +1015,8 @@
     try { await updatePlayer(row.id, { days, last_day: t }); } catch { return row; }
     const nouveaux = FIDELITE.filter(f => f.days > before && f.days <= days).flatMap(f => f.avatars);
     if (nouveaux.length) setTimeout(() => fanfare(days, nouveaux), 600);
+    if (days >= 7) setTimeout(() => accorderBadge("fidele"), nouveaux.length ? 4000 : 1200);
+    if (days >= 30) setTimeout(() => accorderBadge("veteran"), nouveaux.length ? 5000 : 2200);
     return { ...row, days, last_day: t };
   }
   function fanfare(days, avatars) {
@@ -978,6 +1140,7 @@
       panier = null;
       showMain();
       renderBoutique();
+      if (ownedAvatars(me).length >= 10) accorderBadge("collectionneur");
     } catch { panier = null; renderBoutique(); }
   }
 
@@ -1014,17 +1177,32 @@
         <p style="color:var(--cream);margin:14px 0 4px;">${avatar} rejoint ta collection !</p>
         <p style="color:var(--muted);font-size:14px;margin:0 0 16px;">Il te reste ${me.coins} pièce${me.coins > 1 ? "s" : ""} 🪙</p>
         <button class="btn" onclick="closeReveal();renderBoutique();showMain();$('avatarModal').hidden=false;">Super !</button>`;
+      if (ownedAvatars(me).length >= 10) setTimeout(() => accorderBadge("collectionneur"), 4500);
     }, 1300);
   }
 
   // ——— Classement ———
+  let boardMode = "semaine";
+  let boardRows = [];
+  let giftCible = null;
+  function boardTab(mode) { boardMode = mode; giftCible = null; showBoard(); }
+
   async function showBoard() {
     show("scr-board");
+    $("tabSemaine").className = boardMode === "semaine" ? "on" : "";
+    $("tabGeneral").className = boardMode === "general" ? "on" : "";
+    $("boardSub").textContent = boardMode === "semaine" ? "Remise à zéro chaque lundi — que le meilleur gagne !" : "Depuis le tout début";
     $("podium").innerHTML = "";
+    $("giftBar").innerHTML = "";
     $("boardList").innerHTML = "<p class='subtitle'>Chargement…</p>";
     let list;
     try { list = await fetchPlayers(); }
     catch { $("boardList").innerHTML = "<p class='msg'>Impossible de charger le classement.</p>"; return; }
+    couronnerChampion(list);
+    const wk = MesJeux.weekId();
+    const score = p => boardMode === "semaine" ? (p.week_id === wk ? (p.week_points || 0) : 0) : p.points;
+    list.sort((a, b) => score(b) - score(a) || a.pseudo.localeCompare(b.pseudo));
+    boardRows = list;
     const top = list.slice(0, 3);
     const slots = [ { p: top[1], cls: "p2", rk: 2 }, { p: top[0], cls: "p1", rk: 1 }, { p: top[2], cls: "p3", rk: 3 } ];
     $("podium").innerHTML = slots.map(s => !s.p ? "<div class='pod'></div>" : `
@@ -1032,15 +1210,64 @@
         <div class="crown">${s.rk === 1 ? "👑" : ""}</div>
         <span class="pav">${s.p.avatar}</span>
         <div class="pnm">${esc(s.p.pseudo)}${me && s.p.id === me.id ? " (toi)" : ""}</div>
-        <div class="blk"><span class="rk">${s.rk}</span><span class="pt">${s.p.points} pts</span></div>
+        <div class="blk"><span class="rk">${s.rk}</span><span class="pt">${score(s.p)} pts</span></div>
       </div>`).join("");
-    $("boardList").innerHTML = list.slice(3).map((p, i) => `
+    $("boardList").innerHTML = list.map((p, i) => `
       <div class="brow ${me && p.id === me.id ? "me" : ""}">
-        <span class="rk">${i + 4}</span>
+        <span class="rk">${i + 1}</span>
         <span class="av">${p.avatar}</span>
         <span class="nm">${esc(p.pseudo)}${me && p.id === me.id ? " (toi)" : ""}</span>
-        <span class="pt">${p.points} pts</span>
+        <span class="pt">${score(p)} pts</span>
+        ${me && p.id !== me.id ? `<button class="gift" onclick="ouvrirCadeau('${p.id}')" title="Offrir des pièces">🎁</button>` : ""}
       </div>`).join("");
+    if (giftCible) renderGiftBar();
+  }
+
+  // Badge Champion : à la bascule de semaine, couronne le meilleur de la semaine passée
+  async function couronnerChampion(list) {
+    const wk = MesJeux.weekId();
+    const anciens = list.filter(p => p.week_id && p.week_id !== wk && (p.week_points || 0) > 0);
+    if (!anciens.length) return;
+    const derniereSemaine = anciens.map(p => p.week_id).sort().pop();
+    const candidats = anciens.filter(p => p.week_id === derniereSemaine);
+    const gagnant = candidats.sort((a, b) => (b.week_points || 0) - (a.week_points || 0))[0];
+    if (gagnant && !(gagnant.badges || []).includes("champion")) {
+      try { await updatePlayer(gagnant.id, { badges: [...(gagnant.badges || []), "champion"] }); } catch {}
+    }
+  }
+
+  // ——— Cadeaux ———
+  function ouvrirCadeau(id) {
+    giftCible = boardRows.find(p => p.id === id);
+    renderGiftBar();
+    $("giftBar").scrollIntoView({ block: "nearest" });
+  }
+  function renderGiftBar() {
+    const dejaOffert = (me.stats || {}).gift_day === MesJeux.today();
+    $("giftBar").innerHTML = `<div class="gift-bar">
+      <b>🎁 Offrir des pièces à ${esc(giftCible.pseudo)} ?</b>
+      ${dejaOffert
+        ? `<p class="msg2">Tu as déjà offert un cadeau aujourd'hui — reviens demain !</p>`
+        : `<div class="montants">${[5, 10, 20].map(n =>
+            `<button ${(me.coins || 0) < n ? "disabled" : ""} onclick="offrir(${n})">${n} 🪙</button>`).join("")}</div>
+           <p class="msg2">Un cadeau par jour — tu as ${me.coins || 0} 🪙</p>`}
+      <button class="btn-ghost" onclick="giftCible=null;$('giftBar').innerHTML='';">annuler</button>
+    </div>`;
+  }
+  async function offrir(n) {
+    if ((me.coins || 0) < n || !giftCible) return;
+    const stats = { ...(me.stats || {}), gift_day: MesJeux.today() };
+    try {
+      const cible = await fetchPlayer(giftCible.id);
+      await updatePlayer(me.id, { coins: (me.coins || 0) - n, stats });
+      await updatePlayer(giftCible.id, { coins: (cible.coins || 0) + n });
+      me = { ...me, coins: (me.coins || 0) - n, stats };
+      const nom = giftCible.pseudo;
+      giftCible = null;
+      $("giftBar").innerHTML = `<div class="gift-bar"><b>🎁 ${n} pièces offertes à ${esc(nom)} — quel grand cœur !</b></div>`;
+      setTimeout(() => { if ($("giftBar")) $("giftBar").innerHTML = ""; }, 4000);
+      accorderBadge("genereux");
+    } catch { $("giftBar").innerHTML = "<p class='msg'>Petit souci, réessaie.</p>"; }
   }
 
   // ——— Jeux ———
