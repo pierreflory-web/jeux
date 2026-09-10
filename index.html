@@ -934,6 +934,7 @@
     showMain();
     me = await touchDay(me);
     showMain();
+    setTimeout(verifierCadeauxRecus, 900);
   }
   function logout() {
     me = null;
@@ -975,6 +976,25 @@
       if (stats.mj >= 10) accorderBadge("habitue");
       await refreshMe();
     }
+  }
+
+  // ——— Cadeaux reçus : annonce à l'arrivée ———
+  async function verifierCadeauxRecus() {
+    const cadeaux = (me.stats || {}).cadeaux;
+    if (!cadeaux || !cadeaux.length) return;
+    const stats = { ...(me.stats || {}), cadeaux: [] };
+    try { await updatePlayer(me.id, { stats }); } catch { return; }
+    me = { ...me, stats };
+    const total = cadeaux.reduce((a, c) => a + c.n, 0);
+    const lignes = cadeaux.map(c => `<b style="color:var(--gold);">${esc(c.de)}</b> t'a offert <b style="color:var(--gold);">${c.n} pièce${c.n > 1 ? "s" : ""} 🪙</b>`);
+    $("revealBox").innerHTML = `
+      <div style="font-size:34px;">🎁 ✨ 🎁</div>
+      <h2 style="margin:10px 0 4px;">Surprise !</h2>
+      <div class="medaillon">🎁</div>
+      <p style="color:var(--cream);font-size:18px;margin:0;line-height:1.6;">${lignes.join("<br>")}</p>
+      <p style="color:var(--muted);font-size:14px;margin:10px 0 16px;">Tu as maintenant ${me.coins || 0} pièce${(me.coins || 0) > 1 ? "s" : ""} 🪙 — quel${cadeaux.length > 1 ? "s" : ""} grand${cadeaux.length > 1 ? "s" : ""} cœur${cadeaux.length > 1 ? "s" : ""} !</p>
+      <button class="btn" onclick="closeReveal()">Merci ! 💛</button>`;
+    $("revealModal").hidden = false;
   }
 
   // ——— Badges ———
@@ -1260,7 +1280,9 @@
     try {
       const cible = await fetchPlayer(giftCible.id);
       await updatePlayer(me.id, { coins: (me.coins || 0) - n, stats });
-      await updatePlayer(giftCible.id, { coins: (cible.coins || 0) + n });
+      const statsCible = { ...(cible.stats || {}) };
+      statsCible.cadeaux = [...(statsCible.cadeaux || []), { de: me.pseudo, n }];
+      await updatePlayer(giftCible.id, { coins: (cible.coins || 0) + n, stats: statsCible });
       me = { ...me, coins: (me.coins || 0) - n, stats };
       const nom = giftCible.pseudo;
       giftCible = null;
@@ -1291,6 +1313,7 @@
       setSession({ id: row.id, pseudo: row.pseudo, avatar: row.avatar, points: row.points });
       if (!$("scr-main").hidden) showMain();
       if (!$("scr-board").hidden) showBoard();
+      verifierCadeauxRecus();
     } catch {}
   }
   window.addEventListener("pageshow", e => { if (e.persisted) refreshMe(); });
@@ -1310,6 +1333,7 @@
       me = row;
       setSession({ id: row.id, pseudo: row.pseudo, avatar: row.avatar, points: row.points });
       showMain();
+      setTimeout(verifierCadeauxRecus, 900);
     } catch {}
   })();
 </script>
