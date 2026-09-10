@@ -105,8 +105,10 @@
         if (gameId === "cowboy" && extra.secs != null && extra.secs < 300) gagne("eclair");
         if (gameId === "quest" && lines.some(function (l) { return l[1].indexOf("premier coup") !== -1; })) gagne("sansfaute");
       }
-      const coinsApres = (row.coins || 0) + pieces;
+      // chaque badge gagné rapporte 10 pièces
+      let coinsApres = (row.coins || 0) + pieces + nouveaux.length * 10;
       if (coinsApres >= 100) gagne("econome");
+      coinsApres = (row.coins || 0) + pieces + nouveaux.length * 10;
 
       const wk = weekId();
       await sb("/players?id=eq." + s.id, {
@@ -148,7 +150,7 @@
             (l[0] ? "+" + l[0] + " — " : "") + l[1] + "</div>";
         }).join("") +
         (nouveauxBadges || []).map(function (b) {
-          return "<div style='color:#2ee6a8;font-size:14px;'>🎖️ Nouveau badge : " + BADGES[b][0] + " " + BADGES[b][1] + " !</div>";
+          return "<div style='color:#2ee6a8;font-size:14px;'>🎖️ Nouveau badge : " + BADGES[b][0] + " " + BADGES[b][1] + " ! (+10 🪙)</div>";
         }).join("") +
         "<div style='margin-top:6px;color:#ffd27a;'>🪙 +" + pieces + " pièce" + (pieces > 1 ? "s" : "") +
         " — Total : " + total + " pts · " + totalPieces + " pièce" + (totalPieces > 1 ? "s" : "") + "</div>";

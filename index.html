@@ -1002,14 +1002,17 @@
     const badges = (me.badges || []).slice();
     if (badges.includes(id)) return;
     badges.push(id);
-    try { await updatePlayer(me.id, { badges }); } catch { return; }
-    me = { ...me, badges };
+    const coinsApres = (me.coins || 0) + 10;
+    try { await updatePlayer(me.id, { badges, coins: coinsApres }); } catch { return; }
+    me = { ...me, badges, coins: coinsApres };
+    if (!$("scr-main").hidden) showMain();
     const [em, nom] = MesJeux.BADGES[id];
     $("revealBox").innerHTML = `
       <div style="font-size:34px;">🎖️ ✨ 🎖️</div>
       <h2 style="margin:10px 0 4px;">Nouveau badge !</h2>
       <div class="medaillon">${em}</div>
-      <p style="color:var(--gold);font-size:20px;font-weight:bold;margin:0 0 16px;">${nom}</p>
+      <p style="color:var(--gold);font-size:20px;font-weight:bold;margin:0 0 6px;">${nom}</p>
+      <p style="color:#2ee6a8;font-size:16px;margin:0 0 16px;">+10 pièces 🪙 de récompense !</p>
       <button class="btn" onclick="closeReveal()">Génial !</button>`;
     $("revealModal").hidden = false;
   }
@@ -1270,9 +1273,20 @@
         ? `<p class="msg2">Tu as déjà offert un cadeau aujourd'hui — reviens demain !</p>`
         : `<div class="montants">${[5, 10, 20].map(n =>
             `<button ${(me.coins || 0) < n ? "disabled" : ""} onclick="offrir(${n})">${n} 🪙</button>`).join("")}</div>
-           <p class="msg2">Un cadeau par jour — tu as ${me.coins || 0} 🪙</p>`}
+           <div class="montants" style="margin-top:10px;">
+             <input class="field" id="giftLibre" type="number" inputmode="numeric" min="1" max="${me.coins || 0}"
+               placeholder="autre montant…" style="flex:2;padding:10px 14px;font-size:16px;">
+             <button style="flex:1;" ${(me.coins || 0) < 1 ? "disabled" : ""} onclick="offrirLibre()">Envoyer</button>
+           </div>
+           <p class="msg2" id="giftMsg">Un cadeau par jour — tu as ${me.coins || 0} 🪙</p>`}
       <button class="btn-ghost" onclick="giftCible=null;$('giftBar').innerHTML='';">annuler</button>
     </div>`;
+  }
+  function offrirLibre() {
+    const n = parseInt($("giftLibre").value, 10);
+    if (!n || n < 1) { $("giftMsg").textContent = "Indique un montant (au moins 1 pièce) !"; return; }
+    if (n > (me.coins || 0)) { $("giftMsg").textContent = `Tu n'as que ${me.coins || 0} 🪙 — vise plus modeste !`; return; }
+    offrir(n);
   }
   async function offrir(n) {
     if ((me.coins || 0) < n || !giftCible) return;
