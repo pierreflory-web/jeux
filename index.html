@@ -630,8 +630,8 @@
 <!-- Badges -->
 <div id="scr-badges" class="screen" hidden>
   <div class="board-head">
-    <button class="back" onclick="showMain()">←</button>
-    <h1>🎖️ Tes badges</h1>
+    <button class="back" onclick="badgesRetour()">←</button>
+    <h1 id="badgesTitre">🎖️ Tes badges</h1>
   </div>
   <p class="subtitle" id="badgesSub" style="margin:4px 0 0;"></p>
   <div class="badges-grid" id="badgesGrid"></div>
@@ -730,7 +730,7 @@
     if (!res.ok) throw new Error("supabase " + res.status + " " + await res.text());
     return res.status === 204 ? null : res.json();
   }
-  const fetchPlayers = () => sb("/players?select=id,pseudo,avatar,points,week_points,week_id,badges&order=points.desc,pseudo.asc");
+  const fetchPlayers = () => sb("/players?select=id,pseudo,avatar,points,week_points,week_id,badges,stats&order=points.desc,pseudo.asc");
   const fetchPlayer  = id => sb(`/players?select=*&id=eq.${id}`).then(r => r[0]);
   const findPseudo   = p  => sb(`/players?select=id&pseudo=ilike.${encodeURIComponent(p.replaceAll("%","").replaceAll("*",""))}`);
   const insertPlayer = row => sb("/players", { method: "POST", body: JSON.stringify(row), headers: { "Prefer": "return=representation" } }).then(r => r[0]);
@@ -934,7 +934,8 @@
     showMain();
     me = await touchDay(me);
     showMain();
-    setTimeout(verifierCadeauxRecus, 900);
+    try { await couronnerChampion(await fetchPlayers()); } catch {}
+    setTimeout(verifierChampion, 700);
   }
   function logout() {
     me = null;
@@ -1016,10 +1017,14 @@
       <button class="btn" onclick="closeReveal()">Génial !</button>`;
     $("revealModal").hidden = false;
   }
-  function showBadges() {
-    const acquis = me.badges || [];
+  let badgesFrom = "main";
+  function badgesRetour() { badgesFrom === "board" ? showBoard() : showMain(); }
+  function renderBadges(pseudo, acquis, estMoi) {
     const tous = Object.entries(MesJeux.BADGES);
-    $("badgesSub").textContent = `${acquis.length} sur ${tous.length} — continue, ${me.pseudo} !`;
+    $("badgesTitre").textContent = estMoi ? "🎖️ Tes badges" : `🎖️ Badges de ${pseudo}`;
+    $("badgesSub").textContent = estMoi
+      ? `${acquis.length} sur ${tous.length} — continue, ${pseudo} !`
+      : `${acquis.length} sur ${tous.length}`;
     $("badgesGrid").innerHTML = tous.map(([id, [em, nom, desc]]) => `
       <div class="badge ${acquis.includes(id) ? "" : "verrou"}">
         <span class="be">${em}</span>
@@ -1027,6 +1032,16 @@
         <span class="bd">${desc}</span>
       </div>`).join("");
     show("scr-badges");
+  }
+  function showBadges() {
+    badgesFrom = "main";
+    renderBadges(me.pseudo, me.badges || [], true);
+  }
+  function showBadgesDe(id) {
+    const p = boardRows.find(r => r.id === id);
+    if (!p) return;
+    badgesFrom = "board";
+    renderBadges(p.pseudo, p.badges || [], me && p.id === me.id);
   }
 
   // ——— Jours de jeu et fidélité ———
@@ -1229,24 +1244,26 @@
     const top = list.slice(0, 3);
     const slots = [ { p: top[1], cls: "p2", rk: 2 }, { p: top[0], cls: "p1", rk: 1 }, { p: top[2], cls: "p3", rk: 3 } ];
     $("podium").innerHTML = slots.map(s => !s.p ? "<div class='pod'></div>" : `
-      <div class="pod ${s.cls}">
+      <div class="pod ${s.cls}" style="cursor:pointer;" onclick="showBadgesDe('${s.p.id}')">
         <div class="crown">${s.rk === 1 ? "👑" : ""}</div>
         <span class="pav">${s.p.avatar}</span>
         <div class="pnm">${esc(s.p.pseudo)}${me && s.p.id === me.id ? " (toi)" : ""}</div>
         <div class="blk"><span class="rk">${s.rk}</span><span class="pt">${score(s.p)} pts</span></div>
       </div>`).join("");
+    const marqueChamp = p => boardMode === "semaine" && (p.stats || {}).champ_week === wk;
     $("boardList").innerHTML = list.map((p, i) => `
       <div class="brow ${me && p.id === me.id ? "me" : ""}">
         <span class="rk">${i + 1}</span>
-        <span class="av">${p.avatar}</span>
-        <span class="nm">${esc(p.pseudo)}${me && p.id === me.id ? " (toi)" : ""}</span>
+        <span class="av" style="cursor:pointer;" onclick="showBadgesDe('${p.id}')">${p.avatar}</span>
+        <span class="nm" style="cursor:pointer;" onclick="showBadgesDe('${p.id}')">${esc(p.pseudo)}${me && p.id === me.id ? " (toi)" : ""}${marqueChamp(p) ? " 🏆" : ""}${marqueChamp(p) ? `<span style="display:block;font-size:12px;color:#2ee6a8;font-style:italic;">avance de champion</span>` : ""}</span>
         <span class="pt">${score(p)} pts</span>
         ${me && p.id !== me.id ? `<button class="gift" onclick="ouvrirCadeau('${p.id}')" title="Offrir des pièces">🎁</button>` : ""}
       </div>`).join("");
     if (giftCible) renderGiftBar();
   }
 
-  // Badge Champion : à la bascule de semaine, couronne le meilleur de la semaine passée
+  // Champion : à la bascule de semaine, couronne le meilleur de la semaine passée.
+  // Récompense : badge (la 1re fois), +10 pièces, et 35 points d'avance pour la nouvelle semaine.
   async function couronnerChampion(list) {
     const wk = MesJeux.weekId();
     const anciens = list.filter(p => p.week_id && p.week_id !== wk && (p.week_points || 0) > 0);
@@ -1254,9 +1271,44 @@
     const derniereSemaine = anciens.map(p => p.week_id).sort().pop();
     const candidats = anciens.filter(p => p.week_id === derniereSemaine);
     const gagnant = candidats.sort((a, b) => (b.week_points || 0) - (a.week_points || 0))[0];
-    if (gagnant && !(gagnant.badges || []).includes("champion")) {
-      try { await updatePlayer(gagnant.id, { badges: [...(gagnant.badges || []), "champion"] }); } catch {}
-    }
+    if (!gagnant) return;
+    try {
+      const row = await fetchPlayer(gagnant.id);
+      if (!row || row.week_id === wk) return; // déjà couronné entre-temps
+      const dejaBadge = (row.badges || []).includes("champion");
+      const badges = dejaBadge ? (row.badges || []) : [...(row.badges || []), "champion"];
+      const stats = { ...(row.stats || {}), champ_week: wk, champ: { pts: row.week_points || 0, badge: !dejaBadge } };
+      await updatePlayer(gagnant.id, {
+        badges,
+        coins: (row.coins || 0) + 10 + (dejaBadge ? 0 : 10),
+        week_points: 35,
+        week_id: wk,
+        stats
+      });
+      if (me && me.id === gagnant.id) {
+        const frais = await fetchPlayer(me.id);
+        if (frais) me = frais;
+      }
+    } catch {}
+  }
+
+  // Annonce au champion, à sa première connexion de la nouvelle semaine
+  async function verifierChampion() {
+    const champ = (me.stats || {}).champ;
+    if (!champ) return verifierCadeauxRecus();
+    const stats = { ...(me.stats || {}) };
+    delete stats.champ;
+    try { await updatePlayer(me.id, { stats }); } catch { return; }
+    me = { ...me, stats };
+    $("revealBox").innerHTML = `
+      <div style="font-size:34px;">🎉 🏆 🎉</div>
+      <h2 style="margin:10px 0 4px;">Champion de la semaine !</h2>
+      <div class="medaillon">👑</div>
+      <p style="color:var(--cream);font-size:17px;margin:0;line-height:1.6;">Bravo ${esc(me.pseudo)}, 1ᵉʳ la semaine dernière<br>avec <b style="color:var(--gold);">${champ.pts} points</b> !</p>
+      <p style="color:#2ee6a8;font-size:16px;margin:12px 0 4px;font-weight:bold;">Ta récompense de champion :</p>
+      <p style="color:var(--gold);font-size:16px;margin:0 0 16px;font-weight:bold;">⭐ 35 points d'avance cette semaine · 🪙 +10 pièces${champ.badge ? "<br>🎖️ badge Champion (+10 🪙)" : ""}</p>
+      <button class="btn" onclick="closeReveal();verifierCadeauxRecus();">En route vers le doublé !</button>`;
+    $("revealModal").hidden = false;
   }
 
   // ——— Cadeaux ———
@@ -1327,7 +1379,7 @@
       setSession({ id: row.id, pseudo: row.pseudo, avatar: row.avatar, points: row.points });
       if (!$("scr-main").hidden) showMain();
       if (!$("scr-board").hidden) showBoard();
-      verifierCadeauxRecus();
+      verifierChampion();
     } catch {}
   }
   window.addEventListener("pageshow", e => { if (e.persisted) refreshMe(); });
@@ -1347,7 +1399,8 @@
       me = row;
       setSession({ id: row.id, pseudo: row.pseudo, avatar: row.avatar, points: row.points });
       showMain();
-      setTimeout(verifierCadeauxRecus, 900);
+      try { await couronnerChampion(await fetchPlayers()); } catch {}
+      setTimeout(verifierChampion, 700);
     } catch {}
   })();
 </script>
