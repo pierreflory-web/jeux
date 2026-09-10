@@ -1016,7 +1016,7 @@
   function showBadges() {
     const acquis = me.badges || [];
     const tous = Object.entries(MesJeux.BADGES);
-    $("badgesSub").textContent = `${acquis.length} sur ${tous.length} — continue, shérif !`;
+    $("badgesSub").textContent = `${acquis.length} sur ${tous.length} — continue, ${me.pseudo} !`;
     $("badgesGrid").innerHTML = tous.map(([id, [em, nom, desc]]) => `
       <div class="badge ${acquis.includes(id) ? "" : "verrou"}">
         <span class="be">${em}</span>
