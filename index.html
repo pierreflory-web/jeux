@@ -509,6 +509,83 @@
   .badge.verrou .be { opacity: .35; }
   .badge.verrou .bn { color: var(--dim); font-weight: normal; }
 
+  /* Titre du joueur */
+  .titre-line { display: block; color: #ff9dd6; font-size: 12.5px; font-style: italic; }
+
+  /* Cadres d'avatar : anneau + petit ornement */
+  .avwrap {
+    display: inline-flex; align-items: center; justify-content: center;
+    border-radius: 50%; position: relative; flex: none;
+    background: var(--border); padding: 3px;
+  }
+  .avwrap .avin {
+    background: var(--bg-card); border-radius: 50%;
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .avwrap[data-orne]::after {
+    content: attr(data-orne);
+    position: absolute; top: -11px; left: 50%; transform: translateX(-50%);
+    font-size: 14px; line-height: 1;
+  }
+
+  /* Bandeau mise à jour */
+  #majBar {
+    width: 100vw; margin: 0 -20px;
+    background: #153c30; border-bottom: 1px solid #2ee6a8;
+    padding: 10px 18px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  #majBar span { flex: 1; color: #2ee6a8; font-size: 14.5px; }
+  #majBar button {
+    border: 0; border-radius: 8px; background: #2ee6a8; color: #0d2a1c;
+    font-family: inherit; font-weight: bold; font-size: 14px;
+    padding: 8px 14px; cursor: pointer; flex: none;
+  }
+
+  /* Bannière de fête */
+  .fete-card {
+    width: 100%; max-width: 460px;
+    border-radius: 16px; padding: 14px 18px; margin-top: 14px;
+    display: flex; align-items: center; gap: 14px; cursor: pointer;
+  }
+  .fete-card .em { font-size: 32px; flex: none; }
+  .fete-card b { display: block; font-size: 16px; }
+  .fete-card span.sx { display: block; font-size: 13.5px; margin-top: 3px; }
+
+  /* Fil des exploits */
+  .exploit {
+    display: flex; align-items: center; gap: 12px;
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 10px 14px;
+  }
+  .exploit .ee { font-size: 22px; flex: none; }
+  .exploit .et { flex: 1; color: var(--cream); font-size: 14px; line-height: 1.4; }
+  .exploit .eq { display: block; color: var(--dim); font-size: 11.5px; font-style: italic; margin-top: 2px; }
+
+  /* Stats */
+  .stats-grid {
+    width: 100%; max-width: 460px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 18px;
+  }
+  .stat {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 16px 10px; text-align: center;
+  }
+  .stat b { display: block; font-size: 26px; color: var(--gold); }
+  .stat span { display: block; margin-top: 6px; color: var(--muted); font-size: 13.5px; }
+  .histo {
+    width: 100%; max-width: 460px; height: 190px;
+    display: flex; align-items: flex-end; gap: 12px;
+    padding: 0 6px;
+  }
+  .histo { justify-content: center; }
+  .histo .bar { flex: 1; max-width: 84px; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; height: 100%; }
+  .histo .bar i { display: block; width: 100%; border-radius: 6px 6px 0 0; background: #5a3d94; }
+  .histo .bar.now i { background: var(--gold); }
+  .histo .bar b { color: var(--gold); font-size: 13px; margin-bottom: 4px; }
+  .histo .bar small { color: var(--dim); font-size: 11px; margin-top: 6px; }
+
   .center-narrow { width: 100%; max-width: 400px; display: flex; flex-direction: column; align-items: center; }
   .spin { color: var(--muted); font-style: italic; text-align: center; margin-top: 40vh; }
 </style>
@@ -594,11 +671,14 @@
     <button class="avatar-btn" id="meAvatar" onclick="openAvatarModal()">🙂</button>
     <div class="who" onclick="showBadges()" style="cursor:pointer;">
       <b id="meName">Salut !</b>
+      <small id="meTitre" class="titre-line" hidden></small>
       <small id="mePoints">⭐ 0 point</small>
     </div>
     <button class="tbadges" onclick="showBadges()" title="Tes badges">🎖️</button>
     <button class="switch" onclick="logout()">changer<br>de joueur</button>
   </div>
+  <div id="majBar" hidden></div>
+  <div id="feteCard"></div>
   <div class="daily" id="defiCard"></div>
   <div class="daily" id="miniCard"></div>
   <header style="margin:20px 0 28px;">
@@ -608,6 +688,10 @@
     <hr class="rule">
   </header>
   <main class="games" id="games"></main>
+  <section id="exploits" style="width:100%;max-width:460px;margin-top:26px;" hidden>
+    <p style="margin:0 0 10px;color:#ff9dd6;font-size:17px;font-weight:bold;">📰 Les nouvelles du Saloon</p>
+    <div id="exploitsList" style="display:grid;gap:8px;"></div>
+  </section>
   <footer>Bonne partie à toi</footer>
   <button class="fab" onclick="showBoard()" title="Classement">🏆</button>
 </div>
@@ -646,6 +730,19 @@
   </div>
   <p class="subtitle" id="badgesSub" style="margin:4px 0 0;"></p>
   <div class="badges-grid" id="badgesGrid"></div>
+  <button class="btn" id="badgesStatsBtn" style="max-width:300px;margin-top:24px;" onclick="showStats()">📊 Tes stats</button>
+</div>
+
+<!-- Stats -->
+<div id="scr-stats" class="screen" hidden>
+  <div class="board-head">
+    <button class="back" onclick="showBadges()">←</button>
+    <h1>📊 Tes stats</h1>
+  </div>
+  <p class="subtitle" id="statsSub" style="margin:4px 0 0;"></p>
+  <div class="stats-grid" id="statsGrid"></div>
+  <p style="width:100%;max-width:460px;color:var(--muted);font-size:16px;margin:26px 0 10px;">Tes points, semaine après semaine</p>
+  <div class="histo" id="histoChart"></div>
 </div>
 
 <!-- Modal boutique -->
@@ -711,6 +808,68 @@
     { nom: "Mythiques", prix: 200,
       avatars: ["🪐","🧞","🔱","🦕","🧿","🌌"] }
   ];
+  // ——— Titres ———
+  const TITRES = [
+    "Terreur de l'Ouest", "Reine du Saloon", "Roi du Saloon", "Fine Gâchette",
+    "Maître des Énigmes", "Étoile Filante", "Grand Manitou", "As de la Prairie",
+    "Langue de Serpent", "Cavalier Solitaire", "Chercheur d'Or", "Légende Vivante"
+  ];
+  const TITRE_PRIX = 40;
+  const BADGE_TITRES = { eclair: "L'Éclair", habitue: "Pilier du Saloon", champion: "Le Champion" };
+  function titresPossedes(row) {
+    const s = row.stats || {};
+    const parBadges = (row.badges || []).filter(b => BADGE_TITRES[b]).map(b => BADGE_TITRES[b]);
+    return [...new Set([...(s.titres || []), ...parBadges])];
+  }
+
+  // ——— Cadres d'avatar ———
+  const CADRES = {
+    argent:  { nom: "Argent",      prix: 40,  ring: "#c0c8d8" },
+    or:      { nom: "Or",          prix: 60,  ring: "#ffd27a" },
+    emeraude:{ nom: "Émeraude",    prix: 60,  ring: "#2ee6a8" },
+    rubis:   { nom: "Rubis",       prix: 60,  ring: "#d94f3d" },
+    saphir:  { nom: "Saphir",      prix: 60,  ring: "#4f8fd9" },
+    arc:     { nom: "Arc-en-ciel", prix: 100, ring: "linear-gradient(135deg,#d94f3d,#ffd27a,#2ee6a8,#4f8fd9,#ff9dd6)" },
+    ombre:   { nom: "Ombre",       prix: 100, ring: "#12081f", orne: "🕶️" },
+    flammes: { nom: "Flammes",     prix: 150, ring: "linear-gradient(0deg,#d94f3d,#ff8c42,#ffd27a)", orne: "🔥" },
+    glace:   { nom: "Glace",       prix: 150, ring: "linear-gradient(180deg,#eef7ff,#7ec8e3)", orne: "❄️" },
+    galaxie: { nom: "Galaxie",     prix: 200, ring: "linear-gradient(135deg,#8f6fe8,#2a1445,#3de1e8)", orne: "🌌" },
+    royal:   { nom: "Royal",       prix: 200, ring: "linear-gradient(180deg,#ffd27a,#b8862f)", orne: "👑" },
+    etoiles: { nom: "Étoiles",     prix: 200, ring: "linear-gradient(45deg,#ffd27a,#fff4c2,#ffd27a)", orne: "✨" },
+    coeurs:  { nom: "Cœurs",       prix: 200, ring: "linear-gradient(135deg,#ff9dd6,#ff5c9e)", orne: "💗" }
+  };
+  function avatarHTML(avatar, cadreId, taille, fontPx) {
+    const c = CADRES[cadreId];
+    const ring = c ? c.ring : "transparent";
+    const orne = c && c.orne ? ` data-orne="${c.orne}"` : "";
+    return `<span class="avwrap" style="width:${taille}px;height:${taille}px;background:${ring};"${orne}>
+      <span class="avin" style="font-size:${fontPx}px;">${avatar}</span></span>`;
+  }
+
+  // ——— Fêtes de l'année ———
+  const FETES = [
+    { id: "halloween", nom: "L'Halloween du Saloon", emoji: "🎃", debut: "10-20", fin: "11-02",
+      fond: "#3d1f0e", bord: "#ff8c42", texte: "#e8c9a8", avatars: ["🎃","👻","🕷️","🧛‍♀️","🌕"] },
+    { id: "noel", nom: "Le Noël du Saloon", emoji: "🎄", debut: "12-12", fin: "01-02",
+      fond: "#0e2a3d", bord: "#7ec8e3", texte: "#cde8f5", avatars: ["🎅","🎄","⛄","🦌","🎁"] },
+    { id: "carnaval", nom: "Le Carnaval du Saloon", emoji: "🎭", debut: "02-10", fin: "02-24",
+      fond: "#3d0e2e", bord: "#ff9dd6", texte: "#f5cde8", avatars: ["🎭","🤹","🎪","🦜","🥳"] },
+    { id: "paques", nom: "Pâques au Saloon", emoji: "🐰", debut: "03-28", fin: "04-12",
+      fond: "#1e3d0e", bord: "#a8e67a", texte: "#dff5cd", avatars: ["🐰","🥚","🐣","🌷","🍫"] }
+  ];
+  const FETE_PRIX = 60;
+  function feteActive() {
+    try { const t = localStorage.getItem("mesjeux_fete_test"); if (t) return FETES.find(f => f.id === t) || null; } catch {}
+    const d = new Date();
+    const md = String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+    return FETES.find(f => f.debut <= f.fin ? (md >= f.debut && md <= f.fin) : (md >= f.debut || md <= f.fin)) || null;
+  }
+  function joursRestants(f) {
+    const d = new Date();
+    const fin = new Date(d.getFullYear() + (f.debut > f.fin && d.getMonth() + 1 >= 11 ? 1 : 0), parseInt(f.fin.slice(0, 2)) - 1, parseInt(f.fin.slice(3)));
+    return Math.max(1, Math.ceil((fin - d) / 86400000));
+  }
+
   function ownedAvatars(row) {
     const days = row.days || 0;
     const owned = DEPART.concat(
@@ -765,7 +924,7 @@
   const hashAnswer = (pseudo, a) => sha256("rep:" + pseudo.toLowerCase() + ":" + normAnswer(a));
 
   const $ = id => document.getElementById(id);
-  const SCREENS = ["scr-load","scr-who","scr-pin","scr-new","scr-forgot","scr-main","scr-board","scr-mini","scr-badges"];
+  const SCREENS = ["scr-load","scr-who","scr-pin","scr-new","scr-forgot","scr-main","scr-board","scr-mini","scr-badges","scr-stats"];
   function show(id) { SCREENS.forEach(s => $(s).hidden = (s !== id)); window.scrollTo(0, 0); }
 
   function getSession() {
@@ -797,7 +956,8 @@
     }
     const cards = players.map(p => `
       <button class="player-card" onclick="pickPlayer('${p.id}')">
-        <span class="pa">${p.avatar}</span><span class="pn">${esc(p.pseudo)}</span>
+        <span class="pa" style="display:flex;justify-content:center;">${avatarHTML(p.avatar, (p.stats || {}).cadre, 62, 34)}</span>
+        <span class="pn">${esc(p.pseudo)}</span>
       </button>`).join("");
     $("playersGrid").innerHTML = cards + `
       <button class="player-card new" onclick="showNew()">
@@ -876,6 +1036,7 @@
           week_points: 50,
           week_id: MesJeux.weekId()
         });
+        MesJeux.evenement("🌟", `${row.pseudo} a rejoint le Saloon — bienvenue !`);
         login(row);
         setTimeout(afficherBienvenue, 1200);
       } catch { pinError("Impossible de créer le profil, réessaie."); }
@@ -966,9 +1127,35 @@
     showWho();
   }
   function showMain() {
-    $("meAvatar").textContent = me.avatar;
+    const cadre = (me.stats || {}).cadre;
+    const c = CADRES[cadre];
+    const btn = $("meAvatar");
+    btn.innerHTML = `<span class="avin" style="width:46px;height:46px;font-size:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--bg-card);">${me.avatar}</span>`;
+    btn.style.background = c ? c.ring : "";
+    btn.style.border = c ? "none" : "";
+    btn.style.padding = c ? "3px" : "";
     $("meName").textContent = `Salut ${me.pseudo} !`;
+    const titre = (me.stats || {}).titre;
+    $("meTitre").hidden = !titre;
+    $("meTitre").textContent = titre ? `« ${titre} »` : "";
     $("mePoints").textContent = `⭐ ${me.points} · 🪙 ${me.coins || 0} · 📅 ${me.days || 0} j`;
+
+    // bannière de fête
+    const fete = feteActive();
+    if (fete) {
+      $("feteCard").className = "fete-card";
+      $("feteCard").style.cssText = `background:${fete.fond};border:2px solid ${fete.bord};`;
+      $("feteCard").onclick = () => { boutiqueTab = "avatars"; openAvatarModal(); };
+      $("feteCard").innerHTML = `<span class="em">${fete.emoji}</span>
+        <span style="flex:1;"><b style="color:${fete.bord};">${fete.nom} !</b>
+        <span class="sx" style="color:${fete.texte};">Avatars en édition limitée — ${joursRestants(fete)} jour${joursRestants(fete) > 1 ? "s" : ""} restant${joursRestants(fete) > 1 ? "s" : ""} · ${fete.avatars.join(" ")}</span></span>`;
+    } else {
+      $("feteCard").className = "";
+      $("feteCard").style.cssText = "";
+      $("feteCard").innerHTML = "";
+    }
+
+    chargerExploits();
     const defi = MesJeux.defiDuJour();
     $("defiCard").className = "daily defi";
     $("defiCard").innerHTML = `<span class="em">🎯</span><span class="tx"><b>Défi du jour</b><span>${defi.label}<br><b style="display:inline;color:#ffd27a;">Récompense : ${defi.texte}</b></span></span>`;
@@ -1003,6 +1190,65 @@
     }
   }
 
+  // ——— Fil des exploits ———
+  function tempsRelatif(iso) {
+    const m = Math.floor((Date.now() - new Date(iso).getTime()) / 60000);
+    if (m < 1) return "à l'instant";
+    if (m < 60) return `il y a ${m} min`;
+    if (m < 1440) return `il y a ${Math.floor(m / 60)} h`;
+    const j = Math.floor(m / 1440);
+    return j === 1 ? "hier" : `il y a ${j} jours`;
+  }
+  async function chargerExploits() {
+    try {
+      const evs = await sb("/events?select=emoji,texte,created_at&order=created_at.desc&limit=5");
+      if (!evs.length) { $("exploits").hidden = true; return; }
+      $("exploitsList").innerHTML = evs.map(e => `
+        <div class="exploit"><span class="ee">${e.emoji}</span>
+          <span class="et">${esc(e.texte)}<span class="eq">${tempsRelatif(e.created_at)}</span></span></div>`).join("");
+      $("exploits").hidden = false;
+    } catch { $("exploits").hidden = true; }
+  }
+
+  // ——— Page stats ———
+  function showStats() {
+    const s = me.stats || {};
+    const wk = MesJeux.weekId();
+    $("statsSub").textContent = me.pseudo;
+    $("statsGrid").innerHTML = `
+      <div class="stat"><b>${me.points}</b><span>points au total</span></div>
+      <div class="stat"><b>${me.coins || 0}</b><span>🪙 pièces en poche</span></div>
+      <div class="stat"><b style="color:#2ee6a8;">${s.mj || 0}</b><span>🃏 mini-jeux réussis</span></div>
+      <div class="stat"><b style="color:#2ee6a8;">${me.days || 0} j</b><span>📅 jours de jeu</span></div>
+      <div class="stat"><b>${(me.wins || {}).cowboy ? "🤠 ✓" : "🤠 —"}</b><span>${(me.wins || {}).cowboy ? "Mac Blain capturé" : "Mac Blain t'attend !"}</span></div>
+      <div class="stat"><b>${(me.wins || {}).quest ? "🔎 ✓" : "🔎 —"}</b><span>${(me.wins || {}).quest ? "Quest résolu" : "Quest à résoudre !"}</span></div>`;
+    const histo = { ...(s.histo || {}) };
+    histo[wk] = me.week_id === wk ? (me.week_points || 0) : 0;
+    const semaines = Object.keys(histo).sort().slice(-6);
+    const max = Math.max(20, ...semaines.map(w => histo[w]));
+    $("histoChart").innerHTML = semaines.map(w => {
+      const h = Math.max(6, Math.round(histo[w] / max * 130));
+      const lbl = parseInt(w.slice(8)) + "/" + parseInt(w.slice(5, 7));
+      const now = w === wk;
+      return `<div class="bar ${now ? "now" : ""}"><b>${histo[w]}</b><i style="height:${h}px;"></i><small>${now ? "cette sem." : lbl}</small></div>`;
+    }).join("");
+    show("scr-stats");
+  }
+
+  // ——— Détection de nouvelle version ———
+  const VERSION = "2";
+  async function verifierVersion() {
+    try {
+      const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }).then(r => r.json());
+      if (r.v && r.v !== VERSION) {
+        $("majBar").hidden = false;
+        $("majBar").innerHTML = `<span>✨ Une nouvelle version est arrivée !</span>
+          <button onclick="location.reload()">Mettre à jour</button>`;
+      }
+    } catch {}
+  }
+  setInterval(verifierVersion, 300000);
+
   // ——— Cadeau de bienvenue des nouveaux joueurs ———
   function afficherBienvenue() {
     $("revealBox").innerHTML = `
@@ -1022,8 +1268,9 @@
     const stats = { ...(me.stats || {}), cadeaux: [] };
     try { await updatePlayer(me.id, { stats }); } catch { return; }
     me = { ...me, stats };
-    const total = cadeaux.reduce((a, c) => a + c.n, 0);
-    const lignes = cadeaux.map(c => `<b style="color:var(--gold);">${esc(c.de)}</b> t'a offert <b style="color:var(--gold);">${c.n} pièce${c.n > 1 ? "s" : ""} 🪙</b>`);
+    const lignes = cadeaux.map(c =>
+      `<b style="color:var(--gold);">${esc(c.de)}</b> t'a offert <b style="color:var(--gold);">${c.n} pièce${c.n > 1 ? "s" : ""} 🪙</b>` +
+      (c.mot ? `<span style="display:block;margin:6px auto 10px;max-width:320px;padding:8px 14px;background:#3c2469;border:1px solid var(--border);border-radius:10px;color:#e8d9f5;font-style:italic;font-size:15px;">« ${esc(c.mot)} »</span>` : ""));
     $("revealBox").innerHTML = `
       <div style="font-size:34px;">🎁 ✨ 🎁</div>
       <h2 style="margin:10px 0 4px;">Surprise !</h2>
@@ -1086,7 +1333,15 @@
     if (row.last_day === t) return row;
     const before = row.days || 0;
     const days = before + 1;
-    try { await updatePlayer(row.id, { days, last_day: t }); } catch { return row; }
+    const patch = { days, last_day: t };
+    // archive de la semaine passée pour la page stats
+    const wk = MesJeux.weekId();
+    const s = row.stats || {};
+    if (row.week_id && row.week_id !== wk && !((s.histo || {})[row.week_id])) {
+      patch.stats = { ...s, histo: { ...(s.histo || {}), [row.week_id]: row.week_points || 0 } };
+    }
+    try { await updatePlayer(row.id, patch); } catch { return row; }
+    if (patch.stats) row = { ...row, stats: patch.stats };
     const nouveaux = FIDELITE.filter(f => f.days > before && f.days <= days).flatMap(f => f.avatars);
     if (nouveaux.length) setTimeout(() => fanfare(days, nouveaux), 600);
     if (days >= 7) setTimeout(() => accorderBadge("fidele"), nouveaux.length ? 4000 : 1200);
@@ -1121,10 +1376,12 @@
     <path d="M0 -9 L0 0" stroke="#4a2a10" stroke-width="4" stroke-linecap="round"/>
   </svg>`;
   const RARETES = { 0: ["Ménagerie", "#c9b3e8"], 1: ["RARE !", "#c98a5a"], 2: ["LÉGENDAIRE !", "#ffd27a"], 3: ["MYTHIQUE !", "#ff9dd6"] };
-  let panier = null; // {avatar, prix}
+  let panier = null; // {type:'avatar'|'titre'|'cadre', id, prix, label}
+  let boutiqueTab = "avatars";
 
   function openAvatarModal() { panier = null; renderBoutique(); $("avatarModal").hidden = false; }
   function closeAvatarModal() { $("avatarModal").hidden = true; }
+  function boutiqueOnglet(t) { boutiqueTab = t; panier = null; renderBoutique(); }
 
   function manquants() {
     const owned = ownedAvatars(me);
@@ -1132,15 +1389,50 @@
   }
 
   function renderBoutique() {
+    const coins = me.coins || 0;
+    const days = me.days || 0;
+    let html = `<h2>Ta collection &amp; la boutique</h2>
+      <p class="solde">🪙 ${coins} pièce${coins > 1 ? "s" : ""} · 📅 ${days} jour${days > 1 ? "s" : ""} de jeu</p>
+      <div class="tabs" style="margin-top:10px;">
+        <button class="${boutiqueTab === "avatars" ? "on" : ""}" onclick="boutiqueOnglet('avatars')">Avatars</button>
+        <button class="${boutiqueTab === "titres" ? "on" : ""}" onclick="boutiqueOnglet('titres')">Titres</button>
+        <button class="${boutiqueTab === "cadres" ? "on" : ""}" onclick="boutiqueOnglet('cadres')">Cadres</button>
+      </div>`;
+    if (boutiqueTab === "avatars") html += boutiqueAvatars();
+    else if (boutiqueTab === "titres") html += boutiqueTitres();
+    else html += boutiqueCadres();
+
+    if (panier) {
+      const manque = coins < panier.prix;
+      html += `<div class="confirmbar">` + (manque
+        ? `<span style="color:#ff9db0;font-size:15px;flex:1;text-align:center;">Il te manque ${panier.prix - coins} pièce${panier.prix - coins > 1 ? "s" : ""} pour ${panier.label} — retourne jouer !</span>
+           <button class="btn-ghost" onclick="panier=null;renderBoutique()">ok</button>`
+        : `<button class="btn" onclick="acheter()">Acheter ${panier.label} pour ${panier.prix} 🪙</button>
+           <button class="btn-ghost" onclick="panier=null;renderBoutique()">non</button>`) +
+        `</div>`;
+    }
+    html += `<button class="btn-ghost" style="width:100%;margin-top:14px;" onclick="closeAvatarModal()">fermer</button>`;
+    $("boutiqueBox").innerHTML = html;
+  }
+
+  function boutiqueAvatars() {
     const owned = ownedAvatars(me);
     const days = me.days || 0;
     const coins = me.coins || 0;
-    let html = `<h2>Ta collection &amp; la boutique</h2>
-      <p class="solde">🪙 ${coins} pièce${coins > 1 ? "s" : ""} · 📅 ${days} jour${days > 1 ? "s" : ""} de jeu</p>
-      <p class="sect">Tes avatars — touche pour choisir</p>
+    let html = `<p class="sect">Tes avatars — touche pour choisir</p>
       <div class="shop-grid">` +
       owned.map(a => `<div class="it"><button class="${a === me.avatar ? "sel" : ""}" onclick="chooseAvatar('${a}')">${a}</button></div>`).join("") +
       `</div>`;
+
+    const fete = feteActive();
+    if (fete) {
+      const dispo = fete.avatars.filter(a => !owned.includes(a));
+      if (dispo.length) {
+        html += `<p class="sect" style="color:${fete.bord};">${fete.emoji} ${fete.nom} — édition limitée, ${FETE_PRIX} pièces 🪙</p><div class="shop-grid">` +
+          dispo.map(a => `<div class="it"><button class="locked" style="border-color:${fete.bord};" onclick="preparerAchat('avatar','${a}',${FETE_PRIX},'${a}')">${a}</button><small>${FETE_PRIX} 🪙</small></div>`).join("") +
+          `</div><p style="margin:6px 0 0;color:${fete.bord};font-size:12.5px;font-style:italic;text-align:center;">Plus que ${joursRestants(fete)} jour${joursRestants(fete) > 1 ? "s" : ""} — après, ils s'envolent !</p>`;
+      }
+    }
 
     const fidLocked = FIDELITE.filter(f => f.days > days);
     if (fidLocked.length) {
@@ -1152,8 +1444,7 @@
     }
 
     const manq = manquants();
-    const resteTotal = manq.reduce((a, l) => a + l.length, 0);
-    if (resteTotal) {
+    if (manq.reduce((a, l) => a + l.length, 0)) {
       html += `<p class="sect">Le coffre mystère</p>
         <div class="coffre-card">${COFFRE_SVG}
           <div class="t"><b>Coffre mystère</b>
@@ -1169,26 +1460,55 @@
       const dispo = manq[i];
       if (!dispo.length) return;
       html += `<p class="sect" style="color:${RARETES[i][1]}">${tier.nom} — ${tier.prix} pièces 🪙</p><div class="shop-grid">` +
-        dispo.map(a => `<div class="it"><button class="locked" onclick="preparerAchat('${a}',${tier.prix})">${a}</button><small>${tier.prix} 🪙</small></div>`).join("") +
+        dispo.map(a => `<div class="it"><button class="locked" onclick="preparerAchat('avatar','${a}',${tier.prix},'${a}')">${a}</button><small>${tier.prix} 🪙</small></div>`).join("") +
         `</div>`;
     });
-
-    if (panier) {
-      const manque = (me.coins || 0) < panier.prix;
-      html += `<div class="confirmbar">` + (manque
-        ? `<span style="color:#ff9db0;font-size:15px;flex:1;text-align:center;">Il te manque ${panier.prix - (me.coins || 0)} pièce${panier.prix - (me.coins || 0) > 1 ? "s" : ""} pour ${panier.avatar} — retourne jouer !</span>
-           <button class="btn-ghost" onclick="panier=null;renderBoutique()">ok</button>`
-        : `<button class="btn" onclick="acheter()">Acheter ${panier.avatar} pour ${panier.prix} 🪙</button>
-           <button class="btn-ghost" onclick="panier=null;renderBoutique()">non</button>`) +
-        `</div>`;
-    }
-
-    html += `<button class="btn-ghost" style="width:100%;margin-top:14px;" onclick="closeAvatarModal()">fermer</button>`;
-    $("boutiqueBox").innerHTML = html;
+    return html;
   }
 
-  function preparerAchat(avatar, prix) {
-    panier = { avatar, prix };
+  function boutiqueTitres() {
+    const possedes = titresPossedes(me);
+    const actif = (me.stats || {}).titre || "";
+    let html = `<p class="sect">Ton titre — affiché sous ton pseudo</p><div style="display:grid;gap:8px;margin-top:8px;">` +
+      [`<button class="player-card ${!actif ? "new" : ""}" style="padding:12px;text-align:center;" onclick="choisirTitre('')"><span class="pn" style="font-weight:normal;font-style:italic;">aucun titre</span></button>`,
+        ...possedes.map(t => `<button class="player-card ${t === actif ? "" : "new"}" style="padding:12px;text-align:center;${t === actif ? "border-color:var(--gold);" : ""}" onclick="choisirTitre('${t.replace(/'/g, "\\'")}')"><span class="pn">« ${t} »${t === actif ? " ✓" : ""}</span></button>`)
+      ].join("") + `</div>`;
+
+    const aVendre = TITRES.filter(t => !possedes.includes(t));
+    if (aVendre.length) {
+      html += `<p class="sect">À acheter — ${TITRE_PRIX} pièces 🪙</p><div style="display:grid;gap:8px;margin-top:8px;">` +
+        aVendre.map(t => `<button class="player-card new" style="padding:12px;display:flex;justify-content:space-between;align-items:center;" onclick="preparerAchat('titre','${t.replace(/'/g, "\\'")}',${TITRE_PRIX},'« ${t.replace(/'/g, "\\'")} »')">
+          <span class="pn" style="font-weight:normal;">« ${t} »</span><small style="color:var(--gold);">${TITRE_PRIX} 🪙</small></button>`).join("") + `</div>`;
+    }
+    html += `<p style="margin:14px 0 0;color:var(--dim);font-size:12.5px;font-style:italic;text-align:center;">Certains badges offrent leur titre : ⚡ → « L'Éclair », 🃏 → « Pilier du Saloon », 🏆 → « Le Champion »</p>`;
+    return html;
+  }
+
+  function boutiqueCadres() {
+    const possedes = (me.stats || {}).cadres || [];
+    const actif = (me.stats || {}).cadre || "";
+    const rendu = (id, selectionne) => `
+      <div class="it" style="text-align:center;">
+        <div style="display:flex;justify-content:center;">${avatarHTML(me.avatar, id, 56, 26)}</div>
+        <small style="display:block;margin-top:4px;color:${selectionne ? "var(--gold)" : "var(--dim)"};font-size:11px;">${id ? CADRES[id].nom : "aucun"}${selectionne ? " ✓" : ""}</small>
+      </div>`;
+    let html = `<p class="sect">Tes cadres — touche pour choisir</p><div class="shop-grid" style="grid-template-columns:repeat(4,1fr);">` +
+      [`<div onclick="choisirCadre('')" style="cursor:pointer;">${rendu("", !actif)}</div>`,
+        ...possedes.map(id => `<div onclick="choisirCadre('${id}')" style="cursor:pointer;">${rendu(id, id === actif)}</div>`)
+      ].join("") + `</div>`;
+    const aVendre = Object.keys(CADRES).filter(id => !possedes.includes(id));
+    if (aVendre.length) {
+      html += `<p class="sect">À acheter</p><div class="shop-grid" style="grid-template-columns:repeat(4,1fr);">` +
+        aVendre.map(id => `<div onclick="preparerAchat('cadre','${id}',${CADRES[id].prix},'le cadre ${CADRES[id].nom}')" style="cursor:pointer;text-align:center;">
+          <div style="display:flex;justify-content:center;">${avatarHTML(me.avatar, id, 56, 26)}</div>
+          <small style="display:block;margin-top:4px;color:var(--dim);font-size:11px;">${CADRES[id].nom}<br><span style="color:var(--gold);">${CADRES[id].prix} 🪙</span></small>
+        </div>`).join("") + `</div>`;
+    }
+    return html;
+  }
+
+  function preparerAchat(type, id, prix, label) {
+    panier = { type, id, prix, label };
     renderBoutique();
     const box = $("boutiqueBox");
     box.scrollTop = box.scrollHeight;
@@ -1204,20 +1524,38 @@
       setSession({ id: me.id, pseudo: me.pseudo, avatar: a, points: me.points });
     } catch { me.avatar = before; showMain(); renderBoutique(); }
   }
+  async function choisirTitre(t) {
+    const stats = { ...(me.stats || {}), titre: t };
+    try { await updatePlayer(me.id, { stats }); me = { ...me, stats }; showMain(); renderBoutique(); } catch {}
+  }
+  async function choisirCadre(id) {
+    const stats = { ...(me.stats || {}), cadre: id };
+    try { await updatePlayer(me.id, { stats }); me = { ...me, stats }; showMain(); renderBoutique(); } catch {}
+  }
 
   async function acheter() {
     if (!panier || (me.coins || 0) < panier.prix) return;
-    const a = panier.avatar;
-    const nouveauxCoins = (me.coins || 0) - panier.prix;
-    const nouveauxAvatars = [...new Set([...(me.avatars || []), a])];
+    const p = panier;
+    const nouveauxCoins = (me.coins || 0) - p.prix;
     try {
-      await updatePlayer(me.id, { coins: nouveauxCoins, avatars: nouveauxAvatars, avatar: a });
-      me = { ...me, coins: nouveauxCoins, avatars: nouveauxAvatars, avatar: a };
-      setSession({ id: me.id, pseudo: me.pseudo, avatar: a, points: me.points });
+      if (p.type === "avatar") {
+        const nouveauxAvatars = [...new Set([...(me.avatars || []), p.id])];
+        await updatePlayer(me.id, { coins: nouveauxCoins, avatars: nouveauxAvatars, avatar: p.id });
+        me = { ...me, coins: nouveauxCoins, avatars: nouveauxAvatars, avatar: p.id };
+        setSession({ id: me.id, pseudo: me.pseudo, avatar: p.id, points: me.points });
+        if (ownedAvatars(me).length >= 10) accorderBadge("collectionneur");
+      } else if (p.type === "titre") {
+        const stats = { ...(me.stats || {}), titres: [...new Set([...((me.stats || {}).titres || []), p.id])], titre: p.id };
+        await updatePlayer(me.id, { coins: nouveauxCoins, stats });
+        me = { ...me, coins: nouveauxCoins, stats };
+      } else {
+        const stats = { ...(me.stats || {}), cadres: [...new Set([...((me.stats || {}).cadres || []), p.id])], cadre: p.id };
+        await updatePlayer(me.id, { coins: nouveauxCoins, stats });
+        me = { ...me, coins: nouveauxCoins, stats };
+      }
       panier = null;
       showMain();
       renderBoutique();
-      if (ownedAvatars(me).length >= 10) accorderBadge("collectionneur");
     } catch { panier = null; renderBoutique(); }
   }
 
@@ -1245,6 +1583,7 @@
       <h2 style="margin:6px 0 18px;">Le coffre s'ouvre…</h2>
       <div class="chest-shake" style="display:inline-block;">${COFFRE_SVG.replace('width="86" height="70"', 'width="150" height="122"')}</div>`;
     $("revealModal").hidden = false;
+    if (choix.i >= 2) MesJeux.evenement("✨", `${me.pseudo} a tiré ${avatar} (${RARETES[choix.i][0].replace(" !", "")}) au coffre mystère !`);
     setTimeout(() => {
       const [nom, couleur] = RARETES[choix.i];
       $("revealBox").innerHTML = `
@@ -1293,8 +1632,8 @@
     $("boardList").innerHTML = list.map((p, i) => `
       <div class="brow ${me && p.id === me.id ? "me" : ""}">
         <span class="rk">${i + 1}</span>
-        <span class="av" style="cursor:pointer;" onclick="showBadgesDe('${p.id}')">${p.avatar}</span>
-        <span class="nm" style="cursor:pointer;" onclick="showBadgesDe('${p.id}')">${esc(p.pseudo)}${me && p.id === me.id ? " (toi)" : ""}${marqueChamp(p) ? " 🏆" : ""}${marqueChamp(p) ? `<span style="display:block;font-size:12px;color:#2ee6a8;font-style:italic;">avance de champion</span>` : ""}</span>
+        <span class="av" style="cursor:pointer;display:flex;" onclick="showBadgesDe('${p.id}')">${avatarHTML(p.avatar, (p.stats || {}).cadre, 40, 22)}</span>
+        <span class="nm" style="cursor:pointer;" onclick="showBadgesDe('${p.id}')">${esc(p.pseudo)}${me && p.id === me.id ? " (toi)" : ""}${marqueChamp(p) ? " 🏆" : ""}${(p.stats || {}).titre ? `<span style="display:block;font-size:11.5px;color:#ff9dd6;font-style:italic;">« ${esc(p.stats.titre)} »</span>` : ""}${marqueChamp(p) ? `<span style="display:block;font-size:12px;color:#2ee6a8;font-style:italic;">avance de champion</span>` : ""}</span>
         <span class="pt">${score(p)} pts</span>
         ${me && p.id !== me.id ? `<button class="gift" onclick="ouvrirCadeau('${p.id}')" title="Offrir des pièces">🎁</button>` : ""}
       </div>`).join("");
@@ -1326,6 +1665,7 @@
         week_id: wk,
         stats
       });
+      MesJeux.evenement("🏆", `${gagnant.pseudo} est Champion·ne de la semaine !`);
       if (me && me.id === gagnant.id) {
         const frais = await fetchPlayer(me.id);
         if (frais) me = frais;
@@ -1371,6 +1711,8 @@
                placeholder="autre montant…" style="flex:2;padding:10px 14px;font-size:16px;">
              <button style="flex:1;" ${(me.coins || 0) < 1 ? "disabled" : ""} onclick="offrirLibre()">Envoyer</button>
            </div>
+           <input class="field" id="giftMot" maxlength="80" autocomplete="off"
+             placeholder="✏️ un petit mot ? (facultatif)" style="margin-top:10px;padding:10px 14px;font-size:15px;">
            <p class="msg2" id="giftMsg">Un cadeau par jour — tu as ${me.coins || 0} 🪙</p>`}
       <button class="btn-ghost" onclick="giftCible=null;$('giftBar').innerHTML='';">annuler</button>
     </div>`;
@@ -1385,11 +1727,13 @@
     if ((me.coins || 0) < n || !giftCible) return;
     const stats = { ...(me.stats || {}), gift_day: MesJeux.today() };
     try {
+      const mot = ($("giftMot") ? $("giftMot").value.trim() : "").slice(0, 80);
       const cible = await fetchPlayer(giftCible.id);
       await updatePlayer(me.id, { coins: (me.coins || 0) - n, stats });
       const statsCible = { ...(cible.stats || {}) };
-      statsCible.cadeaux = [...(statsCible.cadeaux || []), { de: me.pseudo, n }];
+      statsCible.cadeaux = [...(statsCible.cadeaux || []), { de: me.pseudo, n, mot }];
       await updatePlayer(giftCible.id, { coins: (cible.coins || 0) + n, stats: statsCible });
+      MesJeux.evenement("🎁", `${me.pseudo} a offert un cadeau à ${giftCible.pseudo} !`);
       me = { ...me, coins: (me.coins || 0) - n, stats };
       const nom = giftCible.pseudo;
       giftCible = null;
@@ -1428,6 +1772,7 @@
 
   // ——— Démarrage ———
   buildPad();
+  verifierVersion();
   (async function start() {
     const s = getSession();
     if (!s) return showWho();

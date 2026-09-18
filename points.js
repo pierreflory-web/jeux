@@ -67,6 +67,12 @@
   ];
   function defiDuJour() { return DEFIS[daySeed() % DEFIS.length]; }
 
+  // ——— Journal des exploits (fil des nouvelles du Saloon) ———
+  function evenement(emoji, texte) {
+    // silencieux : si la table n'existe pas encore, tant pis
+    sb("/events", { method: "POST", body: JSON.stringify({ emoji: emoji, texte: texte }) }).catch(function () {});
+  }
+
   // ——— Attribution des gains ———
   async function award(gameId, lines, extra) {
     extra = extra || {};
@@ -131,6 +137,17 @@
         localStorage.setItem(SESSION_KEY, JSON.stringify(Object.assign({}, s, { points: row.points + total })));
       } catch (e) {}
       toast(s.pseudo, detail, row.points + total, pieces, coinsApres, nouveaux);
+      // le fil des exploits
+      if (!repeat) {
+        if (gameId === "cowboy") {
+          const t = extra.secs != null ? " en " + Math.floor(extra.secs / 60) + " min " + (extra.secs % 60) + " s" : "";
+          evenement("🤠", s.pseudo + " a capturé Mac Blain" + t + " !");
+        }
+        if (gameId === "quest") evenement("🔎", s.pseudo + " a résolu l'enquête Quest !");
+      }
+      nouveaux.forEach(function (b) {
+        evenement("🎖️", s.pseudo + " a gagné le badge " + BADGES[b][0] + " " + BADGES[b][1] + " !");
+      });
       return { total: total, pieces: pieces, nouveauxBadges: nouveaux };
     } catch (e) { /* pas de réseau : la victoire reste, les points attendront */ }
   }
@@ -165,7 +182,7 @@
   }
 
   window.MesJeux = {
-    award: award, session: session, defiDuJour: defiDuJour,
+    award: award, session: session, defiDuJour: defiDuJour, evenement: evenement,
     BADGES: BADGES, weekId: weekId, daySeed: daySeed, today: today
   };
 })();
