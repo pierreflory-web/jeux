@@ -48,6 +48,8 @@
     fidele:        ["📅", "Fidèle", "7 jours de jeu"],
     veteran:       ["🗓️", "Vétéran", "30 jours de jeu"],
     habitue:       ["🃏", "Habitué du saloon", "10 mini-jeux réussis"],
+    fermier:       ["🌾", "Fermier", "S'occuper de son ranch"],
+    eleveur:       ["🐮", "Grand éleveur", "8 animaux au ranch"],
     collectionneur:["🦁", "Collectionneur", "10 avatars possédés"],
     econome:       ["💰", "Économe", "100 pièces en poche"],
     genereux:      ["🎁", "Généreux", "Offrir un cadeau"],
@@ -60,7 +62,8 @@
     { game: "cowboy", match: "moins de 8",     label: "Capture Mac Blain en moins de 8 minutes",    effet: 15,  texte: "+15 points !" },
     { game: "quest",  match: "premier coup",   label: "Résous Quest en accusant juste du premier coup", effet: "x2", texte: "pièces doublées !" },
     { game: "quest",  match: "Tous les indices", label: "Résous Quest avec tous les indices",       effet: 15,  texte: "+15 points !" },
-    { game: "mini",   match: null,             label: "Réussis le mini-jeu du jour",                effet: 10,  texte: "+10 points !" }
+    { game: "mini",   match: null,             label: "Réussis le mini-jeu du jour",                effet: 10,  texte: "+10 points !" },
+    { game: "ranch",  match: null,             label: "Soigne tous les animaux de ton ranch",       effet: 10,  texte: "+10 points !" }
   ];
   function defiDuJour() { return DEFIS[daySeed() % DEFIS.length]; }
 
@@ -104,6 +107,8 @@
         if (gameId === "quest") gagne("detective");
         if (gameId === "cowboy" && extra.secs != null && extra.secs < 300) gagne("eclair");
         if (gameId === "quest" && lines.some(function (l) { return l[1].indexOf("premier coup") !== -1; })) gagne("sansfaute");
+        if (gameId === "ranch") gagne("fermier");
+        if (gameId === "ranch" && extra.animaux >= 8) gagne("eleveur");
       }
       // chaque badge gagné rapporte 10 pièces
       let coinsApres = (row.coins || 0) + pieces + nouveaux.length * 10;
