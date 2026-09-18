@@ -234,7 +234,7 @@
           erreurs++;
           affiche();
           if (erreurs === 5) {
-            fin(zone, `Perdu ! Le mot était ${mot}…`, true, () => pendu(zone, onFini));
+            fin(zone, "Perdu ! Le mot garde son mystère… essaie encore !", true, () => pendu(zone, onFini));
           }
         }
       };

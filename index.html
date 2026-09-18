@@ -215,6 +215,16 @@
   .topbar .who { flex: 1; min-width: 0; }
   .topbar .who b { font-size: 19px; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .topbar .who small { color: var(--gold); font-size: 15px; }
+  .topbar .tbadges {
+    flex: none;
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    border: 1.5px solid var(--border);
+    background: var(--bg-card);
+    font-size: 21px;
+    cursor: pointer;
+  }
+  .topbar .tbadges:active { transform: scale(.92); background: var(--bg-card-hover); }
   .topbar .switch {
     background: none; border: 0; color: var(--dim);
     font-family: inherit; font-size: 13px; font-style: italic;
@@ -586,6 +596,7 @@
       <b id="meName">Salut !</b>
       <small id="mePoints">⭐ 0 point</small>
     </div>
+    <button class="tbadges" onclick="showBadges()" title="Tes badges">🎖️</button>
     <button class="switch" onclick="logout()">changer<br>de joueur</button>
   </div>
   <div class="daily" id="defiCard"></div>
@@ -950,20 +961,21 @@
   function showMain() {
     $("meAvatar").textContent = me.avatar;
     $("meName").textContent = `Salut ${me.pseudo} !`;
-    $("mePoints").textContent = `⭐ ${me.points} pts · 🪙 ${me.coins || 0} · 📅 ${me.days || 0} j`;
+    $("mePoints").textContent = `⭐ ${me.points} · 🪙 ${me.coins || 0} · 📅 ${me.days || 0} j`;
     const defi = MesJeux.defiDuJour();
     $("defiCard").className = "daily defi";
     $("defiCard").innerHTML = `<span class="em">🎯</span><span class="tx"><b>Défi du jour</b><span>${defi.label}<br><b style="display:inline;color:#ffd27a;">Récompense : ${defi.texte}</b></span></span>`;
     const mj = MiniJeux.jeuDuJour();
     const fait = (me.wins || {}).mini === MesJeux.today();
     $("miniCard").className = "daily mini";
-    $("miniCard").innerHTML = `<span class="em">${mj.emoji}</span><span class="tx"><b>${mj.nom}</b><span>${fait ? "Réussi aujourd'hui — bravo !" : "Ton mini-jeu du jour t'attend !"}</span></span>
-      <button class="${fait ? "fait" : ""}" onclick="showMini()">${fait ? "rejouer" : "Jouer"}</button>`;
+    $("miniCard").innerHTML = `<span class="em">${mj.emoji}</span><span class="tx"><b>${mj.nom}</b><span>${fait ? "✓ Réussi aujourd'hui — reviens demain !" : "Ton mini-jeu du jour t'attend !"}</span></span>
+      ${fait ? "" : `<button onclick="showMini()">Jouer</button>`}`;
     show("scr-main");
   }
 
   // ——— Mini-jeu du jour ———
   function showMini() {
+    if ((me.wins || {}).mini === MesJeux.today()) return;
     const mj = MiniJeux.jeuDuJour();
     $("mjTitre").textContent = `${mj.emoji} ${mj.nom}`;
     $("mjZone").innerHTML = "";
