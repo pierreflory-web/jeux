@@ -1084,6 +1084,9 @@
     if (nouveaux.length) setTimeout(() => fanfare(days, nouveaux), 600);
     if (days >= 7) setTimeout(() => accorderBadge("fidele"), nouveaux.length ? 4000 : 1200);
     if (days >= 30) setTimeout(() => accorderBadge("veteran"), nouveaux.length ? 5000 : 2200);
+    if (nouveaux.length && ownedAvatars({ ...row, days }).length >= 10) {
+      setTimeout(() => accorderBadge("collectionneur"), 6000);
+    }
     return { ...row, days, last_day: t };
   }
   function fanfare(days, avatars) {
