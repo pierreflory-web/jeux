@@ -852,9 +852,14 @@
           avatar: draft.avatar,
           question: draft.question,
           answer_hash: await hashAnswer(draft.pseudo, draft.answer),
-          pin_hash: await hashPin(draft.pseudo, pin)
+          pin_hash: await hashPin(draft.pseudo, pin),
+          points: 50,
+          coins: 20,
+          week_points: 50,
+          week_id: MesJeux.weekId()
         });
         login(row);
+        setTimeout(afficherBienvenue, 1200);
       } catch { pinError("Impossible de créer le profil, réessaie."); }
 
     } else if (pinMode === "reset") {
@@ -977,6 +982,18 @@
       if (stats.mj >= 10) accorderBadge("habitue");
       await refreshMe();
     }
+  }
+
+  // ——— Cadeau de bienvenue des nouveaux joueurs ———
+  function afficherBienvenue() {
+    $("revealBox").innerHTML = `
+      <div style="font-size:34px;">🤠 ✨ 🤠</div>
+      <h2 style="margin:10px 0 4px;">Bienvenue, ${esc(me.pseudo)} !</h2>
+      <div class="medaillon">🎁</div>
+      <p style="color:var(--cream);font-size:18px;margin:0;line-height:1.6;">Le Saloon t'offre<br><b style="color:var(--gold);">⭐ 50 points · 🪙 20 pièces</b><br>pour bien démarrer l'aventure !</p>
+      <p style="color:var(--muted);font-size:14px;margin:12px 0 16px;">Gagne des points en jouant, dépense tes pièces à la boutique… et vise le podium !</p>
+      <button class="btn" onclick="closeReveal()">Merveilleux !</button>`;
+    $("revealModal").hidden = false;
   }
 
   // ——— Cadeaux reçus : annonce à l'arrivée ———
