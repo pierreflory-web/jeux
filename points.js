@@ -144,6 +144,11 @@
           evenement("🤠", s.pseudo + " a capturé Mac Blain" + t + " !");
         }
         if (gameId === "quest") evenement("🔎", s.pseudo + " a résolu l'enquête Quest !");
+        if (gameId === "ranch") {
+          const n = extra.animaux || 0;
+          evenement("🌾", s.pseudo + " a soigné " + (n > 1 ? "ses " + n + " animaux au ranch" : "son ranch") + " !");
+        }
+        if (gameId === "saloon") evenement("📜", s.pseudo + " a livré la commande du saloon !");
       }
       nouveaux.forEach(function (b) {
         evenement("🎖️", s.pseudo + " a gagné le badge " + BADGES[b][0] + " " + BADGES[b][1] + " !");
