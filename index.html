@@ -1295,6 +1295,8 @@
   // Récompense : badge (la 1re fois), +10 pièces, et 35 points d'avance pour la nouvelle semaine.
   async function couronnerChampion(list) {
     const wk = MesJeux.weekId();
+    // un seul couronnement par semaine : si quelqu'un porte déjà la marque, c'est fait
+    if (list.some(p => (p.stats || {}).champ_week === wk)) return;
     const anciens = list.filter(p => p.week_id && p.week_id !== wk && (p.week_points || 0) > 0);
     if (!anciens.length) return;
     const derniereSemaine = anciens.map(p => p.week_id).sort().pop();
