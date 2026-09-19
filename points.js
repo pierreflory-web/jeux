@@ -48,6 +48,8 @@
     fidele:        ["📅", "Fidèle", "7 jours de jeu"],
     veteran:       ["🗓️", "Vétéran", "30 jours de jeu"],
     habitue:       ["🃏", "Habitué du saloon", "10 mini-jeux réussis"],
+    voltigeuse:    ["🧹", "Voltigeuse", "Traverser 10 anneaux d'un vol (Witch)"],
+    grande_voltige:["🥇", "Grande Voltige", "20 anneaux d'un vol — le cadre Or est offert"],
     fermier:       ["🌾", "Fermier", "S'occuper de son ranch"],
     eleveur:       ["🐮", "Grand éleveur", "8 animaux au ranch"],
     collectionneur:["🦁", "Collectionneur", "10 avatars possédés"],
@@ -63,7 +65,8 @@
     { game: "quest",  match: "premier coup",   label: "Résous Quest en accusant juste du premier coup", effet: "x2", texte: "pièces doublées !" },
     { game: "quest",  match: "Tous les indices", label: "Résous Quest avec tous les indices",       effet: 15,  texte: "+15 points !" },
     { game: "mini",   match: null,             label: "Réussis le mini-jeu du jour",                effet: 10,  texte: "+10 points !" },
-    { game: "ranch",  match: null,             label: "Soigne tous les animaux de ton ranch",       effet: 10,  texte: "+10 points !" }
+    { game: "ranch",  match: null,             label: "Soigne tous les animaux de ton ranch",       effet: 10,  texte: "+10 points !" },
+    { game: "witch",  match: "10 anneaux et plus", label: "Traverse 10 anneaux et plus d'un vol (Witch)", effet: "x2", texte: "pièces doublées !" }
   ];
   function defiDuJour() { return DEFIS[daySeed() % DEFIS.length]; }
 
@@ -79,7 +82,7 @@
     const s = session();
     if (!s) { toast(null, [], null, 0, 0, []); return; }
     try {
-      const rows = await sb("/players?select=id,pseudo,points,coins,wins,badges,week_points,week_id&id=eq." + s.id);
+      const rows = await sb("/players?select=id,pseudo,points,coins,wins,badges,week_points,week_id,stats&id=eq." + s.id);
       const row = rows[0];
       if (!row) return;
       const wins = row.wins || {};
@@ -116,22 +119,37 @@
         if (gameId === "ranch") gagne("fermier");
         if (gameId === "ranch" && extra.animaux >= 8) gagne("eleveur");
       }
+      // les badges de Witch dépendent du score du vol, même en repartie
+      if (gameId === "witch" && extra.anneaux >= 10) gagne("voltigeuse");
+      if (gameId === "witch" && extra.anneaux >= 20) gagne("grande_voltige");
+      // la Grande Voltige offre le cadre Or de la boutique
+      let statsMaj = null;
+      if (nouveaux.indexOf("grande_voltige") !== -1) {
+        const st = row.stats || {};
+        const cadres = (st.cadres || []).slice();
+        if (cadres.indexOf("or") === -1) {
+          cadres.push("or");
+          statsMaj = Object.assign({}, st, { cadres: cadres });
+        }
+      }
       // chaque badge gagné rapporte 10 pièces
       let coinsApres = (row.coins || 0) + pieces + nouveaux.length * 10;
       if (coinsApres >= 100) gagne("econome");
       coinsApres = (row.coins || 0) + pieces + nouveaux.length * 10;
 
       const wk = weekId();
+      const maj = {
+        points: row.points + total,
+        coins: coinsApres,
+        wins: wins,
+        badges: badges,
+        week_points: (row.week_id === wk ? (row.week_points || 0) : 0) + total,
+        week_id: wk
+      };
+      if (statsMaj) maj.stats = statsMaj;
       await sb("/players?id=eq." + s.id, {
         method: "PATCH",
-        body: JSON.stringify({
-          points: row.points + total,
-          coins: coinsApres,
-          wins: wins,
-          badges: badges,
-          week_points: (row.week_id === wk ? (row.week_points || 0) : 0) + total,
-          week_id: wk
-        })
+        body: JSON.stringify(maj)
       });
       try {
         localStorage.setItem(SESSION_KEY, JSON.stringify(Object.assign({}, s, { points: row.points + total })));
@@ -147,6 +165,10 @@
         if (gameId === "ranch") {
           const n = extra.animaux || 0;
           evenement("🌾", s.pseudo + " a soigné " + (n > 1 ? "ses " + n + " animaux au ranch" : "son ranch") + " !");
+        }
+        if (gameId === "witch") {
+          const n = extra.anneaux || 0;
+          evenement("🧙", s.pseudo + " a traversé " + n + " anneau" + (n > 1 ? "x" : "") + " sur son balai !");
         }
         if (gameId === "saloon") evenement("📜", s.pseudo + " a livré la commande du saloon !");
       }
@@ -179,6 +201,8 @@
         (nouveauxBadges || []).map(function (b) {
           return "<div style='color:#2ee6a8;font-size:14px;'>🎖️ Nouveau badge : " + BADGES[b][0] + " " + BADGES[b][1] + " ! (+10 🪙)</div>";
         }).join("") +
+        ((nouveauxBadges || []).indexOf("grande_voltige") !== -1
+          ? "<div style='color:#ffd27a;font-size:14px;'>🖼️ Le cadre <b>Or</b> est à toi — offert !</div>" : "") +
         "<div style='margin-top:6px;color:#ffd27a;'>🪙 +" + pieces + " pièce" + (pieces > 1 ? "s" : "") +
         " — Total : " + total + " pts · " + totalPieces + " pièce" + (totalPieces > 1 ? "s" : "") + "</div>";
     }
