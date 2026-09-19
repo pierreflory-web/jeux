@@ -1236,7 +1236,7 @@
   }
 
   // ——— Détection de nouvelle version ———
-  const VERSION = "2";
+  const VERSION = "3";
   async function verifierVersion() {
     try {
       const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }).then(r => r.json());
