@@ -813,7 +813,7 @@
     { nom: "Légendaires", prix: 100,
       avatars: ["🐉","🦖","👽","🚀","🔥","👑","💎","🏆","🎩","🗿","⚔️","🐳"] },
     { nom: "Mythiques", prix: 200,
-      avatars: ["🪐","🧞","🔱","🦕","🧿","🌌"] }
+      avatars: ["🪐","🧞","🔱","🦕","🧿","🌌","🐲","🏰","🌋","🌠","🎠","🪄"] }
   ];
   // ——— Titres ———
   const TITRES = [
@@ -1243,7 +1243,7 @@
   }
 
   // ——— Détection de nouvelle version ———
-  const VERSION = "3";
+  const VERSION = "6";
   async function verifierVersion() {
     try {
       const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }).then(r => r.json());
