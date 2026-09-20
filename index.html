@@ -792,6 +792,13 @@
       tag: "Voltige",
       description: "45 s de vol sur ton balai : file entre les anneaux, esquive pingouins et crapauds !",
       url: "https://pierreflory-web.github.io/witch/"
+    },
+    {
+      title: "Cubix",
+      icon: "https://pierreflory-web.github.io/cubix/icons/icon-192.png",
+      tag: "Arcade",
+      description: "Ton canon lance des cubes néon : détruis les vagues avant qu'elles ne touchent le sol, et enchaîne les combos jusqu'à x8 !",
+      url: "https://pierreflory-web.github.io/cubix/"
     }
   ];
 
@@ -1243,7 +1250,7 @@
   }
 
   // ——— Détection de nouvelle version ———
-  const VERSION = "6";
+  const VERSION = "7";
   async function verifierVersion() {
     try {
       const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }).then(r => r.json());

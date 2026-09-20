@@ -50,6 +50,9 @@
     habitue:       ["🃏", "Habitué du saloon", "10 mini-jeux réussis"],
     voltigeuse:    ["🧹", "Voltigeuse", "Traverser 10 anneaux d'un vol (Witch)"],
     grande_voltige:["🥇", "Grande Voltige", "20 anneaux d'un vol — le cadre Or est offert"],
+    cube_combo:    ["🔥", "Combo Max", "Multiplicateur x8 sur Cubix"],
+    cube_survivant:["🛡️", "Survivant", "Atteindre la vague 5 de Cubix"],
+    cube_millier:  ["🟦", "Millier", "1 000 points en une partie de Cubix"],
     fermier:       ["🌾", "Fermier", "S'occuper de son ranch"],
     eleveur:       ["🐮", "Grand éleveur", "8 animaux au ranch"],
     collectionneur:["🦁", "Collectionneur", "10 avatars possédés"],
@@ -66,7 +69,8 @@
     { game: "quest",  match: "Tous les indices", label: "Résous Quest avec tous les indices",       effet: 15,  texte: "+15 points !" },
     { game: "mini",   match: null,             label: "Réussis le mini-jeu du jour",                effet: 10,  texte: "+10 points !" },
     { game: "ranch",  match: null,             label: "Soigne tous les animaux de ton ranch",       effet: 10,  texte: "+10 points !" },
-    { game: "witch",  match: "10 anneaux et plus", label: "Traverse 10 anneaux et plus d'un vol (Witch)", effet: "x2", texte: "pièces doublées !" }
+    { game: "witch",  match: "10 anneaux et plus", label: "Traverse 10 anneaux et plus d'un vol (Witch)", effet: "x2", texte: "pièces doublées !" },
+    { game: "cubix",  match: "vague 5",          label: "Atteins la vague 5 sur Cubix",               effet: "x2", texte: "pièces doublées !" }
   ];
   function defiDuJour() { return DEFIS[daySeed() % DEFIS.length]; }
 
@@ -122,6 +126,10 @@
       // les badges de Witch dépendent du score du vol, même en repartie
       if (gameId === "witch" && extra.anneaux >= 10) gagne("voltigeuse");
       if (gameId === "witch" && extra.anneaux >= 20) gagne("grande_voltige");
+      // les badges de Cubix dépendent de la partie, même en repartie
+      if (gameId === "cubix" && extra.combo >= 8) gagne("cube_combo");
+      if (gameId === "cubix" && extra.vague >= 5) gagne("cube_survivant");
+      if (gameId === "cubix" && extra.score >= 1000) gagne("cube_millier");
       // la Grande Voltige offre le cadre Or de la boutique
       let statsMaj = null;
       if (nouveaux.indexOf("grande_voltige") !== -1) {
@@ -169,6 +177,9 @@
         if (gameId === "witch") {
           const n = extra.anneaux || 0;
           evenement("🧙", s.pseudo + " a traversé " + n + " anneau" + (n > 1 ? "x" : "") + " sur son balai !");
+        }
+        if (gameId === "cubix") {
+          evenement("🟦", s.pseudo + " a marqué " + (extra.score || 0) + " points au canon de Cubix !");
         }
         if (gameId === "saloon") evenement("📜", s.pseudo + " a livré la commande du saloon !");
       }
