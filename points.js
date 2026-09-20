@@ -53,6 +53,9 @@
     cube_combo:    ["🔥", "Combo Max", "Multiplicateur x8 sur Cubix"],
     cube_survivant:["🛡️", "Survivant", "Atteindre la vague 5 de Cubix"],
     cube_millier:  ["🟦", "Millier", "1 000 points en une partie de Cubix"],
+    postier:       ["📬", "Postier", "Attraper 10 lettres d'une course (Courrier Express)"],
+    grand_galop:   ["🐎", "Grand Galop", "Parcourir 1 000 m d'une course (Courrier Express)"],
+    messager:      ["📯", "Messager Légendaire", "2 000 m d'une course — le courrier est passé !"],
     fermier:       ["🌾", "Fermier", "S'occuper de son ranch"],
     eleveur:       ["🐮", "Grand éleveur", "8 animaux au ranch"],
     collectionneur:["🦁", "Collectionneur", "10 avatars possédés"],
@@ -70,7 +73,8 @@
     { game: "mini",   match: null,             label: "Réussis le mini-jeu du jour",                effet: 10,  texte: "+10 points !" },
     { game: "ranch",  match: null,             label: "Soigne tous les animaux de ton ranch",       effet: 10,  texte: "+10 points !" },
     { game: "witch",  match: "10 anneaux et plus", label: "Traverse 10 anneaux et plus d'un vol (Witch)", effet: "x2", texte: "pièces doublées !" },
-    { game: "cubix",  match: "vague 5",          label: "Atteins la vague 5 sur Cubix",               effet: "x2", texte: "pièces doublées !" }
+    { game: "cubix",  match: "vague 5",          label: "Atteins la vague 5 sur Cubix",               effet: "x2", texte: "pièces doublées !" },
+    { game: "courrier", match: "10 lettres",     label: "Attrape 10 lettres et plus d'une course (Courrier Express)", effet: "x2", texte: "pièces doublées !" }
   ];
   function defiDuJour() { return DEFIS[daySeed() % DEFIS.length]; }
 
@@ -130,6 +134,10 @@
       if (gameId === "cubix" && extra.combo >= 8) gagne("cube_combo");
       if (gameId === "cubix" && extra.vague >= 5) gagne("cube_survivant");
       if (gameId === "cubix" && extra.score >= 1000) gagne("cube_millier");
+      // les badges du Courrier Express dépendent de la course, même en repartie
+      if (gameId === "courrier" && extra.lettres >= 10) gagne("postier");
+      if (gameId === "courrier" && extra.m >= 1000) gagne("grand_galop");
+      if (gameId === "courrier" && extra.m >= 2000) gagne("messager");
       // la Grande Voltige offre le cadre Or de la boutique
       let statsMaj = null;
       if (nouveaux.indexOf("grande_voltige") !== -1) {
@@ -180,6 +188,9 @@
         }
         if (gameId === "cubix") {
           evenement("🟦", s.pseudo + " a marqué " + (extra.score || 0) + " points au canon de Cubix !");
+        }
+        if (gameId === "courrier") {
+          evenement("📬", s.pseudo + " a galopé " + (extra.m || 0) + " m et livré " + (extra.lettres || 0) + " lettre" + ((extra.lettres || 0) > 1 ? "s" : "") + " !");
         }
         if (gameId === "saloon") evenement("📜", s.pseudo + " a livré la commande du saloon !");
       }

@@ -800,6 +800,13 @@
       tag: "Arcade",
       description: "Ton canon lance des cubes néon : détruis les vagues avant qu'elles ne touchent le sol, et enchaîne les combos jusqu'à x8 !",
       url: "https://pierreflory-web.github.io/cubix/"
+    },
+    {
+      title: "Courrier Express",
+      icon: "https://pierreflory-web.github.io/courrier/icons/icon-192.png",
+      tag: "Course",
+      description: "Au galop, cavalier ! Saute rochers et cactus, attrape lettres et pièces, et livre le courrier le plus loin possible.",
+      url: "https://pierreflory-web.github.io/courrier/"
     }
   ];
 
@@ -1290,7 +1297,7 @@
   }
 
   // ——— Détection de nouvelle version ———
-  const VERSION = "10";
+  const VERSION = "11";
   async function verifierVersion() {
     try {
       const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }).then(r => r.json());
