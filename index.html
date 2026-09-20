@@ -692,6 +692,7 @@
     <p style="margin:0 0 10px;color:#ff9dd6;font-size:17px;font-weight:bold;">📰 Les nouvelles du Saloon</p>
     <div id="exploitsList" style="display:grid;gap:8px;"></div>
   </section>
+  <button class="btn" style="margin-top:24px;" onclick="openCalendrier()">📅 Le calendrier des fêtes</button>
   <footer>Bonne partie à toi</footer>
   <button class="fab" onclick="showBoard()" title="Classement">🏆</button>
 </div>
@@ -896,6 +897,31 @@
     const d = new Date();
     const fin = new Date(d.getFullYear() + (f.debut > f.fin && d.getMonth() + 1 >= 11 ? 1 : 0), parseInt(f.fin.slice(0, 2)) - 1, parseInt(f.fin.slice(3)));
     return Math.max(1, Math.ceil((fin - d) / 86400000));
+  }
+
+  // Le calendrier des fêtes, ouvert par le bouton en bas de l'accueil
+  function openCalendrier() {
+    const dm = md => md.slice(3) + "/" + md.slice(0, 2);
+    const active = feteActive();
+    $("revealBox").innerHTML = `
+      <h2 style="margin:4px 0 2px;">📅 Les fêtes du Saloon</h2>
+      <p style="color:var(--muted);font-size:14px;margin:0 0 14px;">Pendant chaque fête, 5 avatars exclusifs à ${FETE_PRIX} 🪙 en boutique !</p>
+      <div style="display:grid;gap:8px;text-align:left;max-height:56vh;overflow-y:auto;">
+        ${FETES.map(f => {
+          const on = active && active.id === f.id;
+          return `
+          <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:12px;background:${on ? f.fond : "#3c2469"};border:2px solid ${on ? f.bord : "transparent"};">
+            <span style="font-size:24px;">${f.emoji}</span>
+            <div style="flex:1;min-width:0;">
+              <b style="font-size:14.5px;">${f.nom}</b>${on ? ` <span style="color:${f.bord};font-size:12px;font-weight:bold;">— en ce moment, encore ${joursRestants(f)} j !</span>` : ""}
+              <div style="font-size:13px;color:var(--muted);">du ${dm(f.debut)} au ${dm(f.fin)}</div>
+            </div>
+            <span style="font-size:14px;letter-spacing:1px;white-space:nowrap;">${f.avatars.join("")}</span>
+          </div>`;
+        }).join("")}
+      </div>
+      <button class="btn" style="margin-top:16px;" onclick="closeReveal()">Fermer</button>`;
+    $("revealModal").hidden = false;
   }
 
   function ownedAvatars(row) {
@@ -1264,7 +1290,7 @@
   }
 
   // ——— Détection de nouvelle version ———
-  const VERSION = "9";
+  const VERSION = "10";
   async function verifierVersion() {
     try {
       const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }).then(r => r.json());
