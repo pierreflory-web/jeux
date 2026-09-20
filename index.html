@@ -872,12 +872,18 @@
       fond: "#332508", bord: "#ffd700", texte: "#f5e6c8", avatars: ["⛏️","💰","🌵","🐎","🏜️"] },
     { id: "noel", nom: "Le Noël du Saloon", emoji: "🎄", debut: "12-12", fin: "01-02",
       fond: "#0e2a3d", bord: "#7ec8e3", texte: "#cde8f5", avatars: ["🎅","🎄","⛄","🦌","🎁"] },
+    { id: "hiver", nom: "Les Jeux d'Hiver du Saloon", emoji: "⛷️", debut: "01-15", fin: "01-31",
+      fond: "#0e1f3d", bord: "#a8d8f0", texte: "#d5e9f5", avatars: ["⛷️","🏂","⛸️","☃️","🧣"] },
     { id: "carnaval", nom: "Le Carnaval du Saloon", emoji: "🎭", debut: "02-10", fin: "02-24",
       fond: "#3d0e2e", bord: "#ff9dd6", texte: "#f5cde8", avatars: ["🎭","🤹","🎪","🦜","🥳"] },
     { id: "paques", nom: "Pâques au Saloon", emoji: "🐰", debut: "03-28", fin: "04-12",
       fond: "#1e3d0e", bord: "#a8e67a", texte: "#dff5cd", avatars: ["🐰","🥚","🐣","🌷","🍫"] },
+    { id: "printemps", nom: "Le Printemps du Saloon", emoji: "🌸", debut: "04-20", fin: "05-05",
+      fond: "#2e0e30", bord: "#f0a8d8", texte: "#f5d5ec", avatars: ["🌸","🐝","🦋","🐞","🌼"] },
     { id: "foraine", nom: "La Fête Foraine du Saloon", emoji: "🎡", debut: "07-01", fin: "07-15",
-      fond: "#3d0e0e", bord: "#ff6f61", texte: "#f5cdcd", avatars: ["🎡","🎢","🍭","🧸","😎"] }
+      fond: "#3d0e0e", bord: "#ff6f61", texte: "#f5cdcd", avatars: ["🎡","🎢","🍭","🧸","😎"] },
+    { id: "etoiles", nom: "La Nuit des Étoiles", emoji: "🌠", debut: "08-01", fin: "08-15",
+      fond: "#0d0b26", bord: "#b8a8f0", texte: "#ddd5f5", avatars: ["🔭","🌙","☄️","🛰️","👩‍🚀"] }
   ];
   const FETE_PRIX = 60;
   function feteActive() {
@@ -1258,7 +1264,7 @@
   }
 
   // ——— Détection de nouvelle version ———
-  const VERSION = "8";
+  const VERSION = "9";
   async function verifierVersion() {
     try {
       const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }).then(r => r.json());
