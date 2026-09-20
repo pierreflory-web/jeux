@@ -862,14 +862,22 @@
 
   // ——— Fêtes de l'année ———
   const FETES = [
+    { id: "neon", nom: "La Nuit Néon du Saloon", emoji: "🕹️", debut: "09-20", fin: "10-04",
+      fond: "#12102e", bord: "#46f2e0", texte: "#c9e8e3", avatars: ["🕹️","👾","💾","📼","🌃"] },
+    { id: "moisson", nom: "La Moisson du Saloon", emoji: "🌾", debut: "10-05", fin: "10-19",
+      fond: "#2e1c0e", bord: "#e8a93f", texte: "#f0d9b5", avatars: ["🍂","🌾","🦔","🍄","🌰"] },
     { id: "halloween", nom: "L'Halloween du Saloon", emoji: "🎃", debut: "10-20", fin: "11-02",
       fond: "#3d1f0e", bord: "#ff8c42", texte: "#e8c9a8", avatars: ["🎃","👻","🕷️","🧛‍♀️","🌕"] },
+    { id: "ruee", nom: "La Ruée vers l'Or", emoji: "⛏️", debut: "11-10", fin: "11-24",
+      fond: "#332508", bord: "#ffd700", texte: "#f5e6c8", avatars: ["⛏️","💰","🌵","🐎","🏜️"] },
     { id: "noel", nom: "Le Noël du Saloon", emoji: "🎄", debut: "12-12", fin: "01-02",
       fond: "#0e2a3d", bord: "#7ec8e3", texte: "#cde8f5", avatars: ["🎅","🎄","⛄","🦌","🎁"] },
     { id: "carnaval", nom: "Le Carnaval du Saloon", emoji: "🎭", debut: "02-10", fin: "02-24",
       fond: "#3d0e2e", bord: "#ff9dd6", texte: "#f5cde8", avatars: ["🎭","🤹","🎪","🦜","🥳"] },
     { id: "paques", nom: "Pâques au Saloon", emoji: "🐰", debut: "03-28", fin: "04-12",
-      fond: "#1e3d0e", bord: "#a8e67a", texte: "#dff5cd", avatars: ["🐰","🥚","🐣","🌷","🍫"] }
+      fond: "#1e3d0e", bord: "#a8e67a", texte: "#dff5cd", avatars: ["🐰","🥚","🐣","🌷","🍫"] },
+    { id: "foraine", nom: "La Fête Foraine du Saloon", emoji: "🎡", debut: "07-01", fin: "07-15",
+      fond: "#3d0e0e", bord: "#ff6f61", texte: "#f5cdcd", avatars: ["🎡","🎢","🍭","🧸","😎"] }
   ];
   const FETE_PRIX = 60;
   function feteActive() {
@@ -1250,7 +1258,7 @@
   }
 
   // ——— Détection de nouvelle version ———
-  const VERSION = "7";
+  const VERSION = "8";
   async function verifierVersion() {
     try {
       const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }).then(r => r.json());
