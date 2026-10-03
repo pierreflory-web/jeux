@@ -254,6 +254,10 @@ function freshState(){
 /* ---------- Sauvegarde : navigateur + Supabase (colonne players.ville) ---------- */
 const SB_URL="https://xmuohrglecqtpoyzssfj.supabase.co/rest/v1",SB_KEY="sb_publishable_Y9EMQFz64Vt0n1GAs9wv1A_ciDRgNVz";
 const DEV=/[?&]dev=1/.test(location.search);
+const VERSION='13';
+let NEWVER=false;
+async function checkVersion(){try{const r=await fetch('../version.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.json());if(r.v&&r.v!==VERSION&&!NEWVER){NEWVER=true;renderBanner()}}catch(e){}}
+function reloadFresh(){pushRemote(true);location.replace('./?v='+Date.now()+(DEV?'&dev=1':''))}
 const ME=(window.MesJeux&&MesJeux.session())||null;
 let REMOTE=false,FAM=null,saveTimer=null;
 async function sb(path,opt={}){const r=await fetch(SB_URL+path,{...opt,headers:{apikey:SB_KEY,Authorization:'Bearer '+SB_KEY,'Content-Type':'application/json'}});if(!r.ok)throw new Error('supabase '+r.status);return r.status===204?null:r.json()}
@@ -549,6 +553,7 @@ function renderGus(){
 }
 function renderBanner(){
   const b=document.getElementById('bannerBox');
+  if(NEWVER&&!PENDING){b.innerHTML=`<div class="banner"><span>✨ Une nouvelle version est arrivée !</span><button data-act="update">Mettre à jour</button></div>`;return}
   if(PENDING){b.innerHTML=`<div class="banner"><span>Touche un terrain vert pour poser : ${PENDING==='maison'?'Tente':BUILD[PENDING].name}</span><button data-act="cancelPending">Annuler</button></div>`;return}
   const h=S.posters.find(p=>p.hunt&&!p.captured);
   if(VISIT){const f=friends().find(x=>x.id===VISIT);b.innerHTML=`<div class="banner" style="background:#633806;border-color:#412402"><span>Tu visites la ville de ${esc(f.owner)}. <span class="sim">exemple</span></span></div>`;return}
@@ -943,6 +948,7 @@ function settingsSheet(){
   ${vac?`<div class="card row"><b class="grow">Fermé encore ${left} jour${left>1?'s':''}</b><button class="btn small" data-act="vac" data-v="0">Rouvrir</button></div>`:`<div class="toggle">${[3,7,14].map(d=>`<button class="tab" data-act="vac" data-v="${d}">${d} jours</button>`).join('')}</div>`}
   <h3>La Gazette</h3><button class="btn full" data-act="readGazette">Relire la dernière Gazette</button>
   <h3>Sauvegarde</h3><p class="muted">${!ME?'Tu n’es pas connecté : ta ville est gardée sur cet appareil seulement. Connecte-toi sur Mes Jeux pour la sauvegarder.':REMOTE?`Ta ville est sauvegardée en ligne, au nom de <b>${esc(ME.pseudo)}</b>.`:'Sauvegarde en ligne indisponible : ta ville est gardée sur cet appareil.'}</p>
+  <h3>Version</h3><div class="card row"><div class="grow"><b>Version ${VERSION}</b><div class="muted">${NEWVER?'Une nouvelle version est disponible.':'Recharge le jeu pour être sûr d’avoir la dernière version.'}</div></div><button class="btn small ${NEWVER?'green':'primary'}" data-act="update">Mettre à jour</button></div>
   <a class="btn full" href="../" style="text-decoration:none">← Retour à Mes Jeux</a>
   ${DEV?`<h3>Outils de test</h3>
   <div class="btns" style="flex-wrap:wrap"><button class="btn small" data-act="dev" data-v="day">⏩ Avancer d’1 jour</button><button class="btn small" data-act="dev" data-v="day3">⏩ 3 jours (absence)</button><button class="btn small" data-act="dev" data-v="hour">⏩ +6 heures</button><button class="btn small" data-act="dev" data-v="raid">Attaque maintenant</button><button class="btn small" data-act="dev" data-v="merchant">Faire venir Pedro</button><button class="btn small" data-act="dev" data-v="rich">+500 de tout</button><button class="btn small" data-act="dev" data-v="beginner">${S.noBeginner?'Rétablir':'Retirer'} la protection débutant</button><button class="btn small red" data-act="dev" data-v="reset">Tout recommencer</button></div>`:''}`;
@@ -1006,6 +1012,7 @@ const ACT={
   rename:()=>{const v=document.getElementById('tName').value.trim();if(!v){document.getElementById('tNameErr').textContent='Ta ville a besoin d’un nom.';return}S.name=v;save();renderAll();toast('Nouveau panneau à l’entrée de la ville !')},
   vac:d=>{S.vacationUntil=+d.v?now()+ +d.v*DAY:0;save();refreshSheet();toast(+d.v?`Fermé pour ${d.v} jours.`:'La ville rouvre !')},
   dev:d=>dev(d.v),
+  update:()=>reloadFresh(),
 };
 document.getElementById('app').addEventListener('click',e=>{
   const el=e.target.closest('[data-act]');if(!el)return;
@@ -1035,7 +1042,8 @@ if(!S.caps)S.caps={};
 renderAll();
 tick();
 loadRemote().then(()=>{renderAll();tick(true)});
-document.addEventListener('visibilitychange',()=>{if(document.hidden)pushRemote(true);else checkGains()});
+document.addEventListener('visibilitychange',()=>{if(document.hidden)pushRemote(true);else{checkGains();checkVersion()}});
+checkVersion();setInterval(checkVersion,300000);
 window.addEventListener('pagehide',()=>pushRemote(true));
 setInterval(tick,3000);
 setInterval(()=>{if(Math.random()<.5)spawnTumble()},12000);
