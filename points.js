@@ -170,7 +170,7 @@
       try {
         localStorage.setItem(SESSION_KEY, JSON.stringify(Object.assign({}, s, { points: row.points + total })));
       } catch (e) {}
-      toast(s.pseudo, detail, row.points + total, pieces, coinsApres, nouveaux);
+      toast(s.pseudo, detail, row.points + total, pieces, coinsApres, nouveaux, villeRessources(gameId, extra, pieces));
       // le fil des exploits
       if (!repeat) {
         if (gameId === "cowboy") {
@@ -228,14 +228,14 @@
     return villeEnvoi(playerId, item);
   }
 
-  function toast(pseudo, detail, total, pieces, totalPieces, nouveauxBadges) {
+  function toast(pseudo, detail, total, pieces, totalPieces, nouveauxBadges, villeR) {
     const old = document.getElementById("mesjeux-toast");
     if (old) old.remove();
     const el = document.createElement("div");
     el.id = "mesjeux-toast";
     el.style.cssText = "position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:99999;" +
       "background:#2a1445;color:#f0eaff;border:2px solid #ffd27a;border-radius:16px;" +
-      "padding:14px 22px;font-family:Georgia,serif;font-size:16px;text-align:center;" +
+      "padding:14px 34px 14px 22px;cursor:pointer;font-family:Georgia,serif;font-size:16px;text-align:center;" +
       "box-shadow:0 8px 30px rgba(0,0,0,.5);max-width:88vw;line-height:1.5;";
     if (!pseudo) {
       el.innerHTML = "⭐ <b>Connecte-toi sur « Mes Jeux »</b> pour gagner des points la prochaine fois !";
@@ -253,10 +253,17 @@
         ((nouveauxBadges || []).indexOf("grande_voltige") !== -1
           ? "<div style='color:#ffd27a;font-size:14px;'>🖼️ Le cadre <b>Or</b> est à toi — offert !</div>" : "") +
         "<div style='margin-top:6px;color:#ffd27a;'>🪙 +" + pieces + " pièce" + (pieces > 1 ? "s" : "") +
-        " — Total : " + total + " pts · " + totalPieces + " pièce" + (totalPieces > 1 ? "s" : "") + "</div>";
+        " — Total : " + total + " pts · " + totalPieces + " pièce" + (totalPieces > 1 ? "s" : "") + "</div>" +
+        (villeR ? "<div style='margin-top:4px;color:#f5c4b3;font-size:14px;'>🏘️ Pour ta ville : " +
+          Object.keys(villeR).filter(function (k) { return villeR[k] > 0; }).map(function (k) {
+            return "+" + villeR[k] + " " + { p: "$", b: "bois", pi: "pierre", f: "foin", m: "magie" }[k];
+          }).join(" · ") + "</div>" : "");
     }
+    el.innerHTML += "<span style='position:absolute;top:6px;right:12px;font-size:18px;color:#c9b3e8;'>✕</span>" +
+      "<div style='color:#8f7bb0;font-size:12px;margin-top:6px;'>Touche pour fermer</div>";
+    el.onclick = function () { el.remove(); };
     document.body.appendChild(el);
-    setTimeout(function () { el.remove(); }, 9000);
+    setTimeout(function () { el.remove(); }, 20000);
   }
 
   window.MesJeux = {
