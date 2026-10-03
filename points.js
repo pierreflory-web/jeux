@@ -197,8 +197,35 @@
       nouveaux.forEach(function (b) {
         evenement("🎖️", s.pseudo + " a gagné le badge " + BADGES[b][0] + " " + BADGES[b][1] + " !");
       });
+      await villeGains(s.id, gameId, extra, pieces);
       return { total: total, pieces: pieces, nouveauxBadges: nouveaux };
     } catch (e) { /* pas de réseau : la victoire reste, les points attendront */ }
+  }
+
+  // ——— Ma Ville : chaque partie envoie des ressources à la ville du joueur ———
+  // La ville les récupère (avec les plafonds du jour) à sa prochaine ouverture.
+  function villeRessources(gameId, extra, pieces) {
+    const r = { p: 10 + pieces * 2 }; // des dollars pour la ville, à chaque partie
+    if (gameId === "courrier") r.b = Math.min(15, Math.floor((extra.m || 0) / 100));
+    if (gameId === "cubix") r.pi = Math.min(15, Math.max(1, Math.floor((extra.score || 0) / 80)));
+    if (gameId === "ranch") r.f = Math.min(10, 2 + (extra.animaux || 0));
+    if (gameId === "witch") r.m = Math.min(4, Math.floor((extra.anneaux || 0) / 5));
+    return r;
+  }
+  async function villeEnvoi(playerId, item) {
+    try {
+      const rows = await sb("/players?select=ville_gains&id=eq." + playerId);
+      if (!rows[0]) return;
+      const g = (rows[0].ville_gains || []).slice(-60);
+      g.push(Object.assign({ d: today(), at: Date.now() }, item));
+      await sb("/players?id=eq." + playerId, { method: "PATCH", body: JSON.stringify({ ville_gains: g }) });
+    } catch (e) { /* colonne absente ou pas de réseau : tant pis */ }
+  }
+  function villeGains(playerId, gameId, extra, pieces) {
+    const item = { g: gameId, r: villeRessources(gameId, extra || {}, pieces || 1) };
+    if (gameId === "cowboy") item.u = "prison";
+    if (gameId === "witch") item.anneaux = (extra || {}).anneaux || 0;
+    return villeEnvoi(playerId, item);
   }
 
   function toast(pseudo, detail, total, pieces, totalPieces, nouveauxBadges) {
@@ -233,7 +260,7 @@
   }
 
   window.MesJeux = {
-    award: award, session: session, defiDuJour: defiDuJour, evenement: evenement,
+    award: award, session: session, villeEnvoi: villeEnvoi, defiDuJour: defiDuJour, evenement: evenement,
     BADGES: BADGES, weekId: weekId, daySeed: daySeed, today: today
   };
 })();

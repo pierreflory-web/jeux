@@ -807,6 +807,13 @@
       tag: "Course",
       description: "Au galop, cavalier ! Saute rochers et cactus, attrape lettres et pièces, et livre le courrier le plus loin possible.",
       url: "https://pierreflory-web.github.io/courrier/"
+    },
+    {
+      title: "Ma Ville",
+      icon: "ville/icon.svg",
+      tag: "Construction",
+      description: "Bâtis ta ville du Far West avec ce que tu gagnes dans les autres jeux, défends-la des bandits et placarde leurs avis de recherche !",
+      url: "ville/"
     }
   ];
 
@@ -1297,7 +1304,7 @@
   }
 
   // ——— Détection de nouvelle version ———
-  const VERSION = "11";
+  const VERSION = "12";
   async function verifierVersion() {
     try {
       const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }).then(r => r.json());
