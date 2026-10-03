@@ -208,7 +208,7 @@ const K='#412402';
 
 const BUILD={
   maison:{name:'Maison',cat:'Habitations',desc:'Loge des habitants. S’améliore sur place : tente, cabane, maison en bois, maison en pierre.',levels:[
-    {n:'Tente',min:1,cost:{p:20},pop:2},{n:'Cabane',min:2,cost:{b:30},pop:5},{n:'Maison en bois',min:3,cost:{b:60,pi:20},pop:10},{n:'Maison en pierre',min:4,cost:{b:40,pi:80},pop:20}]},
+    {n:'Tente',min:1,cost:{p:20},pop:2},{n:'Cabane',min:1,cost:{b:30},pop:5},{n:'Maison en bois',min:2,cost:{b:60,pi:20},pop:10},{n:'Maison en pierre',min:3,cost:{b:40,pi:80},pop:20}]},
   hotel:{name:'Hôtel',cat:'Habitations',unique:1,desc:'Un grand hôtel de trois étages : +30 habitants.',levels:[{min:4,cost:{p:200,b:80,pi:60},pop:30}]},
   potager:{name:'Potager',cat:'Production',desc:'Des légumes vendus au marché.',levels:[{min:1,cost:{f:10},prod:{p:5}}]},
   saloon:{name:'Saloon',cat:'Production',unique:1,desc:'Les clients paient leur limonade. Obligatoire pour devenir un Village.',levels:[{min:2,cost:{p:80,b:40},prod:{p:15}},{min:2,cost:{p:120,b:60},prod:{p:25}},{min:3,cost:{p:200,b:80,pi:40},prod:{p:40}}]},
@@ -615,7 +615,7 @@ function bldSheet(i){
   if(r&&r.n>=1)h+=`<button class="btn green" data-act="collect" data-i="${i}">Récolter +${r.n}</button>`;
   if(p.c<100)h+=`<button class="btn" data-act="repair" data-i="${i}">Réparer ${costHTML(repairCost(p))}</button>`;
   if(nx)h+=`<button class="btn primary" data-act="upgrade" data-i="${i}">Améliorer</button>`;
-  h+=`</div>`;
+  h+=`</div><div class="btns"><button class="btn small" style="margin-left:auto;flex:none" data-act="demolish" data-i="${i}">Démolir</button></div>`;
   if(p.t==='magasin')h+=exchangeHTML();
   if(p.t==='sorciere')h+=`<h3>Le chaudron</h3><p class="muted">5 foin → 1 magie (3 fois par jour). Aujourd’hui : ${S.daily.cauldron}/3</p><button class="btn full" data-act="cauldron">Touiller le chaudron</button>`;
   if(p.t==='ecole')h+=missionsHTML();
@@ -623,6 +623,9 @@ function bldSheet(i){
   if(p.t==='sherif')h+=`<div class="btns"><button class="btn full" data-act="navPost">Voir le mur des affiches</button></div>`;
   return h;
 }
+function refundOf(p){const r={};BUILD[p.t].levels.slice(0,p.l).forEach(L=>Object.entries(L.cost).forEach(([k,v])=>r[k]=(r[k]||0)+Math.floor(v/2)));return r}
+function demolishAsk(i){const p=S.plots[i];openModal(`<h2>Démolir ${bName(p)} ?</h2><p style="text-align:center">Le terrain redevient libre et tu récupères la moitié de ce qu’il a coûté :</p><p style="text-align:center">${costHTML(refundOf(p))}</p><div class="btns"><button class="btn" data-act="closeModal">Garder</button><button class="btn red" data-act="demolishOk" data-i="${i}">Démolir</button></div>`)}
+function demolish(i){const p=S.plots[i];if(!p)return;const r=refundOf(p),n=bName(p);Object.entries(r).forEach(([k,v])=>S.res[k]+=v);S.plots[i]=null;flashRes(Object.keys(r),'flash');save();closeModal();closeSheet();renderAll();toast(`${n} démoli. Le terrain est libre.`)}
 function upgrade(i){const p=S.plots[i],nx=BUILD[p.t].levels[p.l];if(!nx)return;if(S.level<nx.min)return toast(`Il faut être ${LEVEL_NAMES[nx.min]} (niveau ${nx.min}).`);if(!canPay(nx.cost))return toast('Pas assez de ressources.');
   const r=ready(p);if(r&&r.n)gain(r.r,r.n);pay(nx.cost);p.l++;p.last=now();p.born=now();p.c=100;save();renderAll();openSheet(bName(p),()=>bldSheet(i));toast(`${bName(p)} : niveau ${p.l} !`);setTimeout(()=>{delete p.born;computeLevel()},1600)}
 function repair(i){const p=S.plots[i],c=repairCost(p);if(!canPay(c))return toast('Il te faut du bois pour réparer.');pay(c);p.c=100;S.daily.miss.repair++;save();renderAll();toast(`${bName(p)} est comme neuf !`)}
@@ -971,7 +974,7 @@ const ACT={
   plot:d=>{const i=+d.i;if(PENDING){placeAt(i,PENDING);return}PRESEL=i;openSheet('Bâtir ici',buildList)},
   bld:d=>{const p=S.plots[+d.i];if(PENDING)return toast('Ce terrain est occupé. Choisis un terrain vert.');openSheet(bName(p),()=>bldSheet(+d.i))},
   collect:d=>collect(+d.i),
-  upgrade:d=>upgrade(+d.i),
+  upgrade:d=>upgrade(+d.i),demolish:d=>demolishAsk(+d.i),demolishOk:d=>demolish(+d.i),
   repair:d=>repair(+d.i),
   exchange:()=>{const f=document.getElementById('exFrom').value,t=document.getElementById('exTo').value;const e=document.getElementById('exErr');if(f===t){e.textContent='Choisis deux ressources différentes.';return}if(S.res[f]<3){e.textContent=`Il te faut 3 ${RES_NAME[f]}.`;return}S.res[f]-=3;gain(t,1);flashRes([f],'lose');save();renderHUD();toast(`+1 ${RES_NAME[t]}`)},
   cauldron:()=>{if(S.daily.cauldron>=3)return toast('Le chaudron doit refroidir jusqu’à demain.');if(S.res.f<5)return toast('Il faut 5 foin.');S.res.f-=5;S.daily.cauldron++;gain('m',1);save();renderHUD();refreshSheet();toast('Blop ! +1 magie')},
