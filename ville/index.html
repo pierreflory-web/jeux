@@ -96,7 +96,7 @@ p{margin:6px 0;line-height:1.45}
 .mcard{background:var(--paper);border:3px solid var(--wood-d);border-radius:18px;max-width:440px;width:100%;max-height:94%;overflow:auto;padding:16px;animation:popm .3s cubic-bezier(.3,1.4,.6,1)}
 @keyframes popm{from{transform:scale(.85);opacity:0}}
 .mcard h2{font-family:Rye,Georgia,serif;font-weight:400;font-size:22px;margin:0 0 6px;text-align:center}
-#toast{position:absolute;left:50%;bottom:92px;transform:translateX(-50%);z-index:60;display:flex;flex-direction:column;gap:6px;align-items:center;pointer-events:none;width:92%}
+#toast{position:absolute;left:50%;top:118px;transform:translateX(-50%);z-index:60;display:flex;flex-direction:column;gap:6px;align-items:center;pointer-events:none;width:92%}
 .toast{background:var(--wood-d);color:var(--paper);border-radius:14px;padding:9px 14px;font-weight:800;font-size:15px;text-align:center;animation:tin .25s ease-out;pointer-events:auto;display:flex;gap:10px;align-items:center;box-shadow:0 4px 0 rgba(0,0,0,.25)}
 .toast button{border:2px solid var(--paper);background:transparent;color:var(--paper);border-radius:14px;min-height:32px;padding:0 10px;font-weight:800}
 @keyframes tin{from{transform:translateY(12px);opacity:0}}
@@ -160,6 +160,7 @@ p{margin:6px 0;line-height:1.45}
 .spin{animation:spin 1.2s linear infinite;transform-box:fill-box;transform-origin:center}
 @keyframes spin{to{transform:rotate(360deg)}}
 .tap{cursor:pointer}
+.tb svg{width:100%;height:100%;display:block}
 .kv{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px dashed #E2C99B;font-size:15px}
 .kv:last-child{border-bottom:0}
 .neg{color:#3B6D11;font-weight:800}.pos{color:#A32D2D;font-weight:800}
@@ -240,6 +241,9 @@ const BUILD={
   prison:{name:'Prison',cat:'Récompenses',unique:1,special:'traque',desc:'-50 % de risque d’attaque. Gagnée en capturant Mac Blain dans La Traque.',levels:[{min:1,cost:{}}]},
   sorciere:{name:'Tour de la sorcière',cat:'Récompenses',unique:1,special:'witch',desc:'Son chaudron transforme 5 foin en 1 magie. Gagnée avec 500 anneaux dans Witch.',levels:[{min:1,cost:{}}]},
 };
+/* Tout un peu moins cher : -10 % sur chaque prix */
+const REMISE=.9;
+Object.values(BUILD).forEach(d=>d.levels.forEach(L=>Object.keys(L.cost).forEach(r=>L.cost[r]=Math.max(1,Math.round(L.cost[r]*REMISE)))));
 const CATS=['Habitations','Production','Services','Défense','Récompenses'];
 
 /* ================== État ================== */
@@ -263,7 +267,7 @@ function freshState(){
 /* ---------- Sauvegarde : navigateur + Supabase (colonne players.ville) ---------- */
 const SB_URL="https://xmuohrglecqtpoyzssfj.supabase.co/rest/v1",SB_KEY="sb_publishable_Y9EMQFz64Vt0n1GAs9wv1A_ciDRgNVz";
 const DEV=/[?&]dev=1/.test(location.search);
-const VERSION='14';
+const VERSION='15';
 let NEWVER=false;
 async function checkVersion(){try{const r=await fetch('../version.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.json());if(r.v&&r.v!==VERSION&&!NEWVER){NEWVER=true;renderBanner()}}catch(e){}}
 function reloadFresh(){pushRemote(true);location.replace('./?v='+Date.now()+(DEV?'&dev=1':''))}
@@ -344,7 +348,7 @@ function contestSheet(){
   else h+=`<div class="posters" style="grid-template-columns:1fr 1fr">${list.map(e=>`<div style="text-align:center">${posterSVG(e.poster)}<div style="color:#FAEEDA;font-weight:800;font-size:13px;margin:4px 0">${esc(e.owner)} · ${e.votes} ♥</div>${e.me?'<span class="chip">Toi</span>':voted===e.id?'<span class="chip">Ton vote ✓</span>':voted?'':`<button class="btn small green" data-act="vote" data-id="${e.id}">Voter</button>`}</div>`).join('')}</div>`;
   if(!FAM)h+=`<p class="muted">${ME?'Les affiches de la famille n’ont pas pu être chargées.':'Connecte-toi sur Mes Jeux pour voir et voter pour les affiches de la famille.'}</p>`;
   const lw=weekId(-1),last=entries(lw);
-  if(last.length&&last[0].votes>0)h+=`<h3>Gagnant de la semaine dernière</h3><div class="card row"><div style="width:90px">${posterSVG(last[0].poster)}</div><div class="grow"><b>${esc(last[0].owner)}</b><div class="muted">« ${themeOf(lw)} » · ${last[0].votes} vote${last[0].votes>1?'s':''}</div></div></div>`;
+  if(last.length&&last[0].votes>0)h+=`<h3>Gagnant de la semaine dernière</h3><div class="card row"><div class="tb" style="width:90px;height:127px;flex:none">${posterSVG(last[0].poster)}</div><div class="grow"><b>${esc(last[0].owner)}</b><div class="muted">« ${themeOf(lw)} » · ${last[0].votes} vote${last[0].votes>1?'s':''}</div></div></div>`;
   return h;
 }
 function contestPickSheet(){
@@ -369,6 +373,7 @@ function ready(p){const pr=lvlDef(p).prod;if(!pr)return null;const [r,v]=Object.
 function repairCost(p){const base=Object.values(BUILD[p.t].levels[0].cost).reduce((a,b)=>a+b,0)||40;let c=Math.max(2,Math.round(base*0.05*(100-p.c)/70));if(has('forge'))c=Math.max(1,Math.round(c/2));return {b:c}}
 function sheriffLvl(){const s=get('sherif');return s?s.l:0}
 function protectedP(){let v=50;const l=sheriffLvl();if(l)v+=BUILD.sherif.levels[l-1].protect;if(has('banque'))v+=Math.floor(S.res.p*.3);return Math.min(S.res.p,v)}
+function merchantHere(){return !VISIT&&(has('gare')||S.merchantDay===today())}
 function beginnerLeft(){return 7-(today()-dayKey(S.created))}
 function riskInfo(idle=0){
   const b=beginnerLeft();
@@ -563,8 +568,8 @@ function renderScene(){
   for(let i=0;i<W/40;i++)s+=`<ellipse cx="${hash(i+50)*W}" cy="${GY+20+hash(i+60)*70}" rx="${2+hash(i)*3}" ry="1.5" fill="${night?'#633806':'#BA7517'}"/>`;
   // accessoires de rue
   const kinds=['lamp','horse','barrels','cactus','wagon','lamp','barrels'];
-  for(let i=0;i<nP;i++){const k=kinds[Math.floor(hash(i+(VISIT?5:0))*kinds.length)];if(i===1&&!VISIT&&S.merchantDay===today())continue;s+=prop(k,X0+i*PW+(k==='horse'||k==='wagon'?60:hash(i)>.5?16:104),GY+(k==='lamp'?14:k==='barrels'?24:46),night)}
-  if(!VISIT&&S.merchantDay===today()){const mx=X0+PW+60;s+=`<g class="tap" data-act="merchant">${prop('wagon',mx,GY+56,night).replace('#FAEEDA','#F5C4B3')}<g class="bob">${R(mx-30,GY-4,60,18,'#FAEEDA')}<text x="${mx}" y="${GY+9}" font-size="11" text-anchor="middle" font-family="Rye, Georgia, serif" fill="#712B13">Pedro</text></g></g>`}
+  for(let i=0;i<nP;i++){const k=kinds[Math.floor(hash(i+(VISIT?5:0))*kinds.length)];if(i===1&&!VISIT&&merchantHere())continue;s+=prop(k,X0+i*PW+(k==='horse'||k==='wagon'?60:hash(i)>.5?16:104),GY+(k==='lamp'?14:k==='barrels'?24:46),night)}
+  if(!VISIT&&merchantHere()){const mx=X0+PW+60;s+=`<g class="tap" data-act="merchant">${prop('wagon',mx,GY+56,night).replace('#FAEEDA','#F5C4B3')}<g class="bob">${R(mx-30,GY-4,60,18,'#FAEEDA')}<text x="${mx}" y="${GY+9}" font-size="11" text-anchor="middle" font-family="Rye, Georgia, serif" fill="#712B13">Pedro</text></g></g>`}
   if(!VISIT&&S.guardDog){const dx=X0+20;s+=`<g transform="translate(${dx} ${GY+62})">${P('M-10 0v-12q0-6 6-6h10l4-8 4 2-2 8v16z','#BA7517','stroke-width="1.6"')}<circle cx="11" cy="-24" r="1.4" fill="${K}"/>${P('M-10-8q-8-2-6-10','none','stroke-width="2.5"')}</g>`}
   if(!VISIT&&S.lantern){s+=`<g transform="translate(${X0-24} ${GY+20})">${Ln(0,0,0,-46,K,2.5)}<circle class="flick" cy="-52" r="14" fill="#AFA9EC" opacity=".5"/>${R(-6,-58,12,12,'#CECBF6')}</g>`}
   // habitants
@@ -604,7 +609,7 @@ function gusTip(){
   if(anyReady&&!S.collected)return {k:'t1',t:'Tes bâtiments ont produit ! Touche les <b>bulles</b> au-dessus pour récolter.'};
   if(built<3)return {k:'t2',t:'Il te faut des ressources ? Chaque partie gagnée dans les jeux du lanceur en envoie à ta ville : onglet <b>Jeux</b>.'};
   const dusty=S.plots.find(p=>p&&p.c<70);if(dusty)return {k:'dust'+t,t:`<b>${bName(dusty)}</b> est tout poussiéreux. Touche-le pour le réparer.`};
-  if(S.merchantDay===t)return {k:'m'+t,t:'Pedro le marchand ambulant est en ville ! Touche sa <b>charrette</b>, il repart ce soir.'};
+  if(merchantHere())return {k:'m'+t,t:'Pedro le marchand ambulant est en ville ! Touche sa <b>charrette</b>, il repart ce soir.'};
   const b=S.posters.find(p=>p.kind==='bandit'&&!p.captured&&!p.hunt);if(b)return {k:'b'+b.id,t:has('sherif')?`<b>${esc(b.name)}</b> court toujours avec ton butin. Lance une chasse depuis les <b>Affiches</b> !`:`<b>${esc(b.name)}</b> t’a volé. Construis le <b>bureau du shérif</b> (niveau 3) pour le pourchasser.`};
   const q=nextReq();if(q)return {k:'lv'+S.level,t:`Encore <b>${Math.max(0,q.pop-population(S))} habitants</b>${q.need&&!has(q.need)?` et un <b>${BUILD[q.need].name.toLowerCase()}</b>`:''} pour devenir un <b>${LEVEL_NAMES[S.level+1]}</b>.`};
   return null;
@@ -623,7 +628,7 @@ function renderBanner(){
   b.innerHTML='';
 }
 function renderAll(){renderHUD();renderScene();renderNav();renderGus();renderBanner();if(CUR)document.getElementById('sheetBody').innerHTML=CUR.fn();LASTSIG=sig()}
-function sig(){return S.plots.map(p=>p?(ready(p)||{n:0}).n+':'+p.c:'-').join(',')+'|'+skyPhase()+'|'+S.merchantDay+'|'+today()}
+function sig(){return S.plots.map(p=>p?(ready(p)||{n:0}).n+':'+p.c:'-').join(',')+'|'+skyPhase()+'|'+merchantHere()+'|'+today()}
 
 /* ================== Feuilles & modales ================== */
 function openSheet(title,fn){CUR={title,fn};document.getElementById('sheetTitle').textContent=title;document.getElementById('sheetBody').innerHTML=fn();document.getElementById('sheet').classList.remove('hidden');document.getElementById('scrim').classList.remove('hidden');document.getElementById('sheetBody').scrollTop=0}
@@ -673,7 +678,7 @@ function placeAt(i,k){
 function bldSheet(i){
   const p=S.plots[i];if(!p)return '';
   const d=BUILD[p.t],L=lvlDef(p),nx=d.levels[p.l];
-  let h=`<div class="row"><div style="width:110px;height:110px;flex:none">${thumb(p.t,p.l)}</div><div class="grow"><span class="chip">Niveau ${p.l} / ${d.levels.length}</span><p style="margin-top:6px">${d.desc}</p></div></div>`;
+  let h=`<div class="row" style="align-items:flex-start"><div class="tb" style="width:96px;height:110px;flex:none">${thumb(p.t,p.l)}</div><div class="grow"><span class="chip">Niveau ${p.l} / ${d.levels.length}</span><p style="margin-top:6px">${d.desc}</p></div></div>`;
   h+=`<div class="card"><div class="kv"><span>Effet actuel</span><b>${shortEffect(p.t,p.l)}</b></div>`;
   if(p.t==='sherif')h+=`<div class="kv"><span>Durée des chasses</span><b>${huntHours()} h</b></div>`;
   const r=ready(p);if(r)h+=`<div class="kv"><span>Stock à récolter</span><b>${r.n} / ${r.max} ${RES_NAME[r.r]}</b></div>`;
@@ -733,6 +738,7 @@ const FACE_OPTS={
   paper:[['vieilli','Vieilli'],['brule','Brûlé',30],['dechire','Déchiré',30],['or','Papier or',80]],
   stamp:['MORT OU VIF','VIVANT SEULEMENT','RECHERCHÉ','TRÈS DANGEREUX'],
 };
+Object.values(FACE_OPTS).forEach(list=>Array.isArray(list)&&list.forEach(o=>{if(Array.isArray(o)){const i=o.length===3?2:o.length===2&&typeof o[1]==='number'?1:-1;if(i>0)o[i]=Math.round(o[i]*REMISE)}}));
 function defFace(){return {shape:'rond',skin:'#F0B48F',eyes:'normal',stache:'guidon',hair:'#412402',hat:'stetson',hatColor:'#633806',acc:'aucun'}}
 function randomFace(bandit){return {shape:rnd(['rond','ovale','carre']),skin:rnd(FACE_OPTS.skin),eyes:rnd(['normal','plisses','louche','bandeau']),stache:rnd(['aucune','guidon','brosse','tombante','barbe','barbe3']),hair:rnd(['#412402','#2C2C2A','#D85A30','#EF9F27','#D3D1C7']),hat:rnd(['stetson','stetson','melon','sombrero']),hatColor:rnd(['#633806','#2C2C2A','#A32D2D']),acc:bandit?'masque':rnd(['aucun','cicatrice','dent','bandana'])}}
 function randomNick(){return rnd(NICK_A)+' '+rnd(NICK_B)}
@@ -897,8 +903,8 @@ const GAMES=[
 function gamesSheet(){
   const c=(S.caps||{})[MesJeuxToday()]||{p:0,b:0,pi:0,f:0,m:0};
   let h=`<div class="card"><p style="margin:0">Chaque partie gagnée dans les jeux du lanceur envoie des ressources à ta ville${ME?'':' — <b>connecte-toi sur Mes Jeux</b> pour les recevoir'}. Chaque partie rapporte aussi des dollars.</p></div>`;
-  h+=`<h3>Réserves du jour</h3><div class="card">${RES.map(r=>`<div class="kv"><span class="row" style="gap:6px"><span style="width:20px;display:inline-flex">${resIcon(r)}</span>${RES_NAME[r]}</span><b>${c[r]} / ${CAPS[r]}</b></div>`).join('')}</div>`;
-  h+=`<h3>Jouer pour ta ville</h3>`+GAMES.map(g=>`<a class="card row" style="text-decoration:none;color:inherit" href="${g.url}"><div style="width:30px">${resIcon(g.r)}</div><div class="grow"><b>${g.name}</b><div class="muted">${g.desc}</div></div><span class="btn small primary">Jouer</span></a>`).join('');
+  h+=`<h3>Réserves du jour</h3><div class="card">${RES.map(r=>`<div class="kv"><span class="row" style="gap:6px"><span class="tb" style="width:20px;height:20px;display:inline-flex">${resIcon(r)}</span>${RES_NAME[r]}</span><b>${c[r]} / ${CAPS[r]}</b></div>`).join('')}</div>`;
+  h+=`<h3>Jouer pour ta ville</h3>`+GAMES.map(g=>`<a class="card row" style="text-decoration:none;color:inherit" href="${g.url}"><div class="tb" style="width:30px;height:30px;flex:none">${resIcon(g.r)}</div><div class="grow"><b>${g.name}</b><div class="muted">${g.desc}</div></div><span class="btn small primary">Jouer</span></a>`).join('');
   h+=`<h3>Exploits</h3>`;
   h+=`<div class="card row"><div class="grow"><b>Capturer Mac Blain</b><div class="muted">La Traque · débloque la Prison</div></div>${S.unlocks.prison?'<span class="chip">Fait ✓</span>':'<span class="chip">À faire</span>'}</div>`;
   h+=`<div class="card row"><div class="grow"><b>500 anneaux au total</b><div class="muted">Witch · ${Math.min(500,S.anneaux||0)} / 500 · débloque la Tour de la sorcière</div></div>${S.unlocks.sorciere?'<span class="chip">Fait ✓</span>':'<span class="chip">À faire</span>'}</div>`;
@@ -919,22 +925,22 @@ function visitSheet(){
   const list=friends();
   let h=`<p class="muted">Va voir la ville de ta famille : aime-la, aide à réparer, offre un cadeau. Les visites ne volent jamais rien.</p>`;
   if(!list.length)h+=`<div class="card">Personne d’autre n’a encore de ville. Invite la famille à ouvrir « Ma Ville » dans Mes Jeux !</div>`;
-  h+=list.map(f=>{const first=f.plots.find(Boolean);return `<button class="card row" style="width:100%;text-align:left" data-act="visit" data-id="${f.id}"><div style="width:70px;height:70px">${first?thumb(first.t,first.l):''}</div><div class="grow"><b style="font-size:17px">${esc(f.name)}</b><div class="muted">chez ${esc(f.owner)} · ${LEVEL_NAMES[f.level]} · ♥ ${f.likes}</div>${f.plots.some(p=>p&&p.c<70)?'<span class="chip" style="background:#FCEBEB;color:#791F1F">a besoin d’aide</span>':''}</div><span style="font-size:22px">›</span></button>`}).join('');
+  h+=list.map(f=>{const first=f.plots.find(Boolean);return `<button class="card row" style="width:100%;text-align:left" data-act="visit" data-id="${f.id}"><div class="tb" style="width:70px;height:70px;flex:none">${first?thumb(first.t,first.l):''}</div><div class="grow"><b style="font-size:17px">${esc(f.name)}</b><div class="muted">chez ${esc(f.owner)} · ${LEVEL_NAMES[f.level]} · ♥ ${f.likes}</div>${f.plots.some(p=>p&&p.c<70)?'<span class="chip" style="background:#FCEBEB;color:#791F1F">a besoin d’aide</span>':''}</div><span style="font-size:22px">›</span></button>`}).join('');
   if(!FAM)h+=`<p class="muted"><span class="sim">exemple</span> ${ME?'La sauvegarde en ligne n’est pas encore activée : ce sont des villes d’exemple.':'Connecte-toi sur Mes Jeux pour visiter les vraies villes de ta famille.'}</p>`;
   return h;
 }
-function sendTo(f,item){if(FAM&&window.MesJeux&&MesJeux.villeEnvoi)MesJeux.villeEnvoi(f.id,{...item,from:ME.pseudo})}
+function sendTo(f,item){if(FAM&&ME&&window.MesJeux&&MesJeux.villeEnvoi)MesJeux.villeEnvoi(f.id,{...item,from:ME.pseudo})}
 function vbld(i){const f=friends().find(x=>x.id===VISIT),p=f.plots[i];if(!p)return;if(p.c>=70)return toast(`${bName(p)} de ${f.owner} est en parfait état.`);if(S.daily.helps>=2)return toast('Tu as déjà donné tes 2 coups de main aujourd’hui.');p.c=100;S.daily.helps++;gain('p',5);sendTo(f,{fix:i});save();renderAll();toast(`Tu as réparé ${bName(p)} ! +5 dollars pour toi et ${f.owner}.`)}
 
 /* ---------- Marchand ---------- */
 function merchantSheet(){
-  const offers=[{k:'dog',name:'Chien de garde',d:'Fait fuir 1 bandit sur 3',cost:{p:90},own:S.guardDog},{k:'lantern',name:'Lanterne magique',d:'Décoration rare qui brille la nuit',cost:{m:8},own:S.lantern},{k:'plan',name:'Plan : Kiosque à musique',d:'Débloque un bâtiment exclusif',cost:{p:150},own:S.planKiosque}];
-  let h=`<div class="row"><div style="width:90px">${`<svg viewBox="-40 -80 80 84">${prop('wagon',0,0,false).replace('#FAEEDA','#F5C4B3')}</svg>`}</div><div class="grow"><b>« Hola amigo ! »</b><p class="muted">Pedro repart ce soir. Ses offres changent à chaque passage.</p></div></div>`;
+  const offers=[{k:'dog',name:'Chien de garde',d:'Fait fuir 1 bandit sur 3',cost:{p:80},own:S.guardDog},{k:'lantern',name:'Lanterne magique',d:'Décoration rare qui brille la nuit',cost:{m:7},own:S.lantern},{k:'plan',name:'Plan : Kiosque à musique',d:'Débloque un bâtiment exclusif',cost:{p:135},own:S.planKiosque}];
+  let h=`<div class="row"><div class="tb" style="width:90px;height:94px;flex:none">${`<svg viewBox="-40 -80 80 84">${prop('wagon',0,0,false).replace('#FAEEDA','#F5C4B3')}</svg>`}</div><div class="grow"><b>« Hola amigo ! »</b><p class="muted">Pedro repart ce soir. Ses offres changent à chaque passage.</p></div></div>`;
   h+=offers.map(o=>`<div class="card row"><div class="grow"><b>${o.name}</b><div class="muted">${o.d}</div><div>${o.own?'':costHTML(o.cost)}</div></div>${o.own?'<span class="chip">Acheté ✓</span>':`<button class="btn small primary" data-act="buy" data-k="${o.k}">Acheter</button>`}</div>`).join('');
   h+=`<h3>Échange du jour</h3><div class="card row"><div class="grow"><b>3 bois → 1 pierre</b><div class="muted">Une fois par passage</div></div>${S.daily.swap?'<span class="chip">Fait ✓</span>':'<button class="btn small" data-act="swap">Échanger</button>'}</div>`;
   return h;
 }
-function buy(k){const cost={dog:{p:90},lantern:{m:8},plan:{p:150}}[k];if(!canPay(cost))return toast('Pas assez de ressources.');pay(cost);if(k==='dog')S.guardDog=true;if(k==='lantern')S.lantern=true;if(k==='plan')S.planKiosque=true;save();renderAll();refreshSheet();toast({dog:'Ton chien garde la ville !',lantern:'La lanterne brille à l’entrée de la ville.',plan:'Le Kiosque est disponible dans Bâtir.'}[k])}
+function buy(k){const cost={dog:{p:80},lantern:{m:7},plan:{p:135}}[k];if(!canPay(cost))return toast('Pas assez de ressources.');pay(cost);if(k==='dog')S.guardDog=true;if(k==='lantern')S.lantern=true;if(k==='plan')S.planKiosque=true;save();renderAll();refreshSheet();toast({dog:'Ton chien garde la ville !',lantern:'La lanterne brille à l’entrée de la ville.',plan:'Le Kiosque est disponible dans Bâtir.'}[k])}
 
 /* ---------- Jours, bandits, Gazette ---------- */
 function processDays(n){
