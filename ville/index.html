@@ -223,7 +223,7 @@ const BUILD={
   magasin:{name:'Magasin général',cat:'Services',unique:1,desc:'Échange 3 ressources contre 1 autre, quand tu veux.',levels:[{min:2,cost:{p:60,b:30}}]},
   ecurie:{name:'Écurie',cat:'Services',unique:1,desc:'Les chasses du shérif vont 25 % plus vite.',levels:[{min:2,cost:{b:50,f:20}}]},
   kiosque:{name:'Kiosque à musique',cat:'Services',plan:1,unique:1,desc:'Les habitants dansent devant. Plan vendu par Pedro le marchand.',levels:[{min:1,cost:{b:40,p:30}}]},
-  forge:{name:'Forge',cat:'Services',unique:1,desc:'Les réparations coûtent moitié prix.',levels:[{min:3,cost:{b:40,pi:50}}]},
+  forge:{name:'Forge',cat:'Services',unique:1,desc:'Toutes les réparations ne coûtent plus qu’1 magie.',levels:[{min:3,cost:{b:40,pi:50}}]},
   gare:{name:'Gare',cat:'Services',unique:1,desc:'Pedro le marchand passe tous les jours au lieu d’un jour sur trois.',levels:[{min:3,cost:{b:80,pi:80}}]},
   ecole:{name:'École',cat:'Services',unique:1,desc:'Le vieux Gus propose 3 missions par jour.',levels:[{min:4,cost:{p:120,b:60}}]},
   journal:{name:'Journal',cat:'Services',unique:1,desc:'La Gazette de ta ville. Obligatoire pour devenir une Capitale.',levels:[{min:4,cost:{p:120,b:40}}]},
@@ -267,7 +267,7 @@ function freshState(){
 /* ---------- Sauvegarde : navigateur + Supabase (colonne players.ville) ---------- */
 const SB_URL="https://xmuohrglecqtpoyzssfj.supabase.co/rest/v1",SB_KEY="sb_publishable_Y9EMQFz64Vt0n1GAs9wv1A_ciDRgNVz";
 const DEV=/[?&]dev=1/.test(location.search);
-const VERSION='15';
+const VERSION='16';
 let NEWVER=false;
 async function checkVersion(){try{const r=await fetch('../version.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.json());if(r.v&&r.v!==VERSION&&!NEWVER){NEWVER=true;renderBanner()}}catch(e){}}
 function reloadFresh(){pushRemote(true);location.replace('./?v='+Date.now()+(DEV?'&dev=1':''))}
@@ -370,7 +370,7 @@ function gain(r,v){S.res[r]+=v;flashRes([r],'flash')}
 function nearWell(city,i){const P=city.plots;return P.some(p=>p&&p.t==='chateau')||(P[i-1]&&P[i-1].t==='puits')||(P[i+1]&&P[i+1].t==='puits')||(P[i]&&P[i].t==='puits')}
 function condFactor(c){return c>=70?1:c>=40?.75:.5}
 function ready(p){const pr=lvlDef(p).prod;if(!pr)return null;const [r,v]=Object.entries(pr)[0];const el=Math.min(2*DAY,Math.max(0,now()-p.last));const bonus=(has('mairie')?1.2:1)*(has('statue')?1.1:1);return {r,n:Math.floor(v*bonus*el/DAY*condFactor(p.c)),max:Math.floor(v*bonus*2)}}
-function repairCost(p){const base=Object.values(BUILD[p.t].levels[0].cost).reduce((a,b)=>a+b,0)||40;let c=Math.max(2,Math.round(base*0.05*(100-p.c)/70));if(has('forge'))c=Math.max(1,Math.round(c/2));return {b:c}}
+function repairCost(p){let c=p.c<50?2:1;if(has('forge'))c=1;return {m:c}}
 function sheriffLvl(){const s=get('sherif');return s?s.l:0}
 function protectedP(){let v=50;const l=sheriffLvl();if(l)v+=BUILD.sherif.levels[l-1].protect;if(has('banque'))v+=Math.floor(S.res.p*.3);return Math.min(S.res.p,v)}
 function merchantHere(){return !VISIT&&(has('gare')||S.merchantDay===today())}
@@ -701,7 +701,7 @@ function demolishAsk(i){const p=S.plots[i];openModal(`<h2>Démolir ${bName(p)} ?
 function demolish(i){const p=S.plots[i];if(!p)return;const r=refundOf(p),n=bName(p);Object.entries(r).forEach(([k,v])=>S.res[k]+=v);S.plots[i]=null;flashRes(Object.keys(r),'flash');save();closeModal();closeSheet();renderAll();toast(`${n} démoli. Le terrain est libre.`)}
 function upgrade(i){const p=S.plots[i],nx=BUILD[p.t].levels[p.l];if(!nx)return;if(S.level<nx.min)return toast(`Il faut être ${LEVEL_NAMES[nx.min]} (niveau ${nx.min}).`);if(!canPay(nx.cost))return toast('Pas assez de ressources.');
   const r=ready(p);if(r&&r.n)gain(r.r,r.n);pay(nx.cost);p.l++;p.last=now();p.born=now();p.c=100;save();renderAll();openSheet(bName(p),()=>bldSheet(i));toast(`${bName(p)} : niveau ${p.l} !`);setTimeout(()=>{delete p.born;computeLevel()},1600)}
-function repair(i){const p=S.plots[i],c=repairCost(p);if(!canPay(c))return toast('Il te faut du bois pour réparer.');pay(c);p.c=100;S.daily.miss.repair++;save();renderAll();toast(`${bName(p)} est comme neuf !`)}
+function repair(i){const p=S.plots[i],c=repairCost(p);if(!canPay(c))return toast('Il te faut de la magie pour réparer. Joue à Witch pour en gagner !');pay(c);p.c=100;S.daily.miss.repair++;save();renderAll();toast(`${bName(p)} est comme neuf !`)}
 function collect(i){const p=S.plots[i],r=ready(p);if(!r||r.n<1)return;gain(r.r,r.n);p.last=now();S.collected=true;S.daily.miss.collect++;save();renderAll();toast(`+${r.n} ${RES_NAME[r.r]}`)}
 function exchangeHTML(){return `<h3>Échange</h3><p class="muted">Donne 3, reçois 1.</p><div class="row"><select class="field" id="exFrom">${['p','b','pi','f'].map(r=>`<option value="${r}">3 ${RES_NAME[r]}</option>`).join('')}</select><span style="font-size:20px">→</span><select class="field" id="exTo">${['b','pi','f','p'].map(r=>`<option value="${r}">1 ${RES_NAME[r]}</option>`).join('')}</select></div><div class="err" id="exErr"></div><button class="btn full primary" style="margin-top:8px" data-act="exchange">Échanger</button>`}
 function missionsHTML(){const m=S.daily.miss;const L=[['collect','Récolter 3 fois',3],['repair','Réparer un bâtiment',1],['poster','Créer une affiche',1]];
@@ -934,13 +934,13 @@ function vbld(i){const f=friends().find(x=>x.id===VISIT),p=f.plots[i];if(!p)retu
 
 /* ---------- Marchand ---------- */
 function merchantSheet(){
-  const offers=[{k:'dog',name:'Chien de garde',d:'Fait fuir 1 bandit sur 3',cost:{p:80},own:S.guardDog},{k:'lantern',name:'Lanterne magique',d:'Décoration rare qui brille la nuit',cost:{m:7},own:S.lantern},{k:'plan',name:'Plan : Kiosque à musique',d:'Débloque un bâtiment exclusif',cost:{p:135},own:S.planKiosque}];
+  const offers=[{k:'dog',name:'Chien de garde',d:'Fait fuir 1 bandit sur 3',cost:{p:40},own:S.guardDog},{k:'lantern',name:'Lanterne magique',d:'Décoration rare qui brille la nuit',cost:{m:3},own:S.lantern},{k:'plan',name:'Plan : Kiosque à musique',d:'Débloque un bâtiment exclusif',cost:{p:60},own:S.planKiosque}];
   let h=`<div class="row"><div class="tb" style="width:90px;height:94px;flex:none">${`<svg viewBox="-40 -80 80 84">${prop('wagon',0,0,false).replace('#FAEEDA','#F5C4B3')}</svg>`}</div><div class="grow"><b>« Hola amigo ! »</b><p class="muted">Pedro repart ce soir. Ses offres changent à chaque passage.</p></div></div>`;
   h+=offers.map(o=>`<div class="card row"><div class="grow"><b>${o.name}</b><div class="muted">${o.d}</div><div>${o.own?'':costHTML(o.cost)}</div></div>${o.own?'<span class="chip">Acheté ✓</span>':`<button class="btn small primary" data-act="buy" data-k="${o.k}">Acheter</button>`}</div>`).join('');
   h+=`<h3>Échange du jour</h3><div class="card row"><div class="grow"><b>3 bois → 1 pierre</b><div class="muted">Une fois par passage</div></div>${S.daily.swap?'<span class="chip">Fait ✓</span>':'<button class="btn small" data-act="swap">Échanger</button>'}</div>`;
   return h;
 }
-function buy(k){const cost={dog:{p:80},lantern:{m:7},plan:{p:135}}[k];if(!canPay(cost))return toast('Pas assez de ressources.');pay(cost);if(k==='dog')S.guardDog=true;if(k==='lantern')S.lantern=true;if(k==='plan')S.planKiosque=true;save();renderAll();refreshSheet();toast({dog:'Ton chien garde la ville !',lantern:'La lanterne brille à l’entrée de la ville.',plan:'Le Kiosque est disponible dans Bâtir.'}[k])}
+function buy(k){const cost={dog:{p:40},lantern:{m:3},plan:{p:60}}[k];if(!canPay(cost))return toast('Pas assez de ressources.');pay(cost);if(k==='dog')S.guardDog=true;if(k==='lantern')S.lantern=true;if(k==='plan')S.planKiosque=true;save();renderAll();refreshSheet();toast({dog:'Ton chien garde la ville !',lantern:'La lanterne brille à l’entrée de la ville.',plan:'Le Kiosque est disponible dans Bâtir.'}[k])}
 
 /* ---------- Jours, bandits, Gazette ---------- */
 function processDays(n){
