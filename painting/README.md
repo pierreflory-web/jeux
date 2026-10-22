@@ -15,8 +15,12 @@ Jouable sur https://pierreflory-web.github.io/jeux/painting/ (dossier `painting/
 - Si tu repasses sur ta propre trace, tu perds aussi (les adversaires aussi).
 - Si ta zone est entièrement recouverte, tu perds aussi.
 - Si tu effaces tous tes adversaires, tu as gagné aussi : le terrain se repeint à tes couleurs.
-- À 95 % du terrain, le dernier coup de pinceau repeint tout le reste : **victoire**,
-  puis retour automatique à l'accueil.
+- Victoire quand tout le terrain (100 %) est à toi. Dès 95 %, les endroits qui restent à peindre
+  clignotent pour qu'on les trouve. Retour automatique à l'accueil ensuite.
+
+## Records
+
+Meilleur temps de victoire par niveau, affiché sur l'accueil ; « Nouveau record ! » en fin de partie.
 
 ## Ambiance
 

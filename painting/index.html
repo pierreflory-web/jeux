@@ -84,6 +84,9 @@
   #quiJoue b { color: var(--papier); }
   .avatar-accueil { position: relative; display: flex; flex-direction: column; align-items: center; gap: 6px; }
   #nomAccueil { font-size: 22px; font-weight: 600; }
+  #record { font-size: 16px; background: rgba(27,31,59,.8); padding: 5px 14px; border-radius: 14px; }
+  #record strong { color: var(--jaune); font-variant-numeric: tabular-nums; }
+  .record-battu { font-size: 18px; font-weight: 600; color: var(--jaune); }
   .boutons { position: relative; display: flex; gap: 18px; flex-wrap: wrap; justify-content: center; }
   .boutons .btn { min-width: 230px; }
   .niveaux { position: relative; display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; margin-top: -8px; }
@@ -93,6 +96,7 @@
     background: var(--nuit); color: var(--papier); font-size: 17px; font-weight: 600; cursor: pointer;
   }
   .niveaux button[aria-pressed="true"] { background: var(--jaune); border-color: var(--jaune); color: var(--nuit); }
+  .creatrices { position: relative; margin: -8px 0 0; font-size: 16px; font-weight: 500; color: var(--papier); background: rgba(27,31,59,.8); padding: 5px 14px; border-radius: 14px; }
   .retour-mesjeux { position: relative; color: var(--brume); font-size: 15px; text-decoration: none; background: rgba(27,31,59,.8); padding: 4px 12px; border-radius: 14px; }
   .retour-mesjeux:hover { color: var(--jaune); }
 
@@ -237,6 +241,7 @@
   <div class="avatar-accueil">
     <canvas id="avatarAccueil" width="240" height="280" aria-hidden="true"></canvas>
     <div id="nomAccueil"></div>
+    <div id="record"></div>
   </div>
   <div class="niveaux" role="group" aria-label="Niveau">
     <span class="etiquette">Niveau</span>
@@ -248,6 +253,7 @@
     <button class="btn clair" type="button" id="btnAvatar">Changer d'avatar</button>
     <button class="btn rouge" type="button" id="btnJouer">Lancer une partie</button>
   </div>
+  <p class="creatrices">✨ Créatrices&nbsp;: Télya, Chloé et Clara</p>
   <a class="retour-mesjeux" href="https://pierreflory-web.github.io/jeux/">← Retour à Mes Jeux</a>
 </main>
 
@@ -295,7 +301,7 @@
   // ——— Terrain ———
   var COLS = 100, ROWS = 60, CELL = 12, W = COLS * CELL, H = ROWS * CELL, N = COLS * ROWS;
   var NEUTRE = '#F1EEFA';
-  var VICTOIRE = 0.95; // à 95 %, le dernier coup de pinceau repeint tout le reste
+  var VICTOIRE = 1; // on gagne à 100 % ; dès 95 %, les endroits qui restent clignotent
 
   var joueur = window.MesJeux ? MesJeux.session() : null;
   if (!joueur) { try { joueur = JSON.parse(localStorage.getItem('mesjeux_session')); } catch (e) { joueur = null; } }
@@ -573,7 +579,8 @@
 
   // ——— Statistiques et missions ———
   var DEFAUT = { games: 0, wins: 0, losses: 0, streak: 0, bestStreak: 0, kills: 0, maxKills: 0, maxPct: 0, maxLoop: 0,
-                 dist: 0, stolen: 0, bestTime: 0, winAv: [], days: [], animalGames: 0, foodGames: 0, loops: 0, quick: 0 };
+                 dist: 0, stolen: 0, bestTime: 0, winAv: [], days: [], animalGames: 0, foodGames: 0, loops: 0, quick: 0,
+                 bestFacile: 0, bestNormal: 0, bestDifficile: 0 };
   var stats = Object.assign({}, DEFAUT, lire(CLE_STATS, {}));
   function valeur(st, cle, sauf) {
     switch (cle) {
@@ -603,13 +610,21 @@
   var CLE_NIVEAU = 'painting_niveau_' + PID;
   var niveau = lire(CLE_NIVEAU, 'normal');
   if (!NIVEAUX[niveau]) niveau = 'normal';
+  function enMinutes(secs) { return Math.floor(secs / 60) + ':' + String(secs % 60).padStart(2, '0'); }
+  function majRecord() {
+    var nom = NIVEAUX[niveau].nom, t = stats['best' + nom], el = $('record');
+    el.textContent = '';
+    el.append(t ? '🏆 Record en ' + nom + '\u00a0: ' : '🏆 Pas encore de record en ' + nom);
+    if (t) { var b = document.createElement('strong'); b.textContent = enMinutes(t); el.append(b); }
+    if (stats.wins) el.append(' · ' + stats.wins + ' victoire' + (stats.wins > 1 ? 's' : ''));
+  }
   function majNiveaux() {
     document.querySelectorAll('.niveaux button').forEach(function (b) {
       b.setAttribute('aria-pressed', b.dataset.niveau === niveau ? 'true' : 'false');
     });
   }
   document.querySelectorAll('.niveaux button').forEach(function (b) {
-    b.onclick = function () { niveau = b.dataset.niveau; ecrire(CLE_NIVEAU, niveau); majNiveaux(); sauverDistant(); };
+    b.onclick = function () { niveau = b.dataset.niveau; ecrire(CLE_NIVEAU, niveau); majNiveaux(); majRecord(); sauverDistant(); };
   });
   majNiveaux();
 
@@ -624,7 +639,7 @@
       var x = a[k], y = b[k];
       if (y == null) return;
       if (Array.isArray(DEFAUT[k])) r[k] = (x || []).concat((y || []).filter(function (v) { return (x || []).indexOf(v) === -1; }));
-      else if (k === 'bestTime') r[k] = x && y ? Math.min(x, y) : (x || y);
+      else if (['bestTime', 'bestFacile', 'bestNormal', 'bestDifficile'].indexOf(k) !== -1) r[k] = x && y ? Math.min(x, y) : (x || y);
       else r[k] = Math.max(x || 0, y || 0);
     });
     return r;
@@ -672,6 +687,7 @@
     var av = avatarParId(choix);
     toileAvatar($('avatarAccueil'), av, 84);
     $('nomAccueil').textContent = av.nom;
+    majRecord();
     $('quiJoue').innerHTML = joueur && joueur.pseudo
       ? '🎨 À toi de peindre, <b></b>&nbsp;!'
       : '⭐ Connecte-toi sur Mes Jeux pour gagner points et badges.';
@@ -973,8 +989,14 @@
       var pas;
       if (e.bot) {
         var voulu = cerveau(e, dt);
+        // regarder 3 cases devant : ne jamais foncer dans sa propre trace
+        var evite = false;
+        if (e.trail.length > 3 && (!surPourBot(e, voulu) || !surPourBot(e, e.ang))) {
+          var essais = [0, .6, -.6, 1.2, -1.2, 1.8, -1.8, 2.4, -2.4];
+          for (var es = 0; es < essais.length; es++) if (surPourBot(e, voulu + essais[es])) { voulu += essais[es]; evite = true; break; }
+        }
         var diff = Math.atan2(Math.sin(voulu - e.ang), Math.cos(voulu - e.ang));
-        var maxTour = G.nv.tour * dt;
+        var maxTour = G.nv.tour * dt * (evite ? 2.5 : 1);
         e.ang += Math.max(-maxTour, Math.min(maxTour, diff));
         pas = G.nv.vitesse * dt;
       } else {
@@ -990,6 +1012,16 @@
       if (nx < CELL / 2) { nx = CELL / 2; bord = true; } if (nx > W - CELL / 2) { nx = W - CELL / 2; bord = true; }
       if (ny < CELL / 2) { ny = CELL / 2; bord = true; } if (ny > H - CELL / 2) { ny = H - CELL / 2; bord = true; }
       if (bord && e.bot && e.ai) e.ai.pts = [];
+      // sécurité des adversaires : jamais un pas sur leur propre trace
+      if (e.bot && !pasSur(e, nx, ny)) {
+        var trouve = false, tours = [.5, -.5, 1, -1, 1.5, -1.5, 2, -2, 2.6, -2.6, Math.PI];
+        for (var tt = 0; tt < tours.length && !trouve; tt++) {
+          var an = e.ang + tours[tt], ax = Math.max(CELL / 2, Math.min(W - CELL / 2, e.x + Math.cos(an) * pas)), ay = Math.max(CELL / 2, Math.min(H - CELL / 2, e.y + Math.sin(an) * pas));
+          if (pasSur(e, ax, ay)) { e.ang = an; nx = ax; ny = ay; trouve = true; }
+        }
+        if (e.ai && e.ai.mode !== 'retour') rentrer(e);
+        if (!trouve) continue; // coincé : il attend un instant plutôt que de se couper
+      }
       var c0 = e.cell, c1 = caseDe(nx, ny);
       e.x = nx; e.y = ny;
       if (c1 !== c0) {
@@ -1090,7 +1122,7 @@
 
   function verifierVictoire(force) {
     if (G.fini) return;
-    if (!force && G.me.count / N < VICTOIRE) return;
+    if (!force && G.me.count < N) return;
     // le dernier coup de pinceau : tout le reste du terrain devient à toi
     for (var n = 1; n < G.ents.length; n++) {
       var bot = G.ents[n];
@@ -1113,8 +1145,44 @@
   }
 
   // ——— Les adversaires ———
+  function pasSur(e, nx, ny) {
+    var c0 = e.cell, c1 = caseDe(nx, ny), x = c0 % COLS, y = Math.floor(c0 / COLS), x1 = c1 % COLS, y1 = Math.floor(c1 / COLS);
+    function ok(c) {
+      var t = G.trail[c];
+      if (t && t !== e.id && G.ents[t - 1].bot) return false; // les adversaires ne se coupent pas entre eux
+      return t !== e.id || e.trail.lastIndexOf(c) >= e.trail.length - 3;
+    }
+    while (x !== x1) { x += x1 > x ? 1 : -1; if (!ok(y * COLS + x)) return false; }
+    while (y !== y1) { y += y1 > y ? 1 : -1; if (!ok(y * COLS + x)) return false; }
+    return true;
+  }
+  function surPourBot(e, ang) {
+    for (var d = 1; d <= 5; d++) {
+      var px = e.x + Math.cos(ang) * CELL * d, py = e.y + Math.sin(ang) * CELL * d;
+      if (px < 0 || py < 0 || px >= W || py >= H) return d > 1;
+      var c = caseDe(px, py);
+      if (G.trail[c] === e.id && e.trail.lastIndexOf(c) < e.trail.length - 3) return false;
+    }
+    return true;
+  }
+  function borneCase(x, y) { x = Math.max(1, Math.min(COLS - 2, Math.round(x))); y = Math.max(1, Math.min(ROWS - 2, Math.round(y))); return centre(y * COLS + x); }
   function planifier(e) {
     var a = e.ai, cx = e.cell % COLS, cy = Math.floor(e.cell / COLS);
+    var forme = Math.random();
+    // un raid : aller mordre dans le terrain du joueur tout proche
+    if (forme > .85 && G.me.alive) {
+      var cible = -1, bd = 26;
+      for (var i = 0; i < N; i += 2) if (G.owner[i] === G.me.id) {
+        var dd = Math.abs(i % COLS - cx) + Math.abs(Math.floor(i / COLS) - cy);
+        if (dd < bd) { bd = dd; cible = i; }
+      }
+      if (cible >= 0) {
+        var tx = cible % COLS, ty = Math.floor(cible / COLS), vx = tx - cx, vy = ty - cy, lg = Math.hypot(vx, vy) || 1;
+        a.pts = [borneCase(tx + vx / lg * 4, ty + vy / lg * 4), borneCase(tx + vx / lg * 4 - vy / lg * 6, ty + vy / lg * 4 + vx / lg * 6)];
+        a.mode = 'sortie';
+        return;
+      }
+    }
     var dirs = [[1, 0], [-1, 0], [0, 1], [0, -1]];
     var d1 = dirs[Math.floor(Math.random() * 4)];
     // on préfère partir vers là où il y a de la place
@@ -1126,11 +1194,34 @@
     var p1 = [cx + d1[0] * l1, cy + d1[1] * l1];
     var p2 = [p1[0] + d2[0] * l2, p1[1] + d2[1] * l2];
     var p3 = [p2[0] - d1[0] * (l1 + 2), p2[1] - d1[1] * (l1 + 2)];
-    a.pts = [borne(p1[0], p1[1]), borne(p2[0], p2[1]), borne(p3[0], p3[1])];
+    if (forme < .45) a.pts = [borne(p1[0], p1[1]), borne(p2[0], p2[1]), borne(p3[0], p3[1])]; // rectangle
+    else if (forme < .7) a.pts = [borneCase(cx + (d1[0] + d2[0]) * l1 * .7, cy + (d1[1] + d2[1]) * l1 * .7), borneCase(cx + d2[0] * l2 * 1.3, cy + d2[1] * l2 * 1.3)]; // triangle
+    else a.pts = [borne(cx + d1[0] * (l1 + 6), cy + d1[1] * (l1 + 6)), borne(cx + d1[0] * (l1 + 6) + d2[0] * 3, cy + d1[1] * (l1 + 6) + d2[1] * 3)]; // longue bande
     a.mode = 'sortie';
   }
   function rentrer(e) {
-    var a = e.ai, cx = e.cell % COLS, cy = Math.floor(e.cell / COLS), best = -1, bd = 1e9;
+    // chemin le plus court vers chez soi qui ne recroise pas sa propre trace
+    var a = e.ai, prec = new Int32Array(N).fill(-1), file = [e.cell], arrivee = -1;
+    prec[e.cell] = e.cell;
+    for (var q = 0; q < file.length && arrivee < 0; q++) {
+      var c = file[q], x = c % COLS, voisins = [x > 0 ? c - 1 : -1, x < COLS - 1 ? c + 1 : -1, c - COLS, c + COLS];
+      for (var v = 0; v < 4; v++) {
+        var nc = voisins[v];
+        if (nc < 0 || nc >= N || prec[nc] >= 0 || G.trail[nc] === e.id) continue;
+        prec[nc] = c;
+        if (G.owner[nc] === e.id) { arrivee = nc; break; }
+        file.push(nc);
+      }
+    }
+    if (arrivee >= 0) {
+      var chemin = [], k = arrivee;
+      while (k !== e.cell) { chemin.push(k); k = prec[k]; }
+      chemin.reverse();
+      a.pts = chemin.filter(function (cc, j) { return j % 3 === 2 || j === chemin.length - 1; }).map(centre);
+      a.mode = 'retour';
+      return;
+    }
+    var cx = e.cell % COLS, cy = Math.floor(e.cell / COLS), best = -1, bd = 1e9;
     for (var i = 0; i < N; i++) if (G.owner[i] === e.id) {
       var d = Math.abs(i % COLS - cx) + Math.abs(Math.floor(i / COLS) - cy);
       if (d < bd) { bd = d; best = i; }
@@ -1194,6 +1285,11 @@
       ctx.stroke();
       ctx.globalAlpha = 1;
     }
+    // à partir de 95 %, ce qui reste à peindre clignote
+    if (!G.fini && G.me.alive && G.me.count / N >= 0.95) {
+      ctx.fillStyle = 'rgba(255,90,78,' + (0.25 + 0.25 * Math.sin(G.t * 7)) + ')';
+      for (var r = 0; r < N; r++) if (G.owner[r] !== G.me.id) ctx.fillRect((r % COLS) * CELL - 2, Math.floor(r / COLS) * CELL - 2, CELL + 4, CELL + 4);
+    }
     // les têtes
     for (n = G.ents.length - 1; n >= 0; n--) {
       e = G.ents[n];
@@ -1221,6 +1317,7 @@
   function majHud() {
     var pc = G.me.count / N * 100;
     G.maxPct = Math.max(G.maxPct, pc);
+    if (!G.aide && pc >= 95 && pc < 100 && !G.fini) { G.aide = true; toast('Plus que ' + Math.ceil(100 - pc) + '\u00a0%\u00a0! Les coins à peindre clignotent ✨'); }
     var txt = (pc >= 99.95 ? 100 : pc < 10 ? pc.toFixed(1).replace('.', ',') : Math.floor(pc)) + ' %';
     $('pct').textContent = txt;
     $('pctBarre').firstChild.style.width = Math.min(100, pc / VICTOIRE) + '%';
@@ -1263,6 +1360,9 @@
     if (gagne) {
       stats.wins++; stats.streak++; stats.bestStreak = Math.max(stats.bestStreak, stats.streak);
       stats.bestTime = stats.bestTime ? Math.min(stats.bestTime, secs) : secs;
+      var cleRecord = 'best' + G.nv.nom, ancienRecord = stats[cleRecord];
+      var recordBattu = !ancienRecord || secs < ancienRecord;
+      if (recordBattu) stats[cleRecord] = secs;
       if (stats.winAv.indexOf(av.id) === -1) stats.winAv.push(av.id);
     } else { stats.losses++; stats.streak = 0; }
     ecrire(CLE_STATS, stats);
@@ -1294,7 +1394,13 @@
     chiffre(G.nv.nom, 'Niveau');
     if (!gagne) chiffre(Math.floor(G.maxPct) + ' %', 'Ton record ici');
     chiffre(G.kills, G.kills > 1 ? 'Adversaires effacés' : 'Adversaire effacé');
+    if (gagne && !recordBattu) chiffre(enMinutes(ancienRecord), 'Ton record');
     pan.appendChild(ch);
+    if (gagne && recordBattu) {
+      var rb = document.createElement('p'); rb.className = 'record-battu';
+      rb.textContent = ancienRecord ? '🏆 Nouveau record en ' + G.nv.nom + '\u00a0! (avant\u00a0: ' + enMinutes(ancienRecord) + ')' : '🏆 Premier record en ' + G.nv.nom + '\u00a0!';
+      pan.appendChild(rb);
+    }
     if (nouveaux.length > 1) {
       var grp = document.createElement('div'); grp.className = 'debloque groupe';
       var tt = document.createElement('span'); tt.className = 'etiquette'; tt.textContent = nouveaux.length + ' missions accomplies ✨';
