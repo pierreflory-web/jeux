@@ -775,6 +775,11 @@
         while (x !== x1 && e.alive) { x += x1 > x ? 1 : -1; entrer(e, y * COLS + x); }
         while (y !== y1 && e.alive) { y += y1 > y ? 1 : -1; entrer(e, y * COLS + x); }
       }
+      // le chemin exact suivi, pour dessiner une trace lisse
+      if (e.alive && e.trail.length && e.pts) {
+        var der = e.pts[e.pts.length - 1];
+        if (Math.hypot(e.x - der.x, e.y - der.y) > 3) e.pts.push({ x: e.x, y: e.y });
+      }
     }
     // particules
     for (var p = G.parts.length - 1; p >= 0; p--) {
@@ -790,9 +795,14 @@
     var t = G.trail[i];
     if (t && t !== e.id) tuer(t, e);
     if (!e.alive || G.fini) return;
+    var avant = e.cell;
     e.cell = i;
     if (G.owner[i] === e.id) { if (e.trail.length) capturer(e); }
-    else if (G.trail[i] !== e.id) { G.trail[i] = e.id; e.trail.push(i); }
+    else if (G.trail[i] !== e.id) {
+      // la trace visible part du bord de la zone
+      if (!e.trail.length) e.pts = [centre(avant)];
+      G.trail[i] = e.id; e.trail.push(i);
+    }
   }
 
   function capturer(e) {
@@ -815,7 +825,7 @@
       }
     }
     for (var k = 0; k < e.trail.length; k++) T[e.trail[k]] = 0;
-    e.trail = [];
+    e.trail = []; e.pts = [];
     if (!e.bot) {
       var pc = pris / N * 100;
       G.maxLoop = Math.max(G.maxLoop, pc); G.stolen += voles; G.loops++;
@@ -837,7 +847,7 @@
     if (!v.alive) return;
     v.alive = false;
     for (var k = 0; k < v.trail.length; k++) G.trail[v.trail[k]] = 0;
-    v.trail = [];
+    v.trail = []; v.pts = [];
     for (var i = 0; i < N; i++) if (G.owner[i] === id) { G.owner[i] = 0; peindre(i); }
     v.count = 0;
     eclabousser(v, 26);
@@ -935,13 +945,20 @@
     // les traces
     for (var n = 0; n < G.ents.length; n++) {
       var e = G.ents[n];
-      if (!e.trail.length) continue;
-      ctx.globalAlpha = .78;
-      ctx.fillStyle = motif(ctx, e.av, 'trace');
-      for (var k = 0; k < e.trail.length; k++) {
-        var c = e.trail[k];
-        ctx.fillRect((c % COLS) * CELL, Math.floor(c / COLS) * CELL, CELL, CELL);
+      if (!e.trail.length || !e.pts || !e.pts.length) continue;
+      // une bande lisse aux bouts arrondis qui suit le chemin exact
+      ctx.beginPath();
+      ctx.moveTo(e.pts[0].x, e.pts[0].y);
+      for (var k = 1; k < e.pts.length - 1; k++) {
+        var a = e.pts[k], b2 = e.pts[k + 1];
+        ctx.quadraticCurveTo(a.x, a.y, (a.x + b2.x) / 2, (a.y + b2.y) / 2);
       }
+      ctx.lineTo(e.x, e.y);
+      ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+      ctx.globalAlpha = .8;
+      ctx.lineWidth = CELL * 1.25;
+      ctx.strokeStyle = motif(ctx, e.av, 'trace');
+      ctx.stroke();
       ctx.globalAlpha = 1;
     }
     // le viseur du joueur
