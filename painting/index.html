@@ -268,7 +268,7 @@
       <button type="button" id="btnSon" aria-pressed="true">🔊 Son</button>
       <button type="button" id="btnQuitter">✕ Quitter</button>
     </div>
-    <div class="hud" id="astuce">🖱️ Ta tache suit la souris. Sors de ta zone, fais une boucle et reviens&nbsp;: tout l'intérieur devient à toi&nbsp;!</div>
+    <div class="hud" id="astuce">🖱️ Ta tache suit la souris. Fais une boucle et reviens chez toi&nbsp;: l'intérieur devient à toi. Ne repasse jamais sur ta trace&nbsp;!</div>
     <div id="annonce" hidden></div>
     <div id="toast" hidden></div>
     <div id="fin" hidden></div>
@@ -873,6 +873,8 @@
     if (!e.bot) G.dist++;
     var t = G.trail[i];
     if (t && t !== e.id) tuer(t, e);
+    // repasser sur sa propre trace fait perdre (les 3 dernières cases ne comptent pas)
+    if (t === e.id && e.trail.lastIndexOf(i) < e.trail.length - 3) { tuer(e.id, e, false, true); return; }
     if (!e.alive || G.fini) return;
     var avant = e.cell;
     e.cell = i;
@@ -921,7 +923,7 @@
     if (!e.bot) verifierVictoire();
   }
 
-  function tuer(id, par, recouvert) {
+  function tuer(id, par, recouvert, propre) {
     var v = G.ents[id - 1];
     if (!v.alive) return;
     v.alive = false;
@@ -932,9 +934,10 @@
     eclabousser(v, 26);
     if (v === G.me) {
       bip(220, .5, 'sawtooth', .07, -160);
-      finPartie(false, par && par !== v ? par : null, recouvert);
+      finPartie(false, par && par !== v ? par : null, recouvert, propre);
     } else {
-      if (par === G.me) { G.kills++; toast('Tu as effacé ' + v.av.nom + '\u00a0! 💥'); bip(330, .25, 'square', .05, 400); }
+      if (propre) toast(v.av.nom + ' est passé sur sa propre trace\u00a0! 😅');
+      else if (par === G.me) { G.kills++; toast('Tu as effacé ' + v.av.nom + '\u00a0! 💥'); bip(330, .25, 'square', .05, 400); }
       majHud();
     }
   }
@@ -1099,7 +1102,7 @@
   function aujourdhui() { var d = new Date(); return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate(); }
   var minuteurRetour = 0;
 
-  function finPartie(gagne, tueur, recouvert) {
+  function finPartie(gagne, tueur, recouvert, propre) {
     if (G.fini) return;
     G.fini = true;
     $('astuce').style.opacity = 0;
@@ -1136,7 +1139,7 @@
     } else {
       h.textContent = recouvert ? 'Ta tache a disparu\u00a0!' : 'Ta trace a été coupée\u00a0!';
       h.className = 'perdu';
-      p.textContent = tueur
+      p.textContent = propre ? 'Tu es passé sur ta propre trace.' : tueur
         ? (recouvert ? tueur.av.nom + ' a recouvert toute ta peinture.' : tueur.av.nom + ' est passé sur ta trace.')
         : 'Ta peinture a été effacée.';
     }

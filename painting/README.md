@@ -11,6 +11,7 @@ Jouable sur https://pierreflory-web.github.io/jeux/painting/ (dossier `painting/
 - Diriger : souris ou doigt. La tache avance toujours.
 - Hors de ta zone, tu laisses une trace. Rentrer chez toi transforme la boucle en terrain.
 - Si un adversaire passe sur ta trace, tu perds. Passe sur la sienne et tu l'effaces.
+- Si tu repasses sur ta propre trace, tu perds aussi (les adversaires aussi).
 - Si ta zone est entièrement recouverte, tu perds aussi.
 - À 95 % du terrain, le dernier coup de pinceau repeint tout le reste : **victoire**,
   puis retour automatique à l'accueil.
