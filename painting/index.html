@@ -691,8 +691,8 @@
 
   function lancerPartie() {
     var moi = avatarParId(choix);
-    var autres = melanger(AV.filter(function (a) { return a.id !== moi.id; })).slice(0, 3);
-    var departs = melanger([[84, 12], [82, 48], [56, 9], [58, 51]]).slice(0, 3);
+    var autres = melanger(AV.filter(function (a) { return a.id !== moi.id; })).slice(0, 4);
+    var departs = melanger([[78, 21], [82, 47], [52, 12], [56, 49]]);
     departs.unshift([22, 30]);
     G = {
       owner: new Uint8Array(N), trail: new Uint8Array(N), ents: [], t: 0, fini: false, pret: 1.4,
