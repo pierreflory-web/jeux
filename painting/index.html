@@ -305,6 +305,7 @@
     <div class="hud" id="hudRang"><span class="etiquette">Classement</span><div id="rang"></div></div>
     <div class="commandes">
       <button type="button" id="btnSon" aria-pressed="true">🔊 Son</button>
+      <button type="button" id="btnMusique" aria-pressed="true">🎵 Musique</button>
       <button type="button" id="btnQuitter">✕ Quitter</button>
     </div>
     <div class="hud" id="astuce">🖱️ Ton avatar va là où tu mets la souris. Fais une boucle et reviens chez toi&nbsp;: l'intérieur devient à toi. Ne repasse jamais sur ta trace&nbsp;!</div>
@@ -325,6 +326,7 @@
   var VICTOIRE = 0.95; // à 95 %, le dernier coup de pinceau repeint tout le reste
 
   var joueur = window.MesJeux ? MesJeux.session() : null;
+  if (!joueur) { try { joueur = JSON.parse(localStorage.getItem('mesjeux_session')); } catch (e) { joueur = null; } }
   var PID = joueur ? joueur.id : 'local';
   var CLE_STATS = 'painting_stats_' + PID, CLE_AVATAR = 'painting_avatar_' + PID;
   function lire(k, d) { try { var v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } }
@@ -635,9 +637,54 @@
     });
   }
   document.querySelectorAll('.niveaux button').forEach(function (b) {
-    b.onclick = function () { niveau = b.dataset.niveau; ecrire(CLE_NIVEAU, niveau); majNiveaux(); };
+    b.onclick = function () { niveau = b.dataset.niveau; ecrire(CLE_NIVEAU, niveau); majNiveaux(); sauverDistant(); };
   });
   majNiveaux();
+
+  // ——— Progression partagée entre appareils (colonne « painting » de la table players) ———
+  // Tant que la colonne n'existe pas (painting.sql pas encore exécuté), tout reste dans ce navigateur.
+  var SB_URL = "https://xmuohrglecqtpoyzssfj.supabase.co/rest/v1";
+  var SB_KEY = "sb_publishable_Y9EMQFz64Vt0n1GAs9wv1A_ciDRgNVz";
+  var distant = false;
+  function fusionner(a, b) {
+    var r = Object.assign({}, DEFAUT, a);
+    Object.keys(DEFAUT).forEach(function (k) {
+      var x = a[k], y = b[k];
+      if (y == null) return;
+      if (Array.isArray(DEFAUT[k])) r[k] = (x || []).concat((y || []).filter(function (v) { return (x || []).indexOf(v) === -1; }));
+      else if (k === 'bestTime') r[k] = x && y ? Math.min(x, y) : (x || y);
+      else r[k] = Math.max(x || 0, y || 0);
+    });
+    return r;
+  }
+  async function chargerDistant() {
+    if (!joueur) return;
+    try {
+      var res = await fetch(SB_URL + '/players?select=painting&id=eq.' + joueur.id, { headers: { apikey: SB_KEY, Authorization: 'Bearer ' + SB_KEY } });
+      if (!res.ok) return; // colonne absente : on reste en local
+      var rows = await res.json();
+      if (!rows[0]) return;
+      distant = true;
+      var d = rows[0].painting;
+      if (!d) { sauverDistant(); return; }
+      stats = fusionner(stats, d.stats || {});
+      ecrire(CLE_STATS, stats);
+      if (d.avatar && avatarParId(d.avatar) && debloque(avatarParId(d.avatar))) { choix = d.avatar; ecrire(CLE_AVATAR, choix); }
+      if (d.niveau && NIVEAUX[d.niveau]) { niveau = d.niveau; ecrire(CLE_NIVEAU, niveau); majNiveaux(); }
+      if (!$('accueil').hidden) afficherAccueil();
+      else if (!$('avatars').hidden) afficherAvatars();
+    } catch (e) { /* pas de réseau : tant pis */ }
+  }
+  function sauverDistant() {
+    if (!joueur || !distant) return;
+    try {
+      fetch(SB_URL + '/players?id=eq.' + joueur.id, {
+        method: 'PATCH', keepalive: true,
+        headers: { apikey: SB_KEY, Authorization: 'Bearer ' + SB_KEY, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ painting: { stats: stats, avatar: choix, niveau: niveau, maj: Date.now() } })
+      }).catch(function () {});
+    } catch (e) {}
+  }
 
   var choix = lire(CLE_AVATAR, 'citron');
   if (!avatarParId(choix) || !debloque(avatarParId(choix))) choix = 'citron';
@@ -690,7 +737,7 @@
       var nom = document.createElement('span'); nom.className = 'nom'; nom.textContent = a.nom; carte.appendChild(nom);
       if (libre) {
         var ok = document.createElement('span'); ok.className = 'ok'; ok.textContent = a.id === choix ? '✓ Choisi' : 'Débloqué'; carte.appendChild(ok);
-        carte.onclick = function () { choix = a.id; ecrire(CLE_AVATAR, choix); afficherAvatars(); };
+        carte.onclick = function () { choix = a.id; ecrire(CLE_AVATAR, choix); afficherAvatars(); sauverDistant(); };
       } else {
         var m = a.mission, v = valeur(stats, m[1], a.id), pc = Math.min(100, Math.round(v / m[2] * 100));
         var bloc = document.createElement('div'); bloc.className = 'mission';
@@ -716,10 +763,15 @@
   var audio = null, sonActif = lire('painting_son', true);
   function majBoutonSon() { $('btnSon').textContent = sonActif ? '🔊 Son' : '🔇 Son'; $('btnSon').setAttribute('aria-pressed', sonActif ? 'true' : 'false'); }
   $('btnSon').onclick = function () { sonActif = !sonActif; ecrire('painting_son', sonActif); majBoutonSon(); };
+  function sonCtx() {
+    audio = audio || new (window.AudioContext || window.webkitAudioContext)();
+    if (audio.state === 'suspended') audio.resume();
+    return audio;
+  }
   function bip(f, d, type, vol, glisse) {
     if (!sonActif) return;
     try {
-      audio = audio || new (window.AudioContext || window.webkitAudioContext)();
+      sonCtx();
       var o = audio.createOscillator(), g = audio.createGain(), t = audio.currentTime;
       o.type = type || 'sine'; o.frequency.setValueAtTime(f, t);
       if (glisse) o.frequency.exponentialRampToValueAtTime(Math.max(40, f + glisse), t + d);
@@ -727,6 +779,49 @@
       o.connect(g); g.connect(audio.destination); o.start(t); o.stop(t + d);
     } catch (e) {}
   }
+
+  // ——— Musique : une petite ritournelle jouée par le navigateur (do, la, fa, sol) ———
+  var musique = { on: lire('painting_musique', true), minuteur: 0, pas: 0, prochaine: 0 };
+  var BASSES = [130.81, 110.00, 87.31, 98.00];
+  var ACCORDS = [[523.25, 659.25, 783.99, 1046.5], [440, 523.25, 659.25, 880], [349.23, 440, 523.25, 698.46], [392, 493.88, 587.33, 783.99]];
+  var MOTIF = [0, 1, 2, 3, 2, -1, 1, 0, 0, 2, 1, 3, 2, -1, 1, -1];
+  function majBoutonMusique() {
+    $('btnMusique').textContent = musique.on ? '🎵 Musique' : '🔇 Musique';
+    $('btnMusique').setAttribute('aria-pressed', musique.on ? 'true' : 'false');
+  }
+  function noteMusique(f, t, d, type, vol) {
+    var o = audio.createOscillator(), g = audio.createGain();
+    o.type = type; o.frequency.setValueAtTime(f, t);
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + .02); g.gain.exponentialRampToValueAtTime(.0001, t + d);
+    o.connect(g); g.connect(audio.destination); o.start(t); o.stop(t + d + .05);
+  }
+  function planifierMusique() {
+    var duree = 60 / 116 / 2;
+    while (musique.prochaine < audio.currentTime + .3) {
+      var mesure = Math.floor(musique.pas / 16) % 4, p = musique.pas % 16, t = musique.prochaine;
+      if (p % 4 === 0) noteMusique(BASSES[mesure], t, duree * 3.6, 'sine', .07);
+      var m = MOTIF[p];
+      if (m >= 0) noteMusique(ACCORDS[mesure][m], t, duree * .9, 'triangle', .03);
+      musique.prochaine += duree; musique.pas++;
+    }
+  }
+  function musiqueDemarrer() {
+    musiqueArreter();
+    if (!musique.on) return;
+    try { sonCtx(); } catch (e) { return; }
+    musique.pas = 0; musique.prochaine = audio.currentTime + .1;
+    musique.minuteur = setInterval(planifierMusique, 80);
+  }
+  function musiqueArreter() { clearInterval(musique.minuteur); musique.minuteur = 0; }
+  $('btnMusique').onclick = function () {
+    musique.on = !musique.on; ecrire('painting_musique', musique.on); majBoutonMusique();
+    if (musique.on && G && !G.fini) musiqueDemarrer(); else musiqueArreter();
+  };
+  majBoutonMusique();
+  document.addEventListener('visibilitychange', function () {
+    if (document.hidden) musiqueArreter();
+    else if (G && !G.fini && !$('jeu').hidden) musiqueDemarrer();
+  });
 
   // ——— La partie ———
   var toile = $('toile'), ctx = toile.getContext('2d');
@@ -754,7 +849,7 @@
     var departs = melanger([[78, 21], [82, 47], [52, 12], [56, 49]]).slice(0, NV.bots);
     departs.unshift([22, 30]);
     G = {
-      nv: NV, owner: new Uint8Array(N), trail: new Uint8Array(N), ents: [], t: 0, fini: false, pret: 1.4,
+      nv: NV, owner: new Uint8Array(N), trail: new Uint8Array(N), ents: [], t: 0, fini: false, pret: 2.4,
       souris: null, kills: 0, stolen: 0, maxLoop: 0, maxPct: 0, dist: 0, loops: 0, boucles: [], quick: false, parts: []
     };
     [moi].concat(autres).forEach(function (av, i) {
@@ -776,7 +871,13 @@
     majBoutonSon();
     montrer('jeu');
     ajusterScene();
-    annoncer('Prêt\u00a0?', 900, function () { annoncer('Peins\u00a0! 🎨', 600); });
+    // compte à rebours : 3, 2, 1, Peins !
+    var etapes = ['3', '2', '1'];
+    (function suivant(k) {
+      if (k < etapes.length) { bip(520, .12, 'triangle', .07); annoncer(etapes[k], 800, function () { suivant(k + 1); }); }
+      else { bip(880, .3, 'triangle', .08, 200); annoncer('Peins\u00a0! 🎨', 700); }
+    })(0);
+    musiqueDemarrer();
     majHud(true);
     cancelAnimationFrame(boucle);
     dernier = performance.now();
@@ -862,17 +963,20 @@
   }
 
   // souris et doigt
-  function viser(clientX, clientY) {
+  function viser(clientX, clientY, auDoigt) {
     var r = toile.getBoundingClientRect();
     if (!G) return;
-    G.souris = { x: (clientX - r.left) / r.width * W, y: (clientY - r.top) / r.height * H };
+    // au doigt, on vise 60 px au-dessus pour que le doigt ne cache pas l'avatar
+    var y = clientY - (auDoigt ? 60 : 0);
+    G.souris = { x: (clientX - r.left) / r.width * W, y: Math.max(0, (y - r.top) / r.height * H) };
   }
   toile.addEventListener('mousemove', function (e) { viser(e.clientX, e.clientY); });
-  toile.addEventListener('touchstart', function (e) { var t = e.touches[0]; viser(t.clientX, t.clientY); e.preventDefault(); }, { passive: false });
-  toile.addEventListener('touchmove', function (e) { var t = e.touches[0]; viser(t.clientX, t.clientY); e.preventDefault(); }, { passive: false });
+  toile.addEventListener('touchstart', function (e) { var t = e.touches[0]; viser(t.clientX, t.clientY, true); e.preventDefault(); }, { passive: false });
+  toile.addEventListener('touchmove', function (e) { var t = e.touches[0]; viser(t.clientX, t.clientY, true); e.preventDefault(); }, { passive: false });
 
   $('btnQuitter').onclick = function () {
     if (G && !G.fini) { G.fini = true; cancelAnimationFrame(boucle); }
+    musiqueArreter();
     afficherAccueil();
   };
 
@@ -1168,6 +1272,7 @@
   function finPartie(gagne, tueur, recouvert, propre) {
     if (G.fini) return;
     G.fini = true;
+    musiqueArreter();
     $('astuce').style.opacity = 0;
     var secs = Math.max(1, Math.round(G.t));
     var avant = listeDebloques();
@@ -1188,6 +1293,7 @@
       if (stats.winAv.indexOf(av.id) === -1) stats.winAv.push(av.id);
     } else { stats.losses++; stats.streak = 0; }
     ecrire(CLE_STATS, stats);
+    sauverDistant();
     var nouveaux = listeDebloques().filter(function (id) { return avant.indexOf(id) === -1; }).map(avatarParId);
 
     var duree = Math.floor(secs / 60) + ':' + String(secs % 60).padStart(2, '0');
@@ -1286,6 +1392,7 @@
 
   // ——— Démarrage ———
   afficherAccueil();
+  chargerDistant();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { if (!$('accueil').hidden) afficherAccueil(); });
   if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(function () {});
 })();
