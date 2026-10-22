@@ -603,9 +603,9 @@
 
   // ——— Niveaux ———
   var NIVEAUX = {
-    facile:    { nom: 'Facile',    bots: 3, vitesse: 95,  tour: 5, chasseApres: 15, chasseChance: .2, chasseRayon: 7,  l1: [5, 11], l2: [4, 10] },
-    normal:    { nom: 'Normal',    bots: 4, vitesse: 110, tour: 6, chasseApres: 8,  chasseChance: .4, chasseRayon: 11, l1: [6, 12], l2: [5, 11] },
-    difficile: { nom: 'Difficile', bots: 4, vitesse: 120, tour: 7, chasseApres: 4,  chasseChance: .6, chasseRayon: 15, l1: [7, 13], l2: [6, 12] }
+    facile:    { nom: 'Facile',    erreur: .35, bots: 3, vitesse: 95,  tour: 5, chasseApres: 15, chasseChance: .2, chasseRayon: 7,  l1: [5, 11], l2: [4, 10] },
+    normal:    { nom: 'Normal',    erreur: .2, bots: 4, vitesse: 110, tour: 6, chasseApres: 8,  chasseChance: .4, chasseRayon: 11, l1: [6, 12], l2: [5, 11] },
+    difficile: { nom: 'Difficile', erreur: .1, bots: 4, vitesse: 120, tour: 7, chasseApres: 4,  chasseChance: .6, chasseRayon: 15, l1: [7, 13], l2: [6, 12] }
   };
   var CLE_NIVEAU = 'painting_niveau_' + PID;
   var niveau = lire(CLE_NIVEAU, 'normal');
@@ -991,7 +991,7 @@
         var voulu = cerveau(e, dt);
         // regarder 3 cases devant : ne jamais foncer dans sa propre trace
         var evite = false;
-        if (e.trail.length > 3 && (!surPourBot(e, voulu) || !surPourBot(e, e.ang))) {
+        if (e.trail.length > 3 && !(e.ai && e.ai.distrait) && (!surPourBot(e, voulu) || !surPourBot(e, e.ang))) {
           var essais = [0, .6, -.6, 1.2, -1.2, 1.8, -1.8, 2.4, -2.4];
           for (var es = 0; es < essais.length; es++) if (surPourBot(e, voulu + essais[es])) { voulu += essais[es]; evite = true; break; }
         }
@@ -1149,7 +1149,7 @@
     var c0 = e.cell, c1 = caseDe(nx, ny), x = c0 % COLS, y = Math.floor(c0 / COLS), x1 = c1 % COLS, y1 = Math.floor(c1 / COLS);
     function ok(c) {
       var t = G.trail[c];
-      if (t && t !== e.id && G.ents[t - 1].bot) return false; // les adversaires ne se coupent pas entre eux
+      if (e.ai && e.ai.distrait) return true; // distrait : il peut se couper tout seul
       return t !== e.id || e.trail.lastIndexOf(c) >= e.trail.length - 3;
     }
     while (x !== x1) { x += x1 > x ? 1 : -1; if (!ok(y * COLS + x)) return false; }
@@ -1168,6 +1168,7 @@
   function borneCase(x, y) { x = Math.max(1, Math.min(COLS - 2, Math.round(x))); y = Math.max(1, Math.min(ROWS - 2, Math.round(y))); return centre(y * COLS + x); }
   function planifier(e) {
     var a = e.ai, cx = e.cell % COLS, cy = Math.floor(e.cell / COLS);
+    a.distrait = Math.random() < G.nv.erreur;
     var forme = Math.random();
     // un raid : aller mordre dans le terrain du joueur tout proche
     if (forme > .85 && G.me.alive) {
@@ -1238,11 +1239,16 @@
       a.t = .3;
       var me = G.me, cx = e.cell % COLS, cy = Math.floor(e.cell / COLS);
       // chasse : couper la trace du joueur quand elle passe tout près
-      if (me.alive && me.trail.length && a.mode !== 'chasse' && G.t > G.nv.chasseApres && Math.random() < G.nv.chasseChance) {
+      if (a.mode !== 'chasse' && G.t > G.nv.chasseApres && Math.random() < G.nv.chasseChance) {
         var best = -1, bd = G.nv.chasseRayon;
-        for (var k = 0; k < me.trail.length; k++) {
-          var c = me.trail[k], d = Math.abs(c % COLS - cx) + Math.abs(Math.floor(c / COLS) - cy);
-          if (d < bd) { bd = d; best = c; }
+        for (var o = 0; o < G.ents.length; o++) {
+          var proie = G.ents[o];
+          if (proie === e || !proie.alive) continue;
+          for (var k = 0; k < proie.trail.length; k++) {
+            // la trace du joueur est la proie préférée : celle des autres adversaires compte comme 2× plus loin
+            var c = proie.trail[k], d = (Math.abs(c % COLS - cx) + Math.abs(Math.floor(c / COLS) - cy)) * (proie.bot ? 2 : 1);
+            if (d < bd) { bd = d; best = c; }
+          }
         }
         if (best >= 0) { a.pts = [centre(best)]; a.mode = 'chasse'; }
       }
