@@ -118,7 +118,7 @@
   .carte canvas { display: block; }
   .carte.verrou canvas { filter: grayscale(1); opacity: .35; }
   .cadenas {
-    position: absolute; left: 50%; top: 52px; transform: translateX(-50%);
+    position: absolute; left: 50%; top: 58px; transform: translateX(-50%);
     width: 50px; height: 50px; border-radius: 50%; background: var(--nuit);
     box-shadow: 0 0 0 3px var(--bord); display: flex; align-items: center; justify-content: center;
   }
@@ -230,7 +230,7 @@
   <h1>Painting<br>Further Away</h1>
   <p id="quiJoue"></p>
   <div class="avatar-accueil">
-    <canvas id="avatarAccueil" width="220" height="230" aria-hidden="true"></canvas>
+    <canvas id="avatarAccueil" width="240" height="280" aria-hidden="true"></canvas>
     <div id="nomAccueil"></div>
   </div>
   <div class="boutons">
@@ -453,6 +453,11 @@
       if (ctx.roundRect) ctx.roundRect(x0 * s, y0 * s, w * s, h * s, rad * s); else ctx.rect(x0 * s, y0 * s, w * s, h * s);
       ctx.fillStyle = fond; ctx.fill();
     }
+    function texte(t, tx, ty, taille, couleur) {
+      ctx.font = '700 ' + (taille * s) + 'px Fredoka, sans-serif';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillStyle = couleur; ctx.fillText(t, tx * s, ty * s);
+    }
     var ex = av.extra;
     ctx.save();
     ctx.translate(x, y);
@@ -483,6 +488,17 @@
     if (ex === 'stick') pave(-4, 28, 8, 34, 4, '#F4F1FF');
     if (ex === 'banana') { ctx.save(); ctx.rotate(0.35); pave(-5, -62, 10, 22, 3, '#6B4423'); ctx.restore(); }
     if (av.cat === 'aliments' && !ex) { pave(-5, -60, 8, 20, 4, '#6B4423'); ovale(14, -54, 13, 7, -0.4, '#3BAA4A'); }
+    // ——— les détails des véhicules, sur le toit ———
+    if (av.id === 'bolide') { pave(-36, -58, 72, 9, 3, '#0E1128'); pave(-27, -51, 7, 12, 2, '#0E1128'); pave(20, -51, 7, 12, 2, '#0E1128'); }
+    if (av.id === 'taxi') { pave(-22, -64, 44, 20, 5, '#0E1128'); pave(-19, -61, 38, 14, 3, '#FFD23F'); texte('TAXI', 0, -53.5, 11, '#0E1128'); }
+    if (av.id === 'police') { pave(-23, -49, 46, 9, 3, '#0E1128'); pave(-19, -62, 17, 15, 6, '#2E7BFF'); pave(2, -62, 17, 15, 6, '#FF3B3B'); }
+    if (av.id === 'pompiers') {
+      pave(-38, -57, 76, 3, 1, '#C8CCDA'); pave(-38, -49, 76, 3, 1, '#C8CCDA');
+      for (var bar = -38; bar <= 35; bar += 11) pave(bar, -57, 3, 11, 0, '#C8CCDA');
+      pave(-7, -68, 14, 11, 5, '#2E7BFF');
+    }
+    if (av.id === 'tracteur') { pave(16, -62, 9, 26, 2, '#3A3F5C'); ovale(32, -67, 7, 6, 0, '#D9DCEB'); ovale(43, -72, 9, 7, 0, '#E8EAF3'); }
+    if (av.id === 'bus') { pave(-32, -51, 11, 8, 4, '#FF8A1F'); pave(21, -51, 11, 8, 4, '#FF8A1F'); }
     // ——— le corps ———
     ctx.beginPath(); ctx.arc(0, 0, r, 0, Math.PI * 2);
     ctx.save();
@@ -518,9 +534,12 @@
       ovale(-15 + px, oy + py, 4.5, 5, 0, '#0E1128'); ovale(15 + px, oy + py, 4.5, 5, 0, '#0E1128');
     }
     // ——— devant le corps ———
+    if (av.id === 'bolide') { rond(0, 23, 11, '#FFFFFF'); texte('1', 0, 24, 15, '#E63B2E'); }
+    if (av.id === 'bus') { pave(-22, 18, 44, 15, 3, '#0E1128'); texte('ÉCOLE', 0, 26, 9, '#FFD23F'); }
     if (av.cat === 'vehicules') {
-      rond(-35, 41, 15, '#0E1128'); rond(-35, 41, 7, '#9AA0C8');
-      rond(35, 41, 15, '#0E1128'); rond(35, 41, 7, '#9AA0C8');
+      function roue(cx, cy, rr, jante) { rond(cx, cy, rr, '#0E1128'); rond(cx, cy, rr * .47, jante); }
+      if (av.id === 'tracteur') { roue(-30, 32, 25, '#FFD23F'); roue(37, 44, 12, '#FFD23F'); }
+      else { roue(-35, 41, 15, '#9AA0C8'); roue(35, 41, 15, '#9AA0C8'); }
     }
     ctx.restore();
   }
@@ -602,7 +621,7 @@
       carte.type = 'button';
       carte.className = 'carte' + (libre ? '' : ' verrou') + (a.id === choix ? ' choisi' : '');
       if (!libre) carte.setAttribute('aria-disabled', 'true');
-      var cv = document.createElement('canvas'); cv.width = 120; cv.height = 128; cv.setAttribute('aria-hidden', 'true');
+      var cv = document.createElement('canvas'); cv.width = 120; cv.height = 140; cv.setAttribute('aria-hidden', 'true');
       carte.appendChild(cv);
       toileAvatar(cv, a, 40);
       if (!libre) {
@@ -1108,7 +1127,7 @@
     var duree = Math.floor(secs / 60) + ':' + String(secs % 60).padStart(2, '0');
     var f = $('fin');
     var pan = document.createElement('div'); pan.className = 'panneau';
-    var cv = document.createElement('canvas'); cv.width = 130; cv.height = 130; cv.setAttribute('aria-hidden', 'true');
+    var cv = document.createElement('canvas'); cv.width = 130; cv.height = 150; cv.setAttribute('aria-hidden', 'true');
     pan.appendChild(cv);
     var h = document.createElement('h2'), p = document.createElement('p');
     if (gagne) {
@@ -1145,7 +1164,7 @@
     }
     if (nouveaux.length === 1) nouveaux.forEach(function (a) {
       var d = document.createElement('div'); d.className = 'debloque';
-      var mini = document.createElement('canvas'); mini.width = 70; mini.height = 76; mini.setAttribute('aria-hidden', 'true');
+      var mini = document.createElement('canvas'); mini.width = 70; mini.height = 84; mini.setAttribute('aria-hidden', 'true');
       d.appendChild(mini);
       var t = document.createElement('div');
       t.innerHTML = '<span class="etiquette">Mission accomplie</span><strong></strong><small></small>';
