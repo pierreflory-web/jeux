@@ -947,11 +947,14 @@
       if (propre) toast(v.av.nom + ' est passé sur sa propre trace\u00a0! 😅');
       else if (par === G.me) { G.kills++; toast('Tu as effacé ' + v.av.nom + '\u00a0! 💥'); bip(330, .25, 'square', .05, 400); }
       majHud();
+      // plus aucun adversaire : tu as gagné
+      if (!G.fini && G.me.alive && !G.ents.some(function (b) { return b.bot && b.alive; })) { G.raison = 'adversaires'; verifierVictoire(true); }
     }
   }
 
-  function verifierVictoire() {
-    if (G.me.count / N < VICTOIRE) return;
+  function verifierVictoire(force) {
+    if (G.fini) return;
+    if (!force && G.me.count / N < VICTOIRE) return;
     // le dernier coup de pinceau : tout le reste du terrain devient à toi
     for (var n = 1; n < G.ents.length; n++) {
       var bot = G.ents[n];
@@ -1143,7 +1146,9 @@
     var h = document.createElement('h2'), p = document.createElement('p');
     if (gagne) {
       h.textContent = 'Terrain conquis\u00a0!';
-      p.textContent = av.nom + ' a repeint 100 % du terrain. 🎉';
+      p.textContent = G.raison === 'adversaires'
+        ? 'Plus aucun adversaire\u00a0: ' + av.nom + ' repeint tout le terrain. 🎉'
+        : av.nom + ' a repeint 100 % du terrain. 🎉';
     } else {
       h.textContent = recouvert ? 'Ta tache a disparu\u00a0!' : 'Ta trace a été coupée\u00a0!';
       h.className = 'perdu';
@@ -1219,6 +1224,7 @@
         var lignes = [[30, 'Terrain entièrement repeint']];
         if (G.kills) lignes.push([G.kills * 5, G.kills + ' adversaire' + (G.kills > 1 ? 's effacés' : ' effacé')]);
         if (secs < 120) lignes.push([10, 'Victoire en moins de 2 minutes']);
+        if (G.raison === 'adversaires') lignes.push([10, 'Tous les adversaires effacés']);
         try { MesJeux.award('painting', lignes, { secs: secs, score: 100 }); } catch (e) {}
       }
     }

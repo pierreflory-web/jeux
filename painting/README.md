@@ -14,6 +14,7 @@ Jouable sur https://pierreflory-web.github.io/jeux/painting/ (dossier `painting/
 - Si un adversaire passe sur ta trace, tu perds. Passe sur la sienne et tu l'effaces.
 - Si tu repasses sur ta propre trace, tu perds aussi (les adversaires aussi).
 - Si ta zone est entièrement recouverte, tu perds aussi.
+- Si tu effaces tous tes adversaires, tu as gagné aussi : le terrain se repeint à tes couleurs.
 - À 95 % du terrain, le dernier coup de pinceau repeint tout le reste : **victoire**,
   puis retour automatique à l'accueil.
 
@@ -29,7 +30,7 @@ dans le navigateur (`localStorage`, clé `painting_stats_<id joueur>`).
 - Charge `https://pierreflory-web.github.io/jeux/points.js` et appelle
   `MesJeux.award('painting', lignes, { secs, score })` à la victoire.
 - Lignes du barème : « Terrain entièrement repeint » (30), « N adversaires effacés » (5 chacun),
-  « Victoire en moins de 2 minutes » (10).
+  « Victoire en moins de 2 minutes » (10), « Tous les adversaires effacés » (10).
 
 ## Structure
 
