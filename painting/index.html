@@ -838,9 +838,9 @@
       if (e.bot) {
         var voulu = cerveau(e, dt);
         var diff = Math.atan2(Math.sin(voulu - e.ang), Math.cos(voulu - e.ang));
-        var maxTour = 5 * dt;
+        var maxTour = 7 * dt;
         e.ang += Math.max(-maxTour, Math.min(maxTour, diff));
-        pas = 100 * dt;
+        pas = 120 * dt;
       } else {
         // ton avatar va là où est la souris et s'arrête quand elle s'arrête
         if (!G.souris) continue;
@@ -985,7 +985,7 @@
     if ((d1[0] === 1 && cx > COLS - 12) || (d1[0] === -1 && cx < 12)) d1 = [-d1[0], 0];
     if ((d1[1] === 1 && cy > ROWS - 10) || (d1[1] === -1 && cy < 10)) d1 = [0, -d1[1]];
     var d2 = d1[0] ? [0, Math.random() < .5 ? 1 : -1] : [Math.random() < .5 ? 1 : -1, 0];
-    var l1 = 5 + Math.floor(Math.random() * 11), l2 = 4 + Math.floor(Math.random() * 10);
+    var l1 = 7 + Math.floor(Math.random() * 13), l2 = 6 + Math.floor(Math.random() * 12);
     function borne(x, y) { x = Math.max(1, Math.min(COLS - 2, x)); y = Math.max(1, Math.min(ROWS - 2, y)); return centre(y * COLS + x); }
     var p1 = [cx + d1[0] * l1, cy + d1[1] * l1];
     var p2 = [p1[0] + d2[0] * l2, p1[1] + d2[1] * l2];
@@ -1008,11 +1008,11 @@
     if (a.mode === 'retour' && chez && !e.trail.length) { a.pts = []; a.mode = 'maison'; }
     a.t -= dt;
     if (a.t <= 0) {
-      a.t = .45;
+      a.t = .3;
       var me = G.me, cx = e.cell % COLS, cy = Math.floor(e.cell / COLS);
       // chasse : couper la trace du joueur quand elle passe tout près
-      if (me.alive && me.trail.length && a.mode !== 'chasse' && G.t > 12 && Math.random() < .25) {
-        var best = -1, bd = 7;
+      if (me.alive && me.trail.length && a.mode !== 'chasse' && G.t > 4 && Math.random() < .6) {
+        var best = -1, bd = 15;
         for (var k = 0; k < me.trail.length; k++) {
           var c = me.trail[k], d = Math.abs(c % COLS - cx) + Math.abs(Math.floor(c / COLS) - cy);
           if (d < bd) { bd = d; best = c; }
@@ -1021,7 +1021,7 @@
       }
       // prudence : rentrer quand le joueur s'approche ou quand la trace devient trop longue
       if (e.trail.length && a.mode !== 'chasse' && a.mode !== 'retour') {
-        if ((me.alive && Math.hypot(me.x - e.x, me.y - e.y) < 5 * CELL) || e.trail.length > 70) rentrer(e);
+        if ((me.alive && Math.hypot(me.x - e.x, me.y - e.y) < 5 * CELL) || e.trail.length > 90) rentrer(e);
       }
     }
     if (!a.pts.length) { if (chez || !e.trail.length) planifier(e); else rentrer(e); }
