@@ -1,4 +1,4 @@
-const CACHE = 'painting-v5';
+const CACHE = 'painting-v6';
 const ASSETS = [
   '.',
   'index.html',

@@ -268,7 +268,7 @@
       <button type="button" id="btnSon" aria-pressed="true">🔊 Son</button>
       <button type="button" id="btnQuitter">✕ Quitter</button>
     </div>
-    <div class="hud" id="astuce">🖱️ Ta tache suit la souris. Fais une boucle et reviens chez toi&nbsp;: l'intérieur devient à toi. Ne repasse jamais sur ta trace&nbsp;!</div>
+    <div class="hud" id="astuce">🖱️ Ton avatar va là où tu mets la souris. Fais une boucle et reviens chez toi&nbsp;: l'intérieur devient à toi. Ne repasse jamais sur ta trace&nbsp;!</div>
     <div id="annonce" hidden></div>
     <div id="toast" hidden></div>
     <div id="fin" hidden></div>
@@ -834,14 +834,22 @@
     for (var n = 0; n < G.ents.length; n++) {
       var e = G.ents[n];
       if (!e.alive || G.fini) continue;
-      var voulu = e.ang;
-      if (e.bot) voulu = cerveau(e, dt);
-      else if (G.souris && Math.hypot(G.souris.x - e.x, G.souris.y - e.y) > CELL * 0.7) voulu = Math.atan2(G.souris.y - e.y, G.souris.x - e.x);
-      var diff = Math.atan2(Math.sin(voulu - e.ang), Math.cos(voulu - e.ang));
-      var maxTour = (e.bot ? 5 : 9) * dt;
-      e.ang += Math.max(-maxTour, Math.min(maxTour, diff));
-      var v = e.bot ? 100 : 128;
-      var nx = e.x + Math.cos(e.ang) * v * dt, ny = e.y + Math.sin(e.ang) * v * dt;
+      var pas;
+      if (e.bot) {
+        var voulu = cerveau(e, dt);
+        var diff = Math.atan2(Math.sin(voulu - e.ang), Math.cos(voulu - e.ang));
+        var maxTour = 5 * dt;
+        e.ang += Math.max(-maxTour, Math.min(maxTour, diff));
+        pas = 100 * dt;
+      } else {
+        // ton avatar va là où est la souris et s'arrête quand elle s'arrête
+        if (!G.souris) continue;
+        var dxs = G.souris.x - e.x, dys = G.souris.y - e.y, ds = Math.hypot(dxs, dys);
+        if (ds < 1.5) continue;
+        e.ang = Math.atan2(dys, dxs);
+        pas = Math.min(ds, 150 * dt);
+      }
+      var nx = e.x + Math.cos(e.ang) * pas, ny = e.y + Math.sin(e.ang) * pas;
       var bord = false;
       if (nx < CELL / 2) { nx = CELL / 2; bord = true; } if (nx > W - CELL / 2) { nx = W - CELL / 2; bord = true; }
       if (ny < CELL / 2) { ny = CELL / 2; bord = true; } if (ny > H - CELL / 2) { ny = H - CELL / 2; bord = true; }

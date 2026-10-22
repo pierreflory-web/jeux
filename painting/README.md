@@ -8,7 +8,7 @@ Jouable sur https://pierreflory-web.github.io/jeux/painting/ (dossier `painting/
 
 ## Règles
 
-- Diriger : souris ou doigt. La tache avance toujours.
+- Diriger : souris ou doigt. L'avatar va là où est la souris et s'arrête quand elle s'arrête.
 - Hors de ta zone, tu laisses une trace. Rentrer chez toi transforme la boucle en terrain.
 - Si un adversaire passe sur ta trace, tu perds. Passe sur la sienne et tu l'effaces.
 - Si tu repasses sur ta propre trace, tu perds aussi (les adversaires aussi).
