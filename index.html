@@ -562,6 +562,8 @@
   .exploit .ee { font-size: 22px; flex: none; }
   .exploit .et { flex: 1; color: var(--cream); font-size: 14px; line-height: 1.4; }
   .exploit .eq { display: block; color: var(--dim); font-size: 11.5px; font-style: italic; margin-top: 2px; }
+  .exploit.epingle { background: #3d2a14; border: 2px solid var(--gold); }
+  .exploit.epingle .tag { display: block; color: var(--gold); font-size: 11.5px; font-weight: bold; letter-spacing: .5px; margin-bottom: 3px; }
 
   /* Stats */
   .stats-grid {
@@ -1276,11 +1278,21 @@
   }
   async function chargerExploits() {
     try {
-      const evs = await sb("/events?select=emoji,texte,created_at&order=created_at.desc&limit=5");
-      if (!evs.length) { $("exploits").hidden = true; return; }
-      $("exploitsList").innerHTML = evs.map(e => `
+      // messages épinglés encore valides (colonne epingle_jusqu, absente = pas d'épinglés)
+      let epingles = [], colonneOk = true;
+      try {
+        epingles = await sb("/events?select=emoji,texte,created_at,epingle_jusqu&epingle_jusqu=gte." + today() + "&order=created_at.desc&limit=3");
+      } catch { colonneOk = false; }
+      const evs = await sb("/events?select=emoji,texte,created_at&order=created_at.desc&limit=5" + (colonneOk ? "&epingle_jusqu=is.null" : ""));
+      if (!evs.length && !epingles.length) { $("exploits").hidden = true; return; }
+      const jolieDate = d => { const [a, m, j] = d.split("-"); return parseInt(j) + " " + ["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"][parseInt(m) - 1]; };
+      const pins = epingles.map(e => `
+        <div class="exploit epingle"><span class="ee">${e.emoji}</span>
+          <span class="et"><span class="tag">📌 ÉPINGLÉ — jusqu'au ${jolieDate(e.epingle_jusqu)}</span>${esc(e.texte).replace(/\n/g, "<br>")}<span class="eq">${tempsRelatif(e.created_at)}</span></span></div>`);
+      const normaux = evs.map(e => `
         <div class="exploit"><span class="ee">${e.emoji}</span>
-          <span class="et">${esc(e.texte)}<span class="eq">${tempsRelatif(e.created_at)}</span></span></div>`).join("");
+          <span class="et">${esc(e.texte)}<span class="eq">${tempsRelatif(e.created_at)}</span></span></div>`);
+      $("exploitsList").innerHTML = pins.concat(normaux).join("");
       $("exploits").hidden = false;
     } catch { $("exploits").hidden = true; }
   }
@@ -1311,7 +1323,7 @@
   }
 
   // ——— Détection de nouvelle version ———
-  const VERSION = "16";
+  const VERSION = "17";
   async function verifierVersion() {
     try {
       const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }).then(r => r.json());
