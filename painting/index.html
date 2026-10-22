@@ -86,6 +86,13 @@
   #nomAccueil { font-size: 22px; font-weight: 600; }
   .boutons { position: relative; display: flex; gap: 18px; flex-wrap: wrap; justify-content: center; }
   .boutons .btn { min-width: 230px; }
+  .niveaux { position: relative; display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; margin-top: -8px; }
+  .niveaux .etiquette { margin-right: 4px; }
+  .niveaux button {
+    height: 44px; padding: 0 18px; border-radius: 22px; border: 2px solid var(--bord);
+    background: var(--nuit); color: var(--papier); font-size: 17px; font-weight: 600; cursor: pointer;
+  }
+  .niveaux button[aria-pressed="true"] { background: var(--jaune); border-color: var(--jaune); color: var(--nuit); }
   .retour-mesjeux { position: relative; color: var(--brume); font-size: 15px; text-decoration: none; }
   .retour-mesjeux:hover { color: var(--jaune); }
 
@@ -208,6 +215,7 @@
   #compte { font-size: 15px; color: var(--brume); }
 
   @media (max-width: 640px) {
+    .tache { opacity: .3 !important; transform: scale(.6); }
     #hudRang { display: none; }
     .commandes { top: auto; bottom: 12px; }
     #astuce { display: none; }
@@ -232,6 +240,12 @@
   <div class="avatar-accueil">
     <canvas id="avatarAccueil" width="240" height="280" aria-hidden="true"></canvas>
     <div id="nomAccueil"></div>
+  </div>
+  <div class="niveaux" role="group" aria-label="Niveau">
+    <span class="etiquette">Niveau</span>
+    <button type="button" data-niveau="facile">Facile 🐢</button>
+    <button type="button" data-niveau="normal">Normal</button>
+    <button type="button" data-niveau="difficile">Difficile 🔥</button>
   </div>
   <div class="boutons">
     <button class="btn clair" type="button" id="btnAvatar">Changer d'avatar</button>
@@ -581,6 +595,25 @@
   }
   function listeDebloques(st) { return AV.filter(function (a) { return debloque(a, st); }).map(function (a) { return a.id; }); }
 
+  // ——— Niveaux ———
+  var NIVEAUX = {
+    facile:    { nom: 'Facile',    bots: 3, vitesse: 95,  tour: 5, chasseApres: 15, chasseChance: .2, chasseRayon: 7,  l1: [5, 11], l2: [4, 10] },
+    normal:    { nom: 'Normal',    bots: 4, vitesse: 110, tour: 6, chasseApres: 8,  chasseChance: .4, chasseRayon: 11, l1: [6, 12], l2: [5, 11] },
+    difficile: { nom: 'Difficile', bots: 4, vitesse: 120, tour: 7, chasseApres: 4,  chasseChance: .6, chasseRayon: 15, l1: [7, 13], l2: [6, 12] }
+  };
+  var CLE_NIVEAU = 'painting_niveau_' + PID;
+  var niveau = lire(CLE_NIVEAU, 'normal');
+  if (!NIVEAUX[niveau]) niveau = 'normal';
+  function majNiveaux() {
+    document.querySelectorAll('.niveaux button').forEach(function (b) {
+      b.setAttribute('aria-pressed', b.dataset.niveau === niveau ? 'true' : 'false');
+    });
+  }
+  document.querySelectorAll('.niveaux button').forEach(function (b) {
+    b.onclick = function () { niveau = b.dataset.niveau; ecrire(CLE_NIVEAU, niveau); majNiveaux(); };
+  });
+  majNiveaux();
+
   var choix = lire(CLE_AVATAR, 'citron');
   if (!avatarParId(choix) || !debloque(avatarParId(choix))) choix = 'citron';
 
@@ -691,11 +724,12 @@
 
   function lancerPartie() {
     var moi = avatarParId(choix);
-    var autres = melanger(AV.filter(function (a) { return a.id !== moi.id; })).slice(0, 4);
-    var departs = melanger([[78, 21], [82, 47], [52, 12], [56, 49]]);
+    var NV = NIVEAUX[niveau];
+    var autres = melanger(AV.filter(function (a) { return a.id !== moi.id; })).slice(0, NV.bots);
+    var departs = melanger([[78, 21], [82, 47], [52, 12], [56, 49]]).slice(0, NV.bots);
     departs.unshift([22, 30]);
     G = {
-      owner: new Uint8Array(N), trail: new Uint8Array(N), ents: [], t: 0, fini: false, pret: 1.4,
+      nv: NV, owner: new Uint8Array(N), trail: new Uint8Array(N), ents: [], t: 0, fini: false, pret: 1.4,
       souris: null, kills: 0, stolen: 0, maxLoop: 0, maxPct: 0, dist: 0, loops: 0, boucles: [], quick: false, parts: []
     };
     [moi].concat(autres).forEach(function (av, i) {
@@ -838,9 +872,9 @@
       if (e.bot) {
         var voulu = cerveau(e, dt);
         var diff = Math.atan2(Math.sin(voulu - e.ang), Math.cos(voulu - e.ang));
-        var maxTour = 7 * dt;
+        var maxTour = G.nv.tour * dt;
         e.ang += Math.max(-maxTour, Math.min(maxTour, diff));
-        pas = 120 * dt;
+        pas = G.nv.vitesse * dt;
       } else {
         // ton avatar va là où est la souris et s'arrête quand elle s'arrête
         if (!G.souris) continue;
@@ -985,7 +1019,7 @@
     if ((d1[0] === 1 && cx > COLS - 12) || (d1[0] === -1 && cx < 12)) d1 = [-d1[0], 0];
     if ((d1[1] === 1 && cy > ROWS - 10) || (d1[1] === -1 && cy < 10)) d1 = [0, -d1[1]];
     var d2 = d1[0] ? [0, Math.random() < .5 ? 1 : -1] : [Math.random() < .5 ? 1 : -1, 0];
-    var l1 = 7 + Math.floor(Math.random() * 13), l2 = 6 + Math.floor(Math.random() * 12);
+    var l1 = G.nv.l1[0] + Math.floor(Math.random() * G.nv.l1[1]), l2 = G.nv.l2[0] + Math.floor(Math.random() * G.nv.l2[1]);
     function borne(x, y) { x = Math.max(1, Math.min(COLS - 2, x)); y = Math.max(1, Math.min(ROWS - 2, y)); return centre(y * COLS + x); }
     var p1 = [cx + d1[0] * l1, cy + d1[1] * l1];
     var p2 = [p1[0] + d2[0] * l2, p1[1] + d2[1] * l2];
@@ -1011,8 +1045,8 @@
       a.t = .3;
       var me = G.me, cx = e.cell % COLS, cy = Math.floor(e.cell / COLS);
       // chasse : couper la trace du joueur quand elle passe tout près
-      if (me.alive && me.trail.length && a.mode !== 'chasse' && G.t > 4 && Math.random() < .6) {
-        var best = -1, bd = 15;
+      if (me.alive && me.trail.length && a.mode !== 'chasse' && G.t > G.nv.chasseApres && Math.random() < G.nv.chasseChance) {
+        var best = -1, bd = G.nv.chasseRayon;
         for (var k = 0; k < me.trail.length; k++) {
           var c = me.trail[k], d = Math.abs(c % COLS - cx) + Math.abs(Math.floor(c / COLS) - cy);
           if (d < bd) { bd = d; best = c; }
@@ -1160,6 +1194,7 @@
     var ch = document.createElement('div'); ch.className = 'chiffres';
     function chiffre(v, l) { var d = document.createElement('div'); d.innerHTML = '<b></b><span class="etiquette"></span>'; d.querySelector('b').textContent = v; d.querySelector('span').textContent = l; ch.appendChild(d); }
     chiffre(duree, 'Durée');
+    chiffre(G.nv.nom, 'Niveau');
     if (!gagne) chiffre(Math.floor(G.maxPct) + ' %', 'Ton record ici');
     chiffre(G.kills, G.kills > 1 ? 'Adversaires effacés' : 'Adversaire effacé');
     pan.appendChild(ch);
@@ -1225,6 +1260,7 @@
         if (G.kills) lignes.push([G.kills * 5, G.kills + ' adversaire' + (G.kills > 1 ? 's effacés' : ' effacé')]);
         if (secs < 120) lignes.push([10, 'Victoire en moins de 2 minutes']);
         if (G.raison === 'adversaires') lignes.push([10, 'Tous les adversaires effacés']);
+        if (niveau === 'difficile') lignes.push([10, 'Victoire en niveau difficile']);
         try { MesJeux.award('painting', lignes, { secs: secs, score: 100 }); } catch (e) {}
       }
     }

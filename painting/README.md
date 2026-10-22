@@ -9,7 +9,7 @@ Jouable sur https://pierreflory-web.github.io/jeux/painting/ (dossier `painting/
 ## Règles
 
 - Diriger : souris ou doigt. L'avatar va là où est la souris et s'arrête quand elle s'arrête.
-- 5 joueurs au départ : toi et 4 adversaires.
+- 3 niveaux à choisir sur l'accueil : Facile (3 adversaires lents), Normal (4), Difficile (4 adversaires rapides qui chassent ta trace).
 - Hors de ta zone, tu laisses une trace. Rentrer chez toi transforme la boucle en terrain.
 - Si un adversaire passe sur ta trace, tu perds. Passe sur la sienne et tu l'effaces.
 - Si tu repasses sur ta propre trace, tu perds aussi (les adversaires aussi).
@@ -30,7 +30,7 @@ dans le navigateur (`localStorage`, clé `painting_stats_<id joueur>`).
 - Charge `https://pierreflory-web.github.io/jeux/points.js` et appelle
   `MesJeux.award('painting', lignes, { secs, score })` à la victoire.
 - Lignes du barème : « Terrain entièrement repeint » (30), « N adversaires effacés » (5 chacun),
-  « Victoire en moins de 2 minutes » (10), « Tous les adversaires effacés » (10).
+  « Victoire en moins de 2 minutes » (10), « Tous les adversaires effacés » (10), « Victoire en niveau difficile » (10).
 
 ## Structure
 
