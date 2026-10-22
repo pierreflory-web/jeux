@@ -1,0 +1,15 @@
+{
+  "name": "Painting Further Away",
+  "short_name": "Painting",
+  "description": "Repeins tout le terrain avec ton avatar : sors de ta zone, fais une boucle et reviens.",
+  "lang": "fr",
+  "start_url": ".",
+  "display": "standalone",
+  "orientation": "landscape",
+  "background_color": "#1B1F3B",
+  "theme_color": "#1B1F3B",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
