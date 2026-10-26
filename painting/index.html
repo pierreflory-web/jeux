@@ -924,12 +924,12 @@
   function flouter(src, dst, horizontal) {
     for (var y = 0; y < MH; y++) for (var x = 0; x < MW; x++) {
       var s = 0;
-      for (var k = -1; k <= 1; k++) {
+      for (var k = -2; k <= 2; k++) {
         var xx = horizontal ? Math.min(MW - 1, Math.max(0, x + k)) : x;
         var yy = horizontal ? y : Math.min(MH - 1, Math.max(0, y + k));
         s += src[yy * MW + xx];
       }
-      dst[y * MW + x] = s / 3;
+      dst[y * MW + x] = s / 5;
     }
   }
   function calque(e) {
@@ -945,6 +945,8 @@
     mctx.drawImage(S, -6, -6, (COLS + 4) * 3, (ROWS + 4) * 3);
     var mi = mctx.getImageData(0, 0, MW, MH), md = mi.data, n;
     for (n = 0; n < MW * MH; n++) flouA[n] = md[n * 4 + 3];
+    // trois passes de flou : les petites vagues de la grille disparaissent
+    flouter(flouA, flouB, true); flouter(flouB, flouA, false);
     flouter(flouA, flouB, true); flouter(flouB, flouA, false);
     flouter(flouA, flouB, true); flouter(flouB, flouA, false);
     for (n = 0; n < MW * MH; n++) md[n * 4 + 3] = flouA[n];
@@ -953,7 +955,7 @@
     bctx.imageSmoothingEnabled = true;
     bctx.drawImage(M, 0, 0, W, H);
     var bi = bctx.getImageData(0, 0, W, H), bd = bi.data;
-    for (n = 3; n < bd.length; n += 4) { var v = (bd[n] - 128) * 5 + 128; bd[n] = v < 0 ? 0 : v > 255 ? 255 : v; }
+    for (n = 3; n < bd.length; n += 4) { var v = (bd[n] - 128) * 14 + 128; bd[n] = v < 0 ? 0 : v > 255 ? 255 : v; }
     bctx.putImageData(bi, 0, 0);
     var lc = e.calque.getContext('2d');
     lc.globalCompositeOperation = 'source-over';
