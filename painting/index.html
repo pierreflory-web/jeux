@@ -1148,8 +1148,7 @@
       bip(220, .5, 'sawtooth', .07, -160);
       finPartie(false, par && par !== v ? par : null, recouvert, propre);
     } else {
-      if (propre) toast(v.av.nom + ' est passé sur sa propre trace\u00a0! 😅');
-      else if (par === G.me) { G.kills++; toast('Tu as effacé ' + v.av.nom + '\u00a0! 💥'); bip(330, .25, 'square', .05, 400); }
+      if (!propre && par === G.me) { G.kills++; bip(330, .25, 'square', .05, 400); }
       majHud();
       // plus aucun adversaire : tu as gagné
       if (!G.fini && G.me.alive && !G.ents.some(function (b) { return b.bot && b.alive; })) { G.raison = 'adversaires'; verifierVictoire(true); }
