@@ -284,6 +284,7 @@
     <div class="commandes">
       <button type="button" id="btnSon" aria-pressed="true">🔊 Son</button>
       <button type="button" id="btnMusique" aria-pressed="true">🎵 Musique</button>
+      <button type="button" id="btnPlein">⛶ Plein écran</button>
       <button type="button" id="btnQuitter">✕ Quitter</button>
     </div>
     <div class="hud" id="astuce">🖱️ Ton avatar va là où tu mets la souris. Fais une boucle et reviens chez toi&nbsp;: l'intérieur devient à toi. Ne repasse jamais sur ta trace&nbsp;!</div>
@@ -684,6 +685,7 @@
   }
 
   function afficherAccueil() {
+    if (typeof pleinEcran === 'function') pleinEcran(false);
     var av = avatarParId(choix);
     toileAvatar($('avatarAccueil'), av, 84);
     $('nomAccueil').textContent = av.nom;
@@ -698,6 +700,7 @@
 
   var ongletActif = 'tous';
   function afficherAvatars() {
+    pleinEcran(false);
     var on = $('onglets'); on.innerHTML = '';
     CATS.forEach(function (c) {
       var b = document.createElement('button');
@@ -746,7 +749,29 @@
   $('btnAvatar').onclick = afficherAvatars;
   $('btnRetourAv').onclick = afficherAccueil;
   $('btnValider').onclick = afficherAccueil;
-  $('btnJouer').onclick = function () { lancerPartie(); };
+  // ——— Plein écran pendant la partie ———
+  // (sur iPhone, Safari ne le permet pas pour une page : le jeu installé sur l'écran d'accueil est déjà plein écran)
+  var racine = document.documentElement;
+  function estPlein() { return !!(document.fullscreenElement || document.webkitFullscreenElement); }
+  function pleinEcran(on) {
+    try {
+      if (on && !estPlein()) {
+        var f = racine.requestFullscreen || racine.webkitRequestFullscreen;
+        if (f) { var r = f.call(racine); if (r && r.catch) r.catch(function () {}); }
+      } else if (!on && estPlein()) {
+        var x = document.exitFullscreen || document.webkitExitFullscreen;
+        if (x) { var r2 = x.call(document); if (r2 && r2.catch) r2.catch(function () {}); }
+      }
+    } catch (e) {}
+  }
+  function majBoutonPlein() { $('btnPlein').textContent = estPlein() ? '⛶ Quitter le plein écran' : '⛶ Plein écran'; }
+  ['fullscreenchange', 'webkitfullscreenchange'].forEach(function (ev) {
+    document.addEventListener(ev, function () { majBoutonPlein(); if (!$('jeu').hidden) ajusterScene(); });
+  });
+  if (!(racine.requestFullscreen || racine.webkitRequestFullscreen)) $('btnPlein').hidden = true;
+  $('btnPlein').onclick = function () { pleinEcran(!estPlein()); };
+
+  $('btnJouer').onclick = function () { pleinEcran(true); lancerPartie(); };
 
   // ——— Son ———
   var audio = null, sonActif = lire('painting_son', true);
@@ -820,7 +845,8 @@
   var G = null, boucle = 0, dernier = 0;
 
   function ajusterScene() {
-    var vw = window.innerWidth - 24, vh = window.innerHeight - 24;
+    var marge = estPlein() ? 8 : 24;
+    var vw = window.innerWidth - marge, vh = window.innerHeight - marge;
     var w = Math.min(vw, vh * W / H);
     $('scene').style.width = w + 'px';
     $('scene').style.height = (w * H / W) + 'px';
@@ -1437,7 +1463,7 @@
       b2.textContent = 'Retour à l’accueil'; b2.onclick = function () { clearInterval(minuteurRetour); afficherAccueil(); };
     } else {
       b1.textContent = 'Accueil'; b1.onclick = afficherAccueil;
-      b2.textContent = 'Rejouer'; b2.onclick = function () { lancerPartie(); };
+      b2.textContent = 'Rejouer'; b2.onclick = function () { pleinEcran(true); lancerPartie(); };
     }
     bt.appendChild(b1); bt.appendChild(b2); pan.appendChild(bt);
     f.innerHTML = ''; f.appendChild(pan);
