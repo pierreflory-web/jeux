@@ -1305,11 +1305,6 @@
         ctx.beginPath(); ctx.arc(e.x, e.y, 23, 0, Math.PI * 2); ctx.fillStyle = 'rgba(244,241,255,.85)'; ctx.fill();
       }
       dessinerAvatar(ctx, e.av, e.x, e.y, e.bot ? 15 : 17, { anneau: '#1B1F3B', echelle: .8, regard: e.ang, content: G.fini && !e.bot });
-      if (e.bot) {
-        ctx.font = '600 12px Fredoka, sans-serif'; ctx.textAlign = 'center';
-        ctx.lineWidth = 4; ctx.strokeStyle = 'rgba(244,241,255,.9)'; ctx.strokeText(e.nom, e.x, e.y - 28);
-        ctx.fillStyle = '#1B1F3B'; ctx.fillText(e.nom, e.x, e.y - 28);
-      }
     }
     // éclaboussures
     for (var p = 0; p < G.parts.length; p++) {
