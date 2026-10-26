@@ -267,7 +267,7 @@ function freshState(){
 /* ---------- Sauvegarde : navigateur + Supabase (colonne players.ville) ---------- */
 const SB_URL="https://xmuohrglecqtpoyzssfj.supabase.co/rest/v1",SB_KEY="sb_publishable_Y9EMQFz64Vt0n1GAs9wv1A_ciDRgNVz";
 const DEV=/[?&]dev=1/.test(location.search);
-const VERSION='17';
+const VERSION='18';
 let NEWVER=false;
 async function checkVersion(){try{const r=await fetch('../version.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.json());if(r.v&&r.v!==VERSION&&!NEWVER){NEWVER=true;renderBanner()}}catch(e){}}
 function reloadFresh(){pushRemote(true);location.replace('./?v='+Date.now()+(DEV?'&dev=1':''))}

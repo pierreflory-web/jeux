@@ -909,7 +909,7 @@
     { id: "etoiles", nom: "La Nuit des Étoiles", emoji: "🌠", debut: "08-01", fin: "08-15",
       fond: "#0d0b26", bord: "#b8a8f0", texte: "#ddd5f5", avatars: ["🔭","🌙","☄️","🛰️","👩‍🚀"] }
   ];
-  const FETE_PRIX = 60;
+  const FETE_PRIX = 170;
   function feteActive() {
     try { const t = localStorage.getItem("mesjeux_fete_test"); if (t) return FETES.find(f => f.id === t) || null; } catch {}
     const d = new Date();
@@ -1323,7 +1323,7 @@
   }
 
   // ——— Détection de nouvelle version ———
-  const VERSION = "17";
+  const VERSION = "18";
   async function verifierVersion() {
     try {
       const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }).then(r => r.json());
