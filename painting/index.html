@@ -1126,7 +1126,6 @@
       if (G.boucles.length >= 3) G.quick = true;
       bip(520, .12, 'triangle', .07, 260); setTimeout(function () { bip(780, .14, 'triangle', .05, 200); }, 70);
       eclabousser(e, Math.min(30, 8 + Math.round(pc * 2)));
-      if (pc >= 8) toast('Énorme coup de pinceau\u00a0! +' + Math.round(pc) + ' % 🎨');
     }
     for (var n = 0; n < G.ents.length; n++) {
       var o = G.ents[n];
@@ -1353,7 +1352,6 @@
   function majHud() {
     var pc = G.me.count / N * 100;
     G.maxPct = Math.max(G.maxPct, pc);
-    if (!G.aide && pc >= 95 && pc < 100 && !G.fini) { G.aide = true; toast('Plus que ' + Math.ceil(100 - pc) + '\u00a0%\u00a0! Les coins à peindre clignotent ✨'); }
     var txt = (pc >= 99.95 ? 100 : pc < 10 ? pc.toFixed(1).replace('.', ',') : Math.floor(pc)) + ' %';
     $('pct').textContent = txt;
     $('pctBarre').firstChild.style.width = Math.min(100, pc / VICTOIRE) + '%';
