@@ -1088,7 +1088,7 @@
   function entrer(e, i) {
     if (!e.alive || G.fini) return;
     if (!e.bot) G.dist++;
-    if (!e.bot && G.bonus.cases && G.bonus.cases.indexOf(i) !== -1) prendreBonus();
+    if (G.bonus.cases && G.bonus.cases.indexOf(i) !== -1) prendreBonus(e);
     if (!e.alive || G.fini) return;
     var t = G.trail[i];
     if (t && t !== e.id) tuer(t, e);
@@ -1163,22 +1163,22 @@
 
   // ——— Carré bonus : +10 % de terrain autour de ta zone ———
   function placerBonus() {
-    var mx = G.me.cell % COLS, my = Math.floor(G.me.cell / COLS);
     for (var essai = 0; essai < 200; essai++) {
       var x = 3 + Math.floor(Math.random() * (COLS - 7)), y = 3 + Math.floor(Math.random() * (ROWS - 7));
-      if (Math.abs(x - mx) + Math.abs(y - my) < 12) continue;
+      // loin de tous les joueurs, pour que la course soit équitable
+      if (G.ents.some(function (o) { return o.alive && Math.abs(x - o.cell % COLS) + Math.abs(y - Math.floor(o.cell / COLS)) < 12; })) continue;
       var c = y * COLS + x, cases = [c, c + 1, c + COLS, c + COLS + 1];
-      if (cases.some(function (k) { return G.owner[k] === G.me.id || G.trail[k]; })) continue;
+      if (cases.some(function (k) { return G.owner[k] || G.trail[k]; })) continue;
       G.bonus.cases = cases; G.bonus.depuis = G.t;
       bip(990, .15, 'triangle', .05, 300);
       return;
     }
   }
-  function prendreBonus() {
+  function prendreBonus(qui) {
     var b = G.bonus, cx = (b.cases[0] % COLS) * CELL + CELL, cy = Math.floor(b.cases[0] / COLS) * CELL + CELL;
     b.cases = null; b.pris = true;
     // ta tache s'étend tout autour d'elle jusqu'à gagner 10 % du terrain
-    var id = G.me.id, O = G.owner, but = Math.round(N * 0.10), vu = new Uint8Array(N), file = [], pris = 0;
+    var id = qui.id, O = G.owner, but = Math.round(N * 0.10), vu = new Uint8Array(N), file = [], pris = 0;
     for (var i = 0; i < N; i++) if (O[i] === id) { vu[i] = 1; file.push(i); }
     // couche par couche, en ajoutant les diagonales une couche sur deux : la tache grandit en rond
     for (var couche = 0; file.length && pris < but; couche++) {
@@ -1193,16 +1193,17 @@
           vu[nc] = 1; suivante.push(nc);
           var avant = O[nc];
           if (avant) G.ents[avant - 1].count--;
-          O[nc] = id; G.me.count++; pris++;
+          O[nc] = id; qui.count++; pris++;
         }
       }
       file = suivante;
     }
     for (var s2 = 0; s2 < 6; s2++) setTimeout(function () { bip(600 + Math.random() * 700, .15, 'triangle', .05, 300); }, s2 * 70);
-    eclabousser({ x: cx, y: cy, av: G.me.av }, 40);
-    for (var n = 0; n < G.ents.length; n++) { var o = G.ents[n]; if (o.alive && o.bot && o.count <= 0) tuer(o.id, G.me, true); }
+    eclabousser({ x: cx, y: cy, av: qui.av }, 40);
+    for (var n = 0; n < G.ents.length; n++) { var o = G.ents[n]; if (o.alive && o !== qui && o.count <= 0) tuer(o.id, qui, true); }
+    if (G.fini) return;
     majHud();
-    verifierVictoire();
+    if (!qui.bot) verifierVictoire();
   }
 
   function verifierVictoire(force) {
@@ -1337,8 +1338,14 @@
         }
         if (best >= 0) { a.pts = [centre(best)]; a.mode = 'chasse'; }
       }
+      // le carré bonus : y aller s'il est assez proche
+      if (G.bonus.cases && a.mode !== 'bonus' && Math.random() < .5) {
+        var bc = G.bonus.cases[0], dbx = Math.abs(bc % COLS - cx) + Math.abs(Math.floor(bc / COLS) - cy);
+        if (dbx < 40) { a.pts = [{ x: (bc % COLS) * CELL + CELL, y: Math.floor(bc / COLS) * CELL + CELL }]; a.mode = 'bonus'; }
+      }
+      if (a.mode === 'bonus' && !G.bonus.cases) { a.pts = []; a.mode = 'sortie'; }
       // prudence : rentrer quand le joueur s'approche ou quand la trace devient trop longue
-      if (e.trail.length && a.mode !== 'chasse' && a.mode !== 'retour') {
+      if (e.trail.length && a.mode !== 'chasse' && a.mode !== 'retour' && a.mode !== 'bonus') {
         if ((me.alive && Math.hypot(me.x - e.x, me.y - e.y) < 5 * CELL) || e.trail.length > 90) rentrer(e);
       }
     }
@@ -1346,7 +1353,7 @@
     var p = a.pts[0];
     if (p && Math.hypot(p.x - e.x, p.y - e.y) < CELL * .8) {
       a.pts.shift();
-      if (!a.pts.length && (a.mode === 'sortie' || a.mode === 'chasse')) rentrer(e);
+      if (!a.pts.length && (a.mode === 'sortie' || a.mode === 'chasse' || a.mode === 'bonus')) rentrer(e);
       p = a.pts[0];
     }
     return p ? Math.atan2(p.y - e.y, p.x - e.x) : e.ang;
