@@ -221,7 +221,16 @@
 
   @media (max-width: 640px) {
     .lave { opacity: .75; }
-    #hudRang { display: none; }
+    #hudRang { right: 8px; top: 8px; min-width: 0; padding: 5px 8px; border-radius: 12px; gap: 2px; font-size: 11px; }
+    #hudRang > .etiquette { display: none; }
+    #rang { gap: 2px; }
+    #rang div { gap: 5px; }
+    #rang .pt { width: 8px; height: 8px; }
+    #rang .n { display: none; }
+    #rang .moi .n { display: inline; flex: 0 0 auto; }
+    .commandes { gap: 5px; bottom: 8px; }
+    .commandes button { height: 28px; padding: 0 9px; border-radius: 14px; font-size: 12px; white-space: nowrap; }
+    #hudTerrain { left: 8px; top: 8px; }
     .commandes { top: auto; bottom: 12px; }
     #astuce { display: none; }
     .panneau { padding: 24px 18px; }
@@ -765,7 +774,7 @@
       }
     } catch (e) {}
   }
-  function majBoutonPlein() { $('btnPlein').textContent = estPlein() ? '⛶ Quitter le plein écran' : '⛶ Plein écran'; }
+  function majBoutonPlein() { $('btnPlein').textContent = estPlein() ? '⛶ Réduire' : '⛶ Plein écran'; }
   ['fullscreenchange', 'webkitfullscreenchange'].forEach(function (ev) {
     document.addEventListener(ev, function () { majBoutonPlein(); if (!$('jeu').hidden) ajusterScene(); });
   });
