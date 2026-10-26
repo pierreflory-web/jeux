@@ -157,10 +157,11 @@
     position: absolute; background: var(--nuit); border-radius: 16px; padding: 10px 14px;
     pointer-events: none; font-size: clamp(12px, 1.4vw, 17px);
   }
-  #hudTerrain { left: 12px; top: 12px; min-width: 170px; display: flex; flex-direction: column; gap: 6px; }
-  #hudTerrain .ligne { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
-  #pct { font-family: var(--titre); font-size: clamp(20px, 2.6vw, 32px); color: var(--jaune); font-variant-numeric: tabular-nums; }
-  #pctBarre { height: 10px; border-radius: 5px; background: var(--nuit3); overflow: hidden; }
+  #hudTerrain { left: 10px; top: 10px; min-width: 0; padding: 5px 10px; border-radius: 12px; display: flex; flex-direction: column; gap: 3px; }
+  #hudTerrain .etiquette { font-size: 10px; }
+  #hudTerrain .ligne { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+  #pct { font-family: var(--titre); font-size: clamp(14px, 1.6vw, 20px); color: var(--jaune); font-variant-numeric: tabular-nums; }
+  #pctBarre { height: 5px; border-radius: 3px; background: var(--nuit3); overflow: hidden; }
   #pctBarre i { display: block; height: 100%; width: 0; background: var(--jaune); border-radius: 5px; transition: width .3s; }
   #hudRang { right: 12px; top: 12px; min-width: 170px; display: flex; flex-direction: column; gap: 5px; }
   #rang { display: flex; flex-direction: column; gap: 4px; }
