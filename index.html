@@ -823,6 +823,13 @@
       tag: "Construction",
       description: "Bâtis ta ville du Far West avec ce que tu gagnes dans les autres jeux, défends-la des bandits et placarde leurs avis de recherche !",
       url: "ville/"
+    },
+    {
+      title: "Le sapin des surprises",
+      icon: "sapin/icon.svg",
+      tag: "Calendrier de l'avent",
+      description: "Du 1er au 24 décembre, une boule s'allume chaque jour : recettes, gestes solidaires, énigmes et culture de Noël pour toute la famille.",
+      url: "sapin/"
     }
   ];
 
@@ -1323,7 +1330,7 @@
   }
 
   // ——— Détection de nouvelle version ———
-  const VERSION = "18";
+  const VERSION = "19";
   async function verifierVersion() {
     try {
       const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }).then(r => r.json());
