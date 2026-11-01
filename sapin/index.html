@@ -144,6 +144,11 @@ const C={
 1:{c:"P",e:["🎄","✨","📸"],t:"Le sapin s'allume",h:()=>`
 <p>Bienvenue dans le sapin des surprises ! 🎉 Jusqu'au 24 décembre, une nouvelle boule s'allume chaque matin. Sa couleur annonce le genre de surprise : recette, geste solidaire, énigme, culture de Noël, défi photo…</p>
 ${carte("📸 Le défi du jour",`<p>Photographiez votre coin de Noël : le sapin, la crèche, une fenêtre décorée, ou même une simple bougie. Envoyez la photo à toute la famille pour lancer le mois en beauté.</p>`)}
+${carte("🛒 La liste de courses du mois",`<p>Pour les 5 recettes du calendrier, pour un foyer. Les produits frais sont à acheter quelques jours avant.</p>
+<h3 style="font-size:17px">Épicerie</h3>${liste(["🍫 Chocolat noir : environ 550 g (truffes le 6, mendiants le 8, chocolat chaud le 12)","🌾 Farine : 1 kg (manneles le 20, sablés le 23)","🍚 Sucre : 200 g, et 100 g de sucre glace","🥄 Cacao en poudre non sucré (le 6)","🌰 Amandes, noisettes, raisins secs, pistaches (le 8)","🍪 Pépites de chocolat (le 20)","🍞 1 sachet de levure de boulanger sèche (le 20)","🌿 Cannelle en bâton et en poudre, muscade","🧂 Sel"])}
+<h3 style="font-size:17px">Frais</h3>${liste(["🥛 Lait entier : 1,25 litre (le 12 et le 20)","🧈 Beurre : 250 g","🥚 3 œufs (le 20 et le 23)","🥛 Crème liquide entière : 10 cl (le 6)","🍋 1 citron (glaçage du 23)"])}
+<h3 style="font-size:17px">Facultatif</h3>${liste(["⭐ Badiane, orange et chantilly pour le chocolat chaud","🍊 Écorces d'orange confite pour les mendiants"])}
+<h3 style="font-size:17px">Matériel</h3>${liste(["📜 Papier cuisson","⭐ Emporte-pièces étoile ou sapin","🎀 Un ruban pour accrocher les sablés"])}`)}
 ${devinette("Qu'est-ce qui est vert, plein de boules, et va très vite ?","Un sapin en trottinette ! 🛴🎄")}`},
 2:{c:"B",e:["🎅","😂"],t:"Le comble du Père Noël",h:()=>`
 ${carte("😂 La blague du jour",`<p>Quel est le comble pour le Père Noël ?</p>${reveler("Voir la réponse","Avoir le vertige… alors qu'il passe toute la nuit sur les toits ! 🏠🎅")}`)}
@@ -211,7 +216,8 @@ ${carte("🇮🇸 En Islande",`<p>La veille de Noël, on s'offre des livres, pui
 <p>Avez-vous bien lu les cases ? 6 questions sur tout ce qu'on a appris depuis le début du mois. Envoyez votre score à la famille ! 🏆</p>
 ${carte("",`<div id="quiz"></div><p class="score" id="quiz-score" hidden></p>`)}`},
 18:{c:"E",e:["🎬","🍿","🛋️"],t:"Le même film, le même soir",h:()=>`
-${carte("🎬 Le défi du jour",`<p>Choisissez ensemble un film de Noël, et ce soir, chacun le regarde chez soi, sous un plaid avec du pop-corn. Le lendemain, chacun donne sa note sur 10 à la famille. 🍿</p><p>Quelques idées pour tous les âges : Le Pôle Express, Klaus, Le Grinch, Maman, j'ai raté l'avion, Arthur Christmas.</p>`)}
+${carte("🎬 Le film du soir",`<p style="font-family:var(--display);font-size:24px;font-weight:700;margin:0">Maman, j'ai raté l'avion !</p>${infos(["📅 1990","⏱️ 1 h 43","👨‍👩‍👧‍👦 Pour toute la famille"])}<p>Kevin, 8 ans, est oublié à la maison par sa famille partie en vacances pour Noël. Seul, il doit défendre la maison contre deux cambrioleurs maladroits, à coups de pièges plus inventifs les uns que les autres. 😂</p>`)}
+${carte("🍿 Le défi du jour",`<p>Ce soir, chacun regarde le film chez soi, sous un plaid avec du pop-corn. Le lendemain, chacun envoie sa note sur 10 à la famille, et son piège préféré !</p>`)}
 ${devinette("Quel est le sport préféré des bonshommes de neige ?","Le ski… mais ils n'aiment pas trop le soleil de l'après-midi ! ⛷️⛄")}`},
 19:{c:"L",e:["📞","❤️","🕯️"],t:"Un appel qui réchauffe",h:()=>`
 ${carte("📞 Le geste du jour",`<p>Les fêtes peuvent être un moment difficile pour les personnes seules. Aujourd'hui, appelez quelqu'un qui pourrait se sentir un peu isolé : un voisin âgé, une vieille connaissance, un membre de la famille qu'on appelle trop rarement.</p><p>Quelques minutes de conversation, et c'est un peu de chaleur de Noël qui voyage. ❤️</p>`)}
