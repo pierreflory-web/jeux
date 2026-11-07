@@ -3,7 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Les Ronrons de Bruyère</title>
+<title>Ronron Café</title>
+<link rel="icon" href="icon.svg">
 <!-- Polices : chargées si le lanceur a internet, sinon repli automatique sur les polices système -->
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
 <style>
@@ -68,7 +69,7 @@
 <script>
 "use strict";
 /* =========================================================
-   Les Ronrons de Bruyère — prototype jouable
+   Ronron Café — un café à chats dans le village de Bruyère
    Un seul fichier, aucune dépendance. Résolution logique 1280×720,
    mise à l'échelle automatique dans la fenêtre du lanceur.
    ========================================================= */
@@ -216,7 +217,7 @@ const CATS = {
 const VILLAGERS = [
   { n: "Léon", role: "le facteur", c: "#F2C46D", fav: "tarte", stories: [
     "Léon t'avoue qu'il connaît chaque chat du village par son prénom. « C'est le métier ! »",
-    "Il te montre une vieille carte postale du café, du temps où il s'appelait déjà « Les Ronrons ».",
+    "Il te montre une vieille carte postale du café, du temps où il s'appelait déjà « Ronron Café ».",
     "Léon prend sa retraite l'an prochain. Il dit qu'il viendra ici tous les matins, « pour le facteur, c'est la meilleure tournée »." ] },
   { n: "Margot", role: "la fleuriste", c: "#E9A9B0", fav: "the", stories: [
     "Margot te confie qu'elle parle à ses fleurs. « Elles poussent mieux, je te jure. »",
@@ -531,8 +532,8 @@ function viewTitle() {
   <div style="position:absolute;left:1100px;top:548px">${catSVG("brume", 52, true)}</div>
   <div style="position:absolute;left:96px;top:96px;display:flex;flex-direction:column;gap:28px;width:560px">
     <div style="display:flex;flex-direction:column;gap:6px">
-      <p style="margin:0;font-family:var(--font-title);font-weight:600;font-size:20px;letter-spacing:.08em;text-transform:uppercase;color:var(--sage)">Un café, des chats, quatre saisons</p>
-      <h1 style="font-weight:700;font-size:84px;line-height:.95">Les Ronrons<br>de Bruyère</h1>
+      <p style="margin:0;font-family:var(--font-title);font-weight:600;font-size:20px;letter-spacing:.08em;text-transform:uppercase;color:var(--sage)">Un café à chats au village de Bruyère</p>
+      <h1 style="font-weight:700;font-size:96px;line-height:.95">Ronron<br>Café</h1>
     </div>
     <nav aria-label="Menu principal" style="display:flex;flex-direction:column;gap:12px;width:340px">
       ${has ? `<button class="btn" data-a="continue" style="text-align:left;font-size:24px">Continuer</button>` : ""}
