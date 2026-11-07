@@ -125,6 +125,8 @@ const ITEMS = {
   friandises:{ n: "Friandises",     p: 16, c: "#E9A9B0", shop: "animalerie", cat: true, fx: 55 },
   poisson:  { n: "Poisson pour chats", p: 18, c: "#9CC3D2", shop: "animalerie", cat: true, fx: 70 },
   crevettes:{ n: "Crevettes pour chats", p: 26, c: "#F2A08A", shop: "animalerie", cat: true, fx: 90 },
+  croqchien:{ n: "Croquettes pour chiens", p: 12, c: "#B5774F", shop: "animalerie", cat: true, dog: true, fx: 40 },
+  os:       { n: "Os à mâcher",     p: 20, c: "#F6EEDF", shop: "animalerie", cat: true, dog: true, fx: 70 },
 };
 
 const RECIPES = {
@@ -179,6 +181,7 @@ const UNLOCK = {
   brume: 3, biscotte: 3, pompon: 3,
   moka: 6, caline: 6,
   plume: 9, noisette: 9, filou: 9,
+  nuage: 4, choco: 7, patapouf: 10, balle: 1,
 };
 const unlocked = (id) => S.day >= (UNLOCK[id] || 1);
 const DECOR = {
@@ -196,6 +199,7 @@ const DECOR = {
   tapis:      { n: "Grand tapis tressé",  p: 60,  c: "#C9677A", d: "+5 % de pourboires", tip: 0.05 },
   fauteuil:   { n: "Fauteuil en velours", p: 80,  c: "#8C5E9E", d: "Une chatte très élégante en rêve…" },
   gramophone: { n: "Gramophone",          p: 120, c: "#C99A3E", d: "+10 % de pourboires et une jolie mélodie", tip: 0.10 },
+  balle:      { n: "Balle en caoutchouc", p: 25, c: "#C9677A", d: "Jouet : les chiens restent joyeux plus longtemps.", toy: 0.1, shop: "animalerie" },
   aquarium:   { n: "Aquarium",            p: 150, c: "#86B3C6", d: "Jouet géant ! Et un chat curieux pourrait venir…", toy: 0.30 },
 };
 
@@ -212,6 +216,12 @@ const CATS = {
   caline:   { price: 140, refuge: true, n: "Câline",   fur: "#F6EEDF", eye: "#6F9468", trait: "Douce",     likes: "Les genoux, les chansons", story: "Une chatte tricolore qui choisit toujours les clients un peu tristes.", hint: "Elle attend à l'Animalerie Les Moustaches." },
   filou:    { price: 170, refuge: true, n: "Filou",    fur: "#F1E4CF", eye: "#6E8FB0", trait: "Bavard",    likes: "Parler (beaucoup), les cartons", story: "Un siamois qui commente chaque commande d'un long miaulement.", hint: "Il attend à l'Animalerie Les Moustaches." },
   pistache: { n: "Pistache", fur: "#B9A27A", eye: "#4F6B4A", trait: "Explorateur", likes: "Les quais, l'odeur du poisson", story: "Il a traversé le pont réparé le premier jour, la queue bien haute.", hint: "Il vit de l'autre côté de la rivière…" },
+  // --- chiens : uniquement à l'Animalerie (ils ne viennent jamais tout seuls)
+  doulio:   { kind: "dog", price: 150, n: "Doulio",   race: "Golden retriever", fur: "#FBF7F0", ear: "#E3C9A0", snout: "#FFFFFF", patch: "#E3C9A0", patchX: 40, line: "#D8C7A8", trait: "Joueur",      likes: "Les balles, les enfants, les câlins", story: "Blanc et beige, il court partout en remuant la queue et rapporte tout ce qu'on lui lance.", hint: "Il attend au rayon chiens de l'Animalerie." },
+  pepette:  { kind: "dog", price: 120, n: "Pépette",  race: "Teckel",           fur: "#8A4F2E", ear: "#6B3A20", snout: "#B5774F", patch: "#8A4F2E", patchX: 24, line: "#8A4F2E", trait: "Curieuse",    likes: "Renifler sous les tables", story: "Elle connaît l'odeur de chaque client et devine leur commande avant eux.", hint: "Elle attend au rayon chiens de l'Animalerie." },
+  nuage:    { kind: "dog", price: 140, n: "Nuage",    race: "Bichon frisé",     fur: "#FBF7F0", ear: "#EDE4D6", snout: "#FFFFFF", patch: "#FBF7F0", patchX: 24, line: "#D8C7A8", trait: "Câlin",       likes: "Les genoux, les coussins", story: "Une petite boule blanche qui s'endort sur tous les genoux disponibles.", hint: "Il attend au rayon chiens de l'Animalerie." },
+  choco:    { kind: "dog", price: 170, n: "Choco",    race: "Labrador chocolat", fur: "#6B4A33", ear: "#4F3424", snout: "#8A6448", patch: "#6B4A33", patchX: 24, line: "#6B4A33", trait: "Accueillant", likes: "Dire bonjour à tout le monde", story: "Il attend chaque client à la porte et l'accompagne jusqu'à sa table.", hint: "Il attend au rayon chiens de l'Animalerie." },
+  patapouf: { kind: "dog", price: 220, n: "Patapouf", race: "Saint-bernard",    fur: "#F6EEDF", ear: "#B5653A", snout: "#FFFFFF", patch: "#B5653A", patchX: 40, line: "#D8C7A8", trait: "Tranquille",  likes: "Les siestes près du poêle", story: "Énorme et très doux, il ne se lève que pour les biscuits.", hint: "Il attend au rayon chiens de l'Animalerie." },
 };
 
 const VILLAGERS = [
@@ -343,7 +353,21 @@ function weatherFX(w, h, n = 60) {
   return `<div aria-hidden="true" style="position:absolute;left:0;top:0;width:${w}px;height:${h}px;overflow:hidden;pointer-events:none">${out}</div>`;
 }
 
+const isDog = (id) => CATS[id] && CATS[id].kind === "dog";
+const dogCount = () => S.cats.filter(isDog).length;
+function dogSVG(id, size = 64, sleeping = false) {
+  const d = CATS[id];
+  const eyes = sleeping
+    ? `<path d="M20 28 q4 -3 8 0 M36 28 q4 -3 8 0" stroke="#2F2522" stroke-width="2.5" fill="none" stroke-linecap="round"/>`
+    : `<circle cx="24" cy="28" r="3" fill="#2F2522"/><circle cx="40" cy="28" r="3" fill="#2F2522"/>`;
+  return `<svg class="catsvg" width="${size}" height="${size}" viewBox="0 0 64 64" aria-hidden="true">
+    <ellipse cx="14" cy="28" rx="7" ry="15" fill="${d.ear}" transform="rotate(18 14 28)"/><ellipse cx="50" cy="28" rx="7" ry="15" fill="${d.ear}" transform="rotate(-18 50 28)"/>
+    <path d="M14 26 Q14 8 32 8 Q50 8 50 26 Q52 46 32 54 Q12 46 14 26Z" fill="${d.fur}" stroke="${d.line}" stroke-width="1.5"/>
+    <ellipse cx="${d.patchX}" cy="22" rx="7" ry="8" fill="${d.patch}"/><ellipse cx="32" cy="40" rx="11" ry="9" fill="${d.snout}"/>
+    ${eyes}<ellipse cx="32" cy="36" rx="4" ry="3" fill="#2F2522"/><path d="M32 39 v3 M28 43 q4 3 8 0" stroke="#2F2522" stroke-width="1.5" fill="none" stroke-linecap="round"/><path d="M30 45 q2 5 4 0" fill="#E06A6A"/></svg>`;
+}
 function catSVG(id, size = 64, sleeping = false) {
+  if (isDog(id)) return dogSVG(id, size, sleeping);
   const c = CATS[id];
   const eyes = sleeping
     ? `<path d="M20 36 q4 -3 8 0 M36 36 q4 -3 8 0" stroke="#4A3326" stroke-width="2.5" fill="none" stroke-linecap="round"/>`
@@ -429,6 +453,7 @@ function sfx(name) {
     case "bell": [1568, 2093].forEach((f, i) => tone(f, t + i * 0.12, 1.1, { vol: 0.12 })); break;
     case "ding": tone(1760, t, 1.2, { vol: 0.16 }); tone(2637, t, 0.8, { vol: 0.05 }); break;
     case "oven": noise(t, 0.5, { freq: 300, q: 0.5, vol: 0.12, type: "lowpass" }); break;
+    case "bark": [0, 0.22].forEach((d) => { tone(330, t + d, 0.12, { type: "square", vol: 0.05, glide: 210 }); noise(t + d, 0.1, { freq: 700, q: 1.2, vol: 0.12 }); }); break;
     case "purr": noise(t, 1.2, { freq: 220, q: 0.7, vol: 0.35, type: "lowpass", lfo: 24 }); break;
     case "heart": [79, 83, 86].forEach((m, i) => tone(mtof(m), t + i * 0.09, 0.45, { vol: 0.14 })); break;
     case "page": noise(t, 0.18, { freq: 3000, q: 0.6, vol: 0.06 }); break;
@@ -502,7 +527,13 @@ function go(screen) {
 }
 
 // ---------- Écrans ----------
+// Sauvegarde automatique : à chaque action (au plus toutes les 2 s) et quand on quitte le jeu.
+let lastSave = 0;
+function autoSave() { if (S && ui.screen !== "title" && performance.now() - lastSave > 2000) { lastSave = performance.now(); save(); } }
+window.addEventListener("pagehide", () => { if (S) save(); });
+document.addEventListener("visibilitychange", () => { if (document.hidden && S) save(); });
 function render() {
+  autoSave();
   if (ui.screen !== "cafe") stopCafe();
   const views = { projects: viewProjects, friends: viewFriends, title: viewTitle, village: viewVillage, shop: viewShop, kitchen: viewKitchen, cafe: viewCafe, album: viewAlbum, summary: viewSummary };
   $stage.innerHTML = views[ui.screen]() + soundButton() + (ui.modal ? ui.modal() : "");
@@ -683,7 +714,7 @@ const SHOPS = {
   epicerie:     { n: "Épicerie de Madame Rose", who: "Madame Rose", c: "#B04F3A", hair: "chignon", hello: "Bonjour ! La rhubarbe est arrivée ce matin, parfaite pour une tarte." },
   brocante:     { n: "Brocante du Moulin", who: "Basile", c: "#8A5A3B", hair: "court", hello: "Un coussin, un panier… Les chats savent reconnaître un bon fauteuil." },
   boulangerie:  { n: "Boulangerie Pain d'Épices", who: "Monsieur Fernand", c: "#B9772F", hair: "toque", hello: "Levure, pâte feuilletée, pépites… Tout ce qu'il faut pour des viennoiseries dignes d'un vrai boulanger !" },
-  refuge:       { n: "Animalerie Les Moustaches", who: "Suzon", c: "#5E8C6A", hair: "tresses", hello: "Croquettes, friandises, poisson… et des chats qui attendent une famille ! Tout pour tes petits pensionnaires est ici." },
+  refuge:       { n: "Animalerie Les Moustaches", who: "Suzon", c: "#5E8C6A", hair: "tresses", hello: "Croquettes, os à mâcher, friandises… et des chats et des chiens qui attendent une famille ! Tout pour tes petits pensionnaires est ici." },
   fleuriste:    { n: "Fleuriste de Margot", who: "Margot", c: "#C9677A", hair: "rose", hello: "Un bouquet sur chaque table, et tout le monde sourit. Il dure toute la journée !" },
   ecole:        { n: "École de cuisine de Colette", who: "Colette", c: "#8C5E9E", hair: "carre", hello: "Bienvenue, petite cheffe ! Chaque recette que tu apprends ici fera sourire un villageois." },
   librairie:    { n: "Librairie Le Chat Lettré", who: "Mademoiselle Odile", c: "#2F6B67", hair: "long", hello: "Toutes les recettes du pays sont ici ! Chaque livre fera sourire un villageois. Lequel te tente ?" },
@@ -727,11 +758,13 @@ function nextUnlockIn(tab) {
 }
 function shopCatalogAll(tab) {
   if (tab === "refuge") return [
-    ...Object.entries(ITEMS).filter(([, it]) => it.shop === "animalerie").map(([id, it]) => ({ id, kind: "item", n: it.n, p: it.p, c: it.c, sub: "Nourriture · +" + it.fx + " de bonne humeur · stock : " + qty(id) })),
-    ...Object.entries(CATS).filter(([, c]) => c.price).map(([id, c]) => ({ id, kind: "cat", n: "Adopter " + c.n, p: c.price, c: c.fur, sub: c.trait + " · " + c.likes, owned: S.cats.includes(id) })),
+    ...Object.entries(ITEMS).filter(([, it]) => it.shop === "animalerie").map(([id, it]) => ({ id, kind: "item", n: it.n, p: it.p, c: it.c, sub: (it.dog ? "Pour les chiens" : "Pour les chats") + " · +" + it.fx + " de bonne humeur · stock : " + qty(id) })),
+    ...Object.entries(DECOR).filter(([, d]) => d.shop === "animalerie").map(([id, d]) => ({ id, kind: "decor", n: d.n, p: d.p, c: d.c, sub: d.d, owned: S.decor.includes(id) })),
+    ...Object.entries(CATS).filter(([, c]) => c.price && !c.kind).map(([id, c]) => ({ id, kind: "cat", n: "Adopter " + c.n, p: c.price, c: c.fur, sub: "Chat · " + c.trait + " · " + c.likes, owned: S.cats.includes(id) })),
+    ...Object.entries(CATS).filter(([, c]) => c.kind === "dog").map(([id, c]) => ({ id, kind: "cat", n: "Adopter " + c.n, p: c.price, c: c.fur, sub: "Chien · " + c.race + " · " + c.trait, owned: S.cats.includes(id) })),
   ];
   if (tab === "fleuriste") return Object.entries(BOUQUETS).map(([id, b]) => ({ id, kind: "bouquet", n: "Bouquet de " + b.n.toLowerCase(), p: b.p, c: b.c, sub: b.d, owned: S.bouquetId === id }));
-  if (tab === "brocante") return Object.entries(DECOR).map(([id, d]) => ({ id, kind: "decor", n: d.n, p: d.p, c: d.c, sub: d.d, owned: S.decor.includes(id) }));
+  if (tab === "brocante") return Object.entries(DECOR).filter(([, d]) => !d.shop).map(([id, d]) => ({ id, kind: "decor", n: d.n, p: d.p, c: d.c, sub: d.d, owned: S.decor.includes(id) }));
   if (tab === "librairie" || tab === "ecole") return Object.entries(RECIPES).filter(([id, r]) => r.shop === tab && (!r.season || r.season === season() || S.recipes.includes(id))).map(([id, r]) => ({ id, kind: "book", n: r.n, p: r.book, c: r.c, sub: (r.d ? r.d + " " : "") + r.price + " pièces la part · " + Object.keys(r.needs).map((k) => ITEMS[k].n.toLowerCase()).join(", "), owned: S.recipes.includes(id) }));
   return Object.entries(ITEMS).filter(([, it]) => it.shop === tab && (!it.season || it.season === season())).map(([id, it]) => ({ id, kind: "item", n: it.n, p: it.p, c: it.c, seasonal: !!it.season, sub: it.cat ? "Pour les chats" : "En stock : " + qty(id) }));
 }
@@ -768,7 +801,7 @@ function viewShop() {
         const q = ui.cart[it.id] || 0;
         const single = it.kind !== "item";
         return `<div class="card" style="padding:12px;gap:6px;${q ? "outline:3px solid var(--terra)" : ""}">
-          <div class="between">${it.kind === "cat" ? catSVG(it.id, 50) : `<span style="width:34px;height:34px;border-radius:11px;background:${it.c};border:4px solid rgba(0,0,0,.12)"></span>`}${it.seasonal ? `<span class="tag">SAISON</span>` : ""}${it.owned && it.kind === "cat" ? `<span class="tag">ADOPTÉ</span>` : ""}</div>
+          <div class="between">${it.kind === "cat" ? catSVG(it.id, 50) : `<span style="width:34px;height:34px;border-radius:11px;background:${it.c};border:4px solid rgba(0,0,0,.12)"></span>`}${it.seasonal ? `<span class="tag">SAISON</span>` : ""}${it.owned && it.kind === "cat" ? `<span class="tag">ADOPTÉ</span>` : ""}${it.kind === "cat" && isDog(it.id) && !it.owned ? `<span class="tag" style="background:#FBEBDD;color:#8A4F2E">CHIEN</span>` : ""}</div>
           <b style="font-family:var(--font-title);font-size:16px">${it.n}</b>
           <span class="muted" style="font-size:12px;font-weight:700">${esc(it.sub || "")}</span>
           <div class="between"><span class="row" style="gap:5px;font-weight:800"><span class="coin" style="width:16px;height:16px"></span>${it.p}</span>
@@ -949,20 +982,21 @@ function startCafe() {
 // 0,2 : un chat bien nourri tient environ une journée entière de service.
 const CAT_HUNGER = 0.2;
 const CAT_SPOTS = [
-  { x: 372, y: 426 }, { x: 470, y: 222 }, { x: 1176, y: 112 }, { x: 560, y: 494 }, { x: 1180, y: 252 },
-  { x: 780, y: 490 }, { x: 244, y: 222 }, { x: 1170, y: 392 }, { x: 1000, y: 490 }, { x: 70, y: 444 },
-  { x: 272, y: 486, req: "panier" }, { x: 176, y: 440, req: "fauteuil" }, { x: 1000, y: 112, req: "aquarium" },
+  { x: 372, y: 426, floor: true }, { x: 470, y: 222 }, { x: 1176, y: 112 }, { x: 560, y: 494, floor: true }, { x: 1180, y: 252 },
+  { x: 780, y: 490, floor: true }, { x: 244, y: 222 }, { x: 1170, y: 392 }, { x: 1000, y: 490, floor: true }, { x: 70, y: 444, floor: true },
+  { x: 272, y: 486, req: "panier", floor: true }, { x: 176, y: 440, req: "fauteuil", floor: true }, { x: 1000, y: 112, req: "aquarium" },
+  { x: 440, y: 520, floor: true }, { x: 1206, y: 520, floor: true }, { x: 160, y: 520, floor: true },
 ];
 const nowS = () => performance.now() / 1000;
-function catSpots() { return CAT_SPOTS.map((p, i) => ({ ...p, i })).filter((p) => !p.req || S.decor.includes(p.req)); }
+function catSpots(id) { return CAT_SPOTS.map((p, i) => ({ ...p, i })).filter((p) => (!p.req || S.decor.includes(p.req)) && (!id || !isDog(id) || p.floor)); }
 function catPos(c, t = nowS()) { const k = c.dur ? Math.min(1, (t - c.start) / c.dur) : 1; return { x: c.x + (c.tx - c.x) * k, y: c.y + (c.ty - c.y) * k, moving: k < 1 }; }
 function ensureCatPositions() {
   cafe.cp = cafe.cp || {};
-  const spots = catSpots();
   const used = new Set(Object.values(cafe.cp).map((c) => c.spot));
-  S.cats.forEach((id) => {
+  // les chiens d'abord (moins de places possibles), puis les chats
+  S.cats.slice().sort((a, b) => isDog(b) - isDog(a)).forEach((id) => {
     if (cafe.cp[id]) return;
-    const free = spots.find((p) => !used.has(p.i)); if (!free) return;
+    const free = catSpots(id).find((p) => !used.has(p.i)); if (!free) return;
     used.add(free.i); cafe.cp[id] = { x: free.x, y: free.y, tx: free.x, ty: free.y, start: 0, dur: 0, spot: free.i };
   });
 }
@@ -975,7 +1009,7 @@ function moveCats(dt) {
   if (!idle.length) return;
   const id = idle[Math.floor(Math.random() * idle.length)], c = cafe.cp[id];
   const used = new Set(Object.values(cafe.cp).map((o) => o.spot));
-  const free = catSpots().filter((p) => !used.has(p.i)); if (!free.length) return;
+  const free = catSpots(id).filter((p) => !used.has(p.i)); if (!free.length) return;
   const dest = free[Math.floor(Math.random() * free.length)];
   const cur = catPos(c, t);
   const dist = Math.hypot(dest.x - cur.x, dest.y - cur.y);
@@ -1025,7 +1059,7 @@ function tickCafe() {
       : pool[Math.floor(Math.random() * pool.length)] || VILLAGERS[0];
     const favOk = S.recipes.includes(v.fav) && (S.showcase[v.fav] || 0) > 0 && Math.random() < 0.5;
     sfx("bell");
-    cafe.seats[free] = { v, order: favOk ? v.fav : pickOrder(), patience: 1, maxPat: (30 + avgMood() / 5) * (projDone("fontaine") ? 1.25 : 1) * (0.8 + Math.random() * 0.4), msg: null, leaving: 0 };
+    cafe.seats[free] = { v, order: favOk ? v.fav : pickOrder(), patience: 1, maxPat: (30 + avgMood() / 5) * (projDone("fontaine") ? 1.25 : 1) * (1 + 0.05 * dogCount()) * (0.8 + Math.random() * 0.4), msg: null, leaving: 0 };
     cafe.spawned++;
     // arrivées irrégulières : parfois un petit groupe, parfois un long moment calme
     const r = Math.random();
@@ -1071,34 +1105,37 @@ function serve(i) {
 }
 function pet(id) {
   const now = performance.now();
-  if (cafe && cafe.petCd[id] && now - cafe.petCd[id] < 2500) { toast(CATS[id].n + " fait sa toilette, réessaie dans un instant."); return; }
+  if (cafe && cafe.petCd[id] && now - cafe.petCd[id] < 2500) { toast(CATS[id].n + (isDog(id) ? " court après sa queue, réessaie dans un instant." : " fait sa toilette, réessaie dans un instant.")); return; }
   if (cafe) cafe.petCd[id] = now;
   S.mood[id] = Math.min(100, (S.mood[id] ?? 60) + 15);
-  sfx("purr"); toast(CATS[id].n + " ronronne…"); render();
+  if (isDog(id)) { sfx("bark"); toast(CATS[id].n + " remue la queue et aboie joyeusement !"); }
+  else { sfx("purr"); toast(CATS[id].n + " ronronne…"); }
+  render();
 }
-const catFood = () => Object.fromEntries(Object.entries(ITEMS).filter(([, it]) => it.cat).map(([k, it]) => [k, it.fx]).sort((a, b) => b[1] - a[1]));
-const foodLeft = () => Object.keys(catFood()).reduce((t, k) => t + qty(k), 0);
+// nourriture adaptée : les chats ne mangent pas les os, les chiens pas les sardines
+const petFood = (id) => Object.fromEntries(Object.entries(ITEMS).filter(([, it]) => it.cat && !!it.dog === isDog(id)).map(([k, it]) => [k, it.fx]).sort((a, b) => b[1] - a[1]));
+const foodLeft = () => Object.entries(ITEMS).filter(([, it]) => it.cat).reduce((t, [k]) => t + qty(k), 0);
 function feedAll() {
-  const FOOD = catFood();
   const hungry = S.cats.filter((id) => (S.mood[id] ?? 60) < 85).sort((a, b) => (S.mood[a] ?? 60) - (S.mood[b] ?? 60));
-  if (!hungry.length) { toast("Tous les chats sont repus !"); return; }
+  if (!hungry.length) { toast("Tout le monde est repu !"); return; }
   let fed = 0;
   for (const id of hungry) {
     // la plus petite friandise qui suffit, pour ne pas gaspiller les crevettes
+    const FOOD = petFood(id);
     const need = 100 - (S.mood[id] ?? 60);
     const avail = Object.keys(FOOD).filter((k) => qty(k) > 0);
-    if (!avail.length) break;
+    if (!avail.length) continue;
     const food = avail.slice().reverse().find((k) => FOOD[k] >= need) || avail[0];
     S.pantry[food]--; S.mood[id] = Math.min(100, (S.mood[id] ?? 60) + FOOD[food]); fed++;
   }
   sfx("pop");
-  toast(fed ? fed + " chat" + (fed > 1 ? "s se régalent" : " se régale") + (fed < hungry.length ? " (plus de réserves pour les autres !)" : " !") : "Plus rien pour les chats : passe à l'Animalerie Les Moustaches.");
+  toast(fed ? fed + (fed > 1 ? " animaux se régalent" : " animal se régale") + (fed < hungry.length ? " (il manque de la nourriture pour les autres !)" : " !") : "Plus de nourriture : passe à l'Animalerie Les Moustaches.");
   render();
 }
 function feed(id) {
-  const FOOD = catFood();
+  const FOOD = petFood(id);
   const food = Object.keys(FOOD).find((k) => qty(k) > 0);
-  if (!food) { toast("Plus rien pour les chats : passe à l'Animalerie Les Moustaches."); return; }
+  if (!food) { toast("Plus rien pour " + (isDog(id) ? "les chiens" : "les chats") + " : passe à l'Animalerie Les Moustaches."); return; }
   S.pantry[food]--; S.mood[id] = Math.min(100, (S.mood[id] ?? 60) + FOOD[food]); sfx("pop");
   toast(CATS[id].n + " se régale (" + ITEMS[food].n.toLowerCase() + ")"); render();
 }
@@ -1247,6 +1284,7 @@ function viewCafe() {
     ${deco("gramophone") ? `<g transform="translate(566 372)"><rect x="0" y="40" width="44" height="26" rx="4" fill="#8A5A3B"/><path d="M22 40 v-10" stroke="#C99A3E" stroke-width="4"/><path d="M22 30 L0 0 Q22 -6 50 8Z" fill="#C99A3E"/><ellipse cx="25" cy="4" rx="22" ry="8" fill="#E0B94F" transform="rotate(-20 25 4)"/>${[0,1].map(i=>`<text x="${50+i*12}" y="${-4-i*10}" font-size="16" fill="#8A5A3B" font-family="serif"><animate attributeName="opacity" values="0;1;0" dur="2.4s" begin="${i*1.2}s" repeatCount="indefinite"/>♪</text>`).join("")}</g>` : ""}
     ${deco("fauteuil") ? `<g transform="translate(150 444)"><rect x="6" y="54" width="8" height="22" fill="#6B4A33"/><rect x="96" y="54" width="8" height="22" fill="#6B4A33"/><rect x="10" y="0" width="90" height="56" rx="22" fill="#8C5E9E"/><rect x="0" y="26" width="26" height="42" rx="12" fill="#7A4F8C"/><rect x="84" y="26" width="26" height="42" rx="12" fill="#7A4F8C"/><rect x="18" y="38" width="74" height="26" rx="10" fill="#A27AB2"/></g>` : ""}
     ${deco("griffoir") ? `<g transform="translate(1226 470)"><rect x="0" y="0" width="22" height="96" rx="6" fill="#C9A27A"/><g stroke="#B08A60" stroke-width="2">${Array.from({length:9},(_,i)=>`<path d="M0 ${8+i*10} h22"/>`).join("")}</g><rect x="-10" y="92" width="42" height="10" rx="4" fill="#8A5A3B"/></g>` : ""}
+    ${deco("balle") ? `<g transform="translate(700 470)"><circle r="11" fill="#C9677A"/><path d="M-9 -4 q9 6 18 0 M-9 4 q9 -6 18 0" stroke="#F6EEDF" stroke-width="2" fill="none"/></g>` : ""}
     ${deco("pelote") ? `<g transform="translate(1180 560)"><circle r="14" fill="#E9A9B0"/><path d="M-10 -8 q10 8 20 0 M-12 2 q12 8 24 0 M-6 10 q8 -20 0 -24" stroke="#C9677A" stroke-width="2" fill="none"/><path d="M12 6 q20 10 30 -4" stroke="#E9A9B0" stroke-width="2" fill="none"/></g>` : ""}
     ${seatsX.map((x, i) => cafeTable(x + 50, 545, cloths[i], deco("bougies"))).join("")}
   </svg>
@@ -1285,7 +1323,7 @@ function viewCafe() {
       ${S.recipes.filter((id) => S.showcase[id] > 0).slice(0, 7).map((id) => `<div style="display:flex;flex-direction:column;align-items:center;gap:2px;width:96px;padding:6px;border-radius:14px;background:#fff"><span style="width:26px;height:26px;border-radius:50%;background:${RECIPES[id].c}"></span><span style="font-size:12px;font-weight:800;text-align:center;line-height:1.1">${RECIPES[id].n}</span><b style="color:${S.showcase[id] ? "var(--ok)" : "var(--bad)"}">${S.showcase[id] || 0}</b></div>`).join("")}
     </div>
     <div class="panel" style="width:360px;padding:10px 14px;display:flex;flex-direction:column;gap:5px">
-      <div class="between"><b style="font-family:var(--font-title);font-size:17px">Chats <span class="muted" style="font-size:12px;font-family:var(--font-body)">· réserves ${foodLeft()}</span></b><button class="btn small" data-a="feedall" style="padding:5px 12px;font-size:13px" ${foodLeft() ? "" : "disabled"}>Nourrir tous</button></div>
+      <div class="between"><b style="font-family:var(--font-title);font-size:17px">Animaux <span class="muted" style="font-size:12px;font-family:var(--font-body)">· réserves ${foodLeft()}</span></b><button class="btn small" data-a="feedall" style="padding:5px 12px;font-size:13px" ${foodLeft() ? "" : "disabled"}>Nourrir tous</button></div>
       <div style="display:flex;flex-direction:column;gap:4px">
       ${S.cats.slice().sort((a, b) => (S.mood[a] ?? 60) - (S.mood[b] ?? 60)).slice(0, 3).map((id) => `<div class="between" style="font-size:14px;font-weight:700"><span style="width:70px">${CATS[id].n}</span><div class="bar" style="flex:1;margin:0 8px"><i style="width:${S.mood[id] ?? 60}%;background:${(S.mood[id] ?? 60) > 50 ? "var(--sage-l)" : "var(--terra)"}"></i></div><button class="btn light small" data-a="feed" data-id="${id}" style="padding:4px 10px;font-size:13px">Nourrir</button></div>`).join("")}
       </div>
@@ -1448,7 +1486,7 @@ function viewAlbum() {
   const ids = Object.keys(CATS);
   return `
   <div style="position:absolute;inset:0;background:#EFE1C6"></div>
-  <div class="hud"><div><span class="pill dark">Album des chats · ${S.cats.length} / ${ids.length}</span></div><div><button class="btn light small" data-a="village">← Village</button></div></div>
+  <div class="hud"><div><span class="pill dark">Album des animaux · ${S.cats.length} / ${ids.length}</span></div><div><button class="btn light small" data-a="village">← Village</button></div></div>
   <div class="grid" style="position:absolute;left:24px;right:24px;top:96px;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px;bottom:16px;overflow:auto">
     ${ids.map((id) => { const c = CATS[id], have = S.cats.includes(id);
       return `<div class="card" style="align-items:center;text-align:center;justify-content:flex-start;gap:6px;padding:10px">
@@ -1456,9 +1494,10 @@ function viewAlbum() {
         <h2 style="font-size:18px">${have ? c.n : "???"}</h2>
         ${have ? `<span class="tag">${c.trait.toUpperCase()}</span>
           <div style="width:100%"><div class="between" style="font-size:13px;font-weight:800"><span>Humeur</span><span>${moodWord(S.mood[id] ?? 60)}</span></div><div class="bar"><i style="width:${S.mood[id] ?? 60}%;background:var(--sage-l)"></i></div></div>
+          ${c.kind === "dog" ? `<p style="margin:0;font-size:13px;font-weight:800;color:#8A4F2E">Chien · ${esc(c.race)}</p>` : ""}
           <p style="margin:0;font-size:14px"><b>Aime :</b> ${esc(c.likes)}</p>
           <p class="muted" style="margin:0;font-size:14px;font-style:italic">${esc(c.story)}</p>`
-        : `<p class="muted" style="margin:0;font-weight:700">Comment l'attirer ?</p><p style="margin:0;font-size:15px">${esc(c.hint)}</p>`}
+        : `<p class="muted" style="margin:0;font-weight:700">${c.kind === "dog" ? "Où le trouver ?" : "Comment l'attirer ?"}</p><p style="margin:0;font-size:15px">${esc(c.hint)}</p>`}
       </div>`; }).join("")}
   </div>`;
 }
@@ -1483,7 +1522,7 @@ function helpModal() {
   return `<div class="modal-bg"><div class="panel modal" role="dialog" aria-label="Comment jouer" style="width:760px;max-height:680px;display:flex;flex-direction:column;gap:10px;padding:22px 30px;background:#FFFBF2">
     <div class="between"><h1 style="font-size:30px">Comment jouer</h1>${catSVG("caramel", 48)}</div>
     <p class="muted" style="margin:0;font-weight:700">Tu tiens un café à chats à Bruyère. Pas de chrono stressant ni d'échec : prends ton temps.</p>
-    ${step(1, "#D9826B", "Le matin, fais tes courses", "Sur la carte du village, va à l'<b>Épicerie de Madame Rose</b>. Ajoute au panier les ingrédients des recettes que tu veux préparer, puis clique sur <b>Payer</b>. La nourriture pour chats (et les chats à adopter !) se trouve à l'<b>Animalerie Les Moustaches</b>.")}
+    ${step(1, "#D9826B", "Le matin, fais tes courses", "Sur la carte du village, va à l'<b>Épicerie de Madame Rose</b>. Ajoute au panier les ingrédients des recettes que tu veux préparer, puis clique sur <b>Payer</b>. La nourriture des animaux, les chats et les <b>chiens</b> à adopter se trouvent à l'<b>Animalerie Les Moustaches</b>. Les chiens accueillent les clients, qui deviennent plus patients.")}
     ${step(2, "#4F6B4A", "À midi, cuisine", "Clique sur <b>Rentrer cuisiner</b>. Choisis une recette : les ingrédients manquants sont entourés en rouge. Clique sur <b>Commencer</b>, puis fais les gestes : verser les ingrédients, <b>pétrir</b> (clics), <b>remuer</b> (maintiens le clic et tourne dans le bol), enfourner… Le plat fini va en <b>vitrine</b>.")}
     ${step(3, "#6E8FB0", "L'après-midi, sers les clients", "Clique sur <b>Ouvrir le café</b>. Les villageois arrivent et commandent : clique sur <b>Servir</b>. La barre verte montre leur patience. Chaque villageois a un <b>plat préféré</b> : le lui servir fait vite grandir votre amitié (♥), et il finit par se confier à toi (avec un cadeau).")}
     ${step(4, "#C9677A", "Prends soin des chats", "Clique sur un chat pour le <b>caresser</b>, ou sur <b>Nourrir</b> (croquettes ou poisson). Des chats heureux donnent jusqu'à +20 % de pourboires.")}
@@ -1547,7 +1586,7 @@ function act(a, el, isKey = false) {
         else if (it.kind === "decor") S.decor.push(k);
         else if (it.kind === "book") S.recipes.push(k);
         else if (it.kind === "bouquet") { S.bouquet = BOUQUETS[k].tip; S.bouquetId = k; }
-        else if (it.kind === "cat") { S.cats.push(k); S.mood[k] = 75; setTimeout(() => { toast(CATS[k].n + " rejoint ton café !"); sfx("purr"); }, 300); }
+        else if (it.kind === "cat") { S.cats.push(k); S.mood[k] = 75; setTimeout(() => { toast(CATS[k].n + " rejoint ton café !"); sfx(isDog(k) ? "bark" : "purr"); }, 300); }
       }
       ui.cart = {}; save(); sfx("coin"); render(); toast("Merci ! À bientôt."); break;
     }
