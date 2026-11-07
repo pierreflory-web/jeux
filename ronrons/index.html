@@ -945,6 +945,9 @@ function startCafe() {
   cafe.timer = setInterval(tickCafe, 200);
 }
 // ---------- Chats qui se promènent dans le café ----------
+// Vitesse à laquelle les chats ont faim (points d'humeur perdus par seconde de service).
+// 0,2 : un chat bien nourri tient environ une journée entière de service.
+const CAT_HUNGER = 0.2;
 const CAT_SPOTS = [
   { x: 372, y: 426 }, { x: 470, y: 222 }, { x: 1176, y: 112 }, { x: 560, y: 494 }, { x: 1180, y: 252 },
   { x: 780, y: 490 }, { x: 244, y: 222 }, { x: 1170, y: 392 }, { x: 1000, y: 490 }, { x: 70, y: 444 },
@@ -1001,7 +1004,7 @@ function tickCafe() {
   const now = performance.now(); const dt = Math.min(0.5, (now - cafe.last) / 1000); cafe.last = now;
   cafe.time += dt;
   // humeur des chats
-  S.cats.forEach((c) => { S.mood[c] = Math.max(0, (S.mood[c] ?? 60) - dt * 0.9 * toyFactor()); });
+  S.cats.forEach((c) => { S.mood[c] = Math.max(0, (S.mood[c] ?? 60) - dt * CAT_HUNGER * toyFactor()); });
   ensureCatPositions(); moveCats(dt);
   // patience
   cafe.seats.forEach((cl, i) => {
