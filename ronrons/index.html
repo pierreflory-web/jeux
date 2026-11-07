@@ -221,6 +221,7 @@ const CATS = {
   pepette:  { kind: "dog", price: 120, n: "Pépette",  race: "Teckel",           fur: "#8A4F2E", ear: "#6B3A20", snout: "#B5774F", patch: "#8A4F2E", patchX: 24, line: "#8A4F2E", trait: "Curieuse",    likes: "Renifler sous les tables", story: "Elle connaît l'odeur de chaque client et devine leur commande avant eux.", hint: "Elle attend au rayon chiens de l'Animalerie." },
   nuage:    { kind: "dog", price: 140, n: "Nuage",    race: "Bichon frisé",     fur: "#FBF7F0", ear: "#EDE4D6", snout: "#FFFFFF", patch: "#FBF7F0", patchX: 24, line: "#D8C7A8", trait: "Câlin",       likes: "Les genoux, les coussins", story: "Une petite boule blanche qui s'endort sur tous les genoux disponibles.", hint: "Il attend au rayon chiens de l'Animalerie." },
   choco:    { kind: "dog", price: 170, n: "Choco",    race: "Labrador chocolat", fur: "#6B4A33", ear: "#4F3424", snout: "#8A6448", patch: "#6B4A33", patchX: 24, line: "#6B4A33", trait: "Accueillant", likes: "Dire bonjour à tout le monde", story: "Il attend chaque client à la porte et l'accompagne jusqu'à sa table.", hint: "Il attend au rayon chiens de l'Animalerie." },
+  givre:    { kind: "dog", price: 190, n: "Givre",    race: "Husky",            fur: "#7E8790", ear: "#6B737C", snout: "#FFFFFF", patch: "#7E8790", patchX: 24, line: "#6B737C", eye: "#6EA8D8", pointy: true, mask: "#FFFFFF", trait: "Aventurier",  likes: "La neige, hurler avec la musique", story: "Ses yeux bleus font fondre tout le village. Les jours de neige, il est fou de joie.", hint: "Il attend au rayon chiens de l'Animalerie." },
   patapouf: { kind: "dog", price: 220, n: "Patapouf", race: "Saint-bernard",    fur: "#F6EEDF", ear: "#B5653A", snout: "#FFFFFF", patch: "#B5653A", patchX: 40, line: "#D8C7A8", trait: "Tranquille",  likes: "Les siestes près du poêle", story: "Énorme et très doux, il ne se lève que pour les biscuits.", hint: "Il attend au rayon chiens de l'Animalerie." },
 };
 
@@ -359,11 +360,15 @@ function dogSVG(id, size = 64, sleeping = false) {
   const d = CATS[id];
   const eyes = sleeping
     ? `<path d="M20 28 q4 -3 8 0 M36 28 q4 -3 8 0" stroke="#2F2522" stroke-width="2.5" fill="none" stroke-linecap="round"/>`
-    : `<circle cx="24" cy="28" r="3" fill="#2F2522"/><circle cx="40" cy="28" r="3" fill="#2F2522"/>`;
+    : `<circle cx="24" cy="28" r="3.2" fill="${d.eye || "#2F2522"}"/><circle cx="40" cy="28" r="3.2" fill="${d.eye || "#2F2522"}"/>${d.eye ? `<circle cx="24" cy="28" r="1.3" fill="#2F2522"/><circle cx="40" cy="28" r="1.3" fill="#2F2522"/>` : ""}`;
+  const ears = d.pointy
+    ? `<path d="M14 24 L16 2 L30 14Z M50 24 L48 2 L34 14Z" fill="${d.ear}"/><path d="M17 18 L18 7 L26 14Z M47 18 L46 7 L38 14Z" fill="#E9D9DB"/>`
+    : `<ellipse cx="14" cy="28" rx="7" ry="15" fill="${d.ear}" transform="rotate(18 14 28)"/><ellipse cx="50" cy="28" rx="7" ry="15" fill="${d.ear}" transform="rotate(-18 50 28)"/>`;
+  const mask = d.mask ? `<path d="M15 30 Q20 22 26 26 Q32 18 38 26 Q44 22 49 30 Q50 46 32 54 Q14 46 15 30Z" fill="${d.mask}"/><path d="M29 10 h6 v12 h-6z" fill="${d.mask}"/>` : "";
   return `<svg class="catsvg" width="${size}" height="${size}" viewBox="0 0 64 64" aria-hidden="true">
-    <ellipse cx="14" cy="28" rx="7" ry="15" fill="${d.ear}" transform="rotate(18 14 28)"/><ellipse cx="50" cy="28" rx="7" ry="15" fill="${d.ear}" transform="rotate(-18 50 28)"/>
+    ${ears}
     <path d="M14 26 Q14 8 32 8 Q50 8 50 26 Q52 46 32 54 Q12 46 14 26Z" fill="${d.fur}" stroke="${d.line}" stroke-width="1.5"/>
-    <ellipse cx="${d.patchX}" cy="22" rx="7" ry="8" fill="${d.patch}"/><ellipse cx="32" cy="40" rx="11" ry="9" fill="${d.snout}"/>
+    <ellipse cx="${d.patchX}" cy="22" rx="7" ry="8" fill="${d.patch}"/>${mask}<ellipse cx="32" cy="40" rx="11" ry="9" fill="${d.snout}"/>
     ${eyes}<ellipse cx="32" cy="36" rx="4" ry="3" fill="#2F2522"/><path d="M32 39 v3 M28 43 q4 3 8 0" stroke="#2F2522" stroke-width="1.5" fill="none" stroke-linecap="round"/><path d="M30 45 q2 5 4 0" fill="#E06A6A"/></svg>`;
 }
 function catSVG(id, size = 64, sleeping = false) {
