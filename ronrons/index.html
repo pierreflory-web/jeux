@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Ronron Café</title>
 <link rel="icon" href="icon.svg">
 <!-- Polices : chargées si le lanceur a internet, sinon repli automatique sur les polices système -->
@@ -16,9 +16,9 @@
     --font-body: "Nunito", "Segoe UI", system-ui, sans-serif;
   }
   *{box-sizing:border-box}
-  html,body{margin:0;height:100%;background:#2E2420;}
-  body{display:flex;align-items:center;justify-content:center;font-family:var(--font-body);color:var(--ink);overflow:hidden}
-  #stage{width:1280px;height:720px;position:relative;overflow:hidden;background:var(--cream);transform-origin:center center;border-radius:6px}
+  html,body{margin:0;position:fixed;inset:0;overflow:hidden;background:#2E2420;overscroll-behavior:none;touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+  body{font-family:var(--font-body);color:var(--ink)}
+  #stage{width:1280px;height:720px;position:fixed;left:50%;top:50%;overflow:hidden;background:var(--cream);transform-origin:center center;border-radius:6px}
   button{font-family:inherit;color:inherit;cursor:pointer}
   button:disabled{cursor:not-allowed}
   h1,h2,h3{font-family:var(--font-title);margin:0;font-weight:600}
@@ -1591,11 +1591,19 @@ window.addEventListener("pointermove", stirMove);
 window.addEventListener("pointerup", () => { if (ui.cook) ui.cook.stirring = false; });
 
 // ---------- Mise à l'échelle ----------
+// Le jeu est dessiné en 1280×720 puis mis à l'échelle de l'écran.
+// Téléphone tenu en portrait : l'image est tournée d'un quart de tour pour occuper tout l'écran.
 function fit() {
-  const s = Math.min(window.innerWidth / 1280, window.innerHeight / 720);
-  $stage.style.transform = `scale(${s})`;
+  const vv = window.visualViewport;
+  const W = vv ? vv.width : window.innerWidth, H = vv ? vv.height : window.innerHeight;
+  const portrait = H > W * 1.05;
+  const s = portrait ? Math.min(W / 720, H / 1280) : Math.min(W / 1280, H / 720);
+  $stage.style.transform = `translate(-50%, -50%) ${portrait ? "rotate(90deg) " : ""}scale(${s})`;
 }
-window.addEventListener("resize", fit); fit();
+window.addEventListener("resize", fit);
+window.addEventListener("orientationchange", () => setTimeout(fit, 150));
+if (window.visualViewport) window.visualViewport.addEventListener("resize", fit);
+fit();
 render();
 </script>
 </body>
