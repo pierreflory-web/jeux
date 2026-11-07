@@ -994,7 +994,17 @@ const CAT_SPOTS = [
 ];
 const nowS = () => performance.now() / 1000;
 function catSpots(id) { return CAT_SPOTS.map((p, i) => ({ ...p, i })).filter((p) => (!p.req || S.decor.includes(p.req)) && (!id || !isDog(id) || p.floor)); }
-function catPos(c, t = nowS()) { const k = c.dur ? Math.min(1, (t - c.start) / c.dur) : 1; return { x: c.x + (c.tx - c.x) * k, y: c.y + (c.ty - c.y) * k, moving: k < 1 }; }
+const FLOOR_Y = 494; // hauteur du sol où les chats marchent
+function catPos(c, t = nowS()) {
+  if (!c.dur || !c.pts) return { x: c.tx, y: c.ty, moving: false, dx: 0 };
+  let e = t - c.start;
+  if (e >= c.dur) return { x: c.tx, y: c.ty, moving: false, dx: 0 };
+  for (let i = 1; i < c.pts.length; i++) {
+    const a = c.pts[i - 1], b = c.pts[i], d = c.segs[i - 1];
+    if (e <= d || i === c.pts.length - 1) { const k = d ? Math.min(1, e / d) : 1; return { x: a.x + (b.x - a.x) * k, y: a.y + (b.y - a.y) * k, moving: true, dx: b.x - a.x, seg: i, k }; }
+    e -= d;
+  }
+}
 function ensureCatPositions() {
   cafe.cp = cafe.cp || {};
   const used = new Set(Object.values(cafe.cp).map((c) => c.spot));
@@ -1017,18 +1027,34 @@ function moveCats(dt) {
   const free = catSpots(id).filter((p) => !used.has(p.i)); if (!free.length) return;
   const dest = free[Math.floor(Math.random() * free.length)];
   const cur = catPos(c, t);
-  const dist = Math.hypot(dest.x - cur.x, dest.y - cur.y);
-  Object.assign(c, { x: cur.x, y: cur.y, tx: dest.x, ty: dest.y, start: t, dur: Math.min(6, Math.max(1.5, dist / 110)), spot: dest.i });
+  // les chats ne volent pas : ils sautent au sol, marchent, puis grimpent
+  const high = (y) => y < FLOOR_Y - 60;
+  const pts = [{ x: cur.x, y: cur.y }];
+  if (high(cur.y)) pts.push({ x: cur.x, y: FLOOR_Y });
+  if (high(dest.y)) pts.push({ x: dest.x, y: FLOOR_Y });
+  pts.push({ x: dest.x, y: dest.y });
+  const segs = [];
+  for (let i = 1; i < pts.length; i++) {
+    const a = pts[i - 1], b = pts[i], dist = Math.hypot(b.x - a.x, b.y - a.y);
+    segs.push(Math.abs(b.x - a.x) < 1 ? Math.max(0.35, dist / 420) : Math.max(0.8, dist / 120)); // saut rapide, marche tranquille
+  }
+  const dur = segs.reduce((a, b) => a + b, 0);
+  Object.assign(c, { x: cur.x, y: cur.y, tx: dest.x, ty: dest.y, pts, segs, start: t, dur, spot: dest.i });
 }
 function animateCats() {
   const t = nowS();
   $stage.querySelectorAll("[data-cat]").forEach((el) => {
     const c = cafe && cafe.cp && cafe.cp[el.dataset.cat]; if (!c) return;
     const p = catPos(c, t); if (!p.moving) return;
+    // le reste du chemin, joué d'un seul tenant par le navigateur
+    const frames = [{ left: p.x + "px", top: p.y + "px", offset: 0 }];
     const rem = c.start + c.dur - t;
-    void el.offsetLeft; // force le navigateur à prendre la position de départ
-    el.style.transition = `left ${rem}s linear, top ${rem}s linear`;
+    let acc = c.segs[p.seg - 1] * (1 - p.k);
+    frames.push({ left: c.pts[p.seg].x + "px", top: c.pts[p.seg].y + "px", offset: Math.min(1, acc / rem) });
+    for (let i = p.seg + 1; i < c.pts.length; i++) { acc += c.segs[i - 1]; frames.push({ left: c.pts[i].x + "px", top: c.pts[i].y + "px", offset: Math.min(1, acc / rem) }); }
+    frames[frames.length - 1].offset = 1;
     el.style.left = c.tx + "px"; el.style.top = c.ty + "px";
+    if (el.animate) el.animate(frames, { duration: rem * 1000, easing: "linear", fill: "backwards" });
   });
 }
 
@@ -1319,6 +1345,7 @@ function viewCafe() {
       ${villagerSVG(cl.v)}
     </div>`).join("")}
   ${(() => { ensureCatPositions(); const t = nowS(); return Object.entries(cafe.cp).map(([id, c]) => { const m = S.mood[id] ?? 60, p = catPos(c, t), flip = p.moving && c.tx < c.x;
+    if (p.moving) { p.x = Math.round(p.x); p.y = Math.round(p.y); }
     return `<button data-a="pet" data-id="${id}" data-cat="${id}" aria-label="Caresser ${CATS[id].n}" title="${CATS[id].n} · ${moodWord(m)}" style="position:absolute;left:${p.x}px;top:${p.y}px;border:0;background:none;padding:0;z-index:2">
       <span style="display:block;${flip ? "transform:scaleX(-1);" : ""}"><span style="display:block;${p.moving ? "animation:bob .45s ease-in-out infinite;" : ""}">${catSVG(id, 58, m < 30 && !p.moving)}</span></span>${m > 75 ? `<span style="position:absolute;right:-6px;top:-6px;font-size:13px;font-weight:800;color:var(--terra)">♥</span>` : ""}</button>`; }).join(""); })()}
   <div style="position:absolute;left:24px;right:24px;bottom:16px;display:flex;gap:14px;align-items:stretch;z-index:4">
