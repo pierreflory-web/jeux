@@ -1073,8 +1073,27 @@ function pet(id) {
   S.mood[id] = Math.min(100, (S.mood[id] ?? 60) + 15);
   sfx("purr"); toast(CATS[id].n + " ronronne…"); render();
 }
+const catFood = () => Object.fromEntries(Object.entries(ITEMS).filter(([, it]) => it.cat).map(([k, it]) => [k, it.fx]).sort((a, b) => b[1] - a[1]));
+const foodLeft = () => Object.keys(catFood()).reduce((t, k) => t + qty(k), 0);
+function feedAll() {
+  const FOOD = catFood();
+  const hungry = S.cats.filter((id) => (S.mood[id] ?? 60) < 85).sort((a, b) => (S.mood[a] ?? 60) - (S.mood[b] ?? 60));
+  if (!hungry.length) { toast("Tous les chats sont repus !"); return; }
+  let fed = 0;
+  for (const id of hungry) {
+    // la plus petite friandise qui suffit, pour ne pas gaspiller les crevettes
+    const need = 100 - (S.mood[id] ?? 60);
+    const avail = Object.keys(FOOD).filter((k) => qty(k) > 0);
+    if (!avail.length) break;
+    const food = avail.slice().reverse().find((k) => FOOD[k] >= need) || avail[0];
+    S.pantry[food]--; S.mood[id] = Math.min(100, (S.mood[id] ?? 60) + FOOD[food]); fed++;
+  }
+  sfx("pop");
+  toast(fed ? fed + " chat" + (fed > 1 ? "s se régalent" : " se régale") + (fed < hungry.length ? " (plus de réserves pour les autres !)" : " !") : "Plus rien pour les chats : passe à l'Animalerie Les Moustaches.");
+  render();
+}
 function feed(id) {
-  const FOOD = Object.fromEntries(Object.entries(ITEMS).filter(([, it]) => it.cat).map(([k, it]) => [k, it.fx]).sort((a, b) => b[1] - a[1]));
+  const FOOD = catFood();
   const food = Object.keys(FOOD).find((k) => qty(k) > 0);
   if (!food) { toast("Plus rien pour les chats : passe à l'Animalerie Les Moustaches."); return; }
   S.pantry[food]--; S.mood[id] = Math.min(100, (S.mood[id] ?? 60) + FOOD[food]); sfx("pop");
@@ -1232,7 +1251,7 @@ function viewCafe() {
   ${festival() ? `<svg width="1280" height="50" viewBox="0 0 1280 50" aria-hidden="true" style="position:absolute;left:0;top:10px;pointer-events:none"><path d="M0 6 Q320 34 640 6 T1280 6" stroke="#8A5A3B" stroke-width="2" fill="none"/>${Array.from({length:32},(_,i)=>`<path d="M${20+i*40} ${10+Math.abs(Math.sin(i/16*Math.PI))*18} l10 16 l10 -16z" fill="${["#E9A9B0","#F2C46D","#8FAF8A","#9CC3D2"][i%4]}"/>`).join("")}</svg>` : ""}
   <div style="position:absolute;left:174px;top:80px;width:172px;color:#F1F4EE;display:flex;flex-direction:column;gap:3px;font-family:'Comic Sans MS','Segoe Print',var(--font-body)">
     <b style="font-size:16px;text-align:center;border-bottom:2px dashed rgba(241,244,238,.5);padding-bottom:3px">Menu du jour</b>
-    ${S.recipes.map((id) => `<span class="between" style="font-size:13px;font-weight:700"><span>${RECIPES[id].n.replace("Tarte à la ", "Tarte ").replace("Tartelette ", "Tartel. ")}</span><span>${RECIPES[id].price}</span></span>`).join("")}
+    ${S.recipes.filter((id) => S.showcase[id] > 0).slice(0, 6).map((id) => `<span class="between" style="font-size:13px;font-weight:700;gap:6px"><span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${RECIPES[id].n.replace("Tarte à la ", "Tarte ").replace("Tartelette ", "Tartel. ")}</span><span>${RECIPES[id].price}</span></span>`).join("")}
   </div>
   ${hudTop(`${hour} h`, `<button class="pill" data-a="help" aria-label="Comment jouer (met le service en pause)" style="border:0">? Aide</button><span class="pill">Clients ${Math.min(cafe.spawned, clientsPerDay())} / ${clientsPerDay()}</span>`)}
   <button data-a="kitchen" aria-label="Aller en cuisine (met le service en pause)" style="position:absolute;left:24px;top:300px;display:flex;align-items:center;gap:8px;padding:12px 18px 12px 12px;border:0;border-radius:999px;background:var(--terra);color:#fff;font-family:var(--font-title);font-weight:600;font-size:19px;box-shadow:0 5px 0 var(--terra-d);z-index:3">
@@ -1259,12 +1278,13 @@ function viewCafe() {
   <div style="position:absolute;left:24px;right:24px;bottom:16px;display:flex;gap:14px;align-items:stretch;z-index:4">
     <div class="panel" style="flex:1;padding:10px 14px;display:flex;gap:10px;align-items:center">
       <b style="font-family:var(--font-title);font-size:17px;margin-right:4px">Vitrine</b>
-      ${S.recipes.map((id) => `<div style="display:flex;flex-direction:column;align-items:center;gap:2px;width:96px;padding:6px;border-radius:14px;background:#fff"><span style="width:26px;height:26px;border-radius:50%;background:${RECIPES[id].c}"></span><span style="font-size:12px;font-weight:800;text-align:center;line-height:1.1">${RECIPES[id].n}</span><b style="color:${S.showcase[id] ? "var(--ok)" : "var(--bad)"}">${S.showcase[id] || 0}</b></div>`).join("")}
+      ${S.recipes.filter((id) => S.showcase[id] > 0).length ? "" : `<span class="muted" style="font-weight:700">Vitrine vide : retourne en cuisine !</span>`}
+      ${S.recipes.filter((id) => S.showcase[id] > 0).slice(0, 7).map((id) => `<div style="display:flex;flex-direction:column;align-items:center;gap:2px;width:96px;padding:6px;border-radius:14px;background:#fff"><span style="width:26px;height:26px;border-radius:50%;background:${RECIPES[id].c}"></span><span style="font-size:12px;font-weight:800;text-align:center;line-height:1.1">${RECIPES[id].n}</span><b style="color:${S.showcase[id] ? "var(--ok)" : "var(--bad)"}">${S.showcase[id] || 0}</b></div>`).join("")}
     </div>
     <div class="panel" style="width:360px;padding:10px 14px;display:flex;flex-direction:column;gap:5px">
-      <div class="between"><b style="font-family:var(--font-title);font-size:17px">Chats</b><span class="muted" style="font-size:12px;font-weight:700">Réserves : ${["croquettes", "friandises", "sardines", "poisson", "crevettes"].reduce((t, k) => t + qty(k), 0)}</span></div>
-      <div style="display:flex;flex-direction:column;gap:4px;max-height:74px;overflow:auto;padding-right:4px">
-      ${S.cats.map((id) => `<div class="between" style="font-size:14px;font-weight:700"><span style="width:70px">${CATS[id].n}</span><div class="bar" style="flex:1;margin:0 8px"><i style="width:${S.mood[id] ?? 60}%;background:${(S.mood[id] ?? 60) > 50 ? "var(--sage-l)" : "var(--terra)"}"></i></div><button class="btn light small" data-a="feed" data-id="${id}" style="padding:4px 10px;font-size:13px">Nourrir</button></div>`).join("")}
+      <div class="between"><b style="font-family:var(--font-title);font-size:17px">Chats <span class="muted" style="font-size:12px;font-family:var(--font-body)">· réserves ${foodLeft()}</span></b><button class="btn small" data-a="feedall" style="padding:5px 12px;font-size:13px" ${foodLeft() ? "" : "disabled"}>Nourrir tous</button></div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+      ${S.cats.slice().sort((a, b) => (S.mood[a] ?? 60) - (S.mood[b] ?? 60)).slice(0, 3).map((id) => `<div class="between" style="font-size:14px;font-weight:700"><span style="width:70px">${CATS[id].n}</span><div class="bar" style="flex:1;margin:0 8px"><i style="width:${S.mood[id] ?? 60}%;background:${(S.mood[id] ?? 60) > 50 ? "var(--sage-l)" : "var(--terra)"}"></i></div><button class="btn light small" data-a="feed" data-id="${id}" style="padding:4px 10px;font-size:13px">Nourrir</button></div>`).join("")}
       </div>
     </div>
   </div>`;
@@ -1575,6 +1595,7 @@ function act(a, el, isKey = false) {
     case "serve": serve(+el.dataset.i); break;
     case "pet": pet(id); break;
     case "feed": feed(id); break;
+    case "feedall": feedAll(); break;
   }
 }
 // pointerdown : évite de perdre un clic quand le café se redessine
