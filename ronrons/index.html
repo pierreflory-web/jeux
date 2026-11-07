@@ -1,0 +1,1601 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Les Ronrons de Bruyère</title>
+<!-- Polices : chargées si le lanceur a internet, sinon repli automatique sur les polices système -->
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#F6EEDF; --paper:#FBF5EA; --ink:#4A3326; --ink2:#6B5444; --wood:#8A5A3B; --wood2:#A97C5A;
+    --terra:#D9826B; --terra-d:#B76A55; --sage:#4F6B4A; --sage-d:#3B5237; --sage-l:#8FAF8A;
+    --butter:#F2C46D; --rose:#E9A9B0; --sky:#CFE3E6; --line:#D8C7A8; --ok:#3E5A39; --bad:#A3402C;
+    --font-title: "Fredoka", "Baloo 2", "Trebuchet MS", system-ui, sans-serif;
+    --font-body: "Nunito", "Segoe UI", system-ui, sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:#2E2420;}
+  body{display:flex;align-items:center;justify-content:center;font-family:var(--font-body);color:var(--ink);overflow:hidden}
+  #stage{width:1280px;height:720px;position:relative;overflow:hidden;background:var(--cream);transform-origin:center center;border-radius:6px}
+  button{font-family:inherit;color:inherit;cursor:pointer}
+  button:disabled{cursor:not-allowed}
+  h1,h2,h3{font-family:var(--font-title);margin:0;font-weight:600}
+  .pill{display:inline-flex;gap:8px;align-items:center;padding:10px 18px;border-radius:999px;background:var(--cream);box-shadow:0 4px 0 var(--line);font-family:var(--font-title);font-weight:600;font-size:18px}
+  .pill.dark{background:var(--ink);color:var(--cream);box-shadow:none}
+  .panel{background:var(--paper);border-radius:22px;box-shadow:0 6px 0 var(--line);padding:18px}
+  .btn{border:0;border-radius:16px;padding:14px 20px;font-family:var(--font-title);font-weight:600;font-size:18px;background:var(--terra);color:#fff;box-shadow:0 5px 0 var(--terra-d);transition:transform .08s}
+  .btn:active:not(:disabled){transform:translateY(3px);box-shadow:0 2px 0 var(--terra-d)}
+  .btn.green{background:var(--sage);box-shadow:0 5px 0 var(--sage-d)}
+  .btn.light{background:var(--cream);color:var(--ink);box-shadow:0 5px 0 var(--line)}
+  .btn:disabled{background:var(--line);color:var(--ink2);box-shadow:none}
+  .btn.small{padding:8px 12px;font-size:15px;border-radius:12px}
+  .hud{position:absolute;left:24px;right:24px;top:18px;display:flex;justify-content:space-between;align-items:center;z-index:5;pointer-events:none}
+  .hud > div{display:flex;gap:10px;pointer-events:auto}
+  .coin{width:20px;height:20px;border-radius:50%;background:var(--butter);box-shadow:inset 0 0 0 3px #C99A3E}
+  .dot{width:16px;height:16px;border-radius:50%;border:2px solid #C9B48E;flex-shrink:0}
+  .toast{position:absolute;left:50%;bottom:28px;transform:translateX(-50%);background:var(--ink);color:var(--cream);padding:12px 22px;border-radius:999px;font-weight:800;z-index:50;animation:pop .25s ease-out}
+  @keyframes pop{from{transform:translate(-50%,20px);opacity:0}to{transform:translate(-50%,0);opacity:1}}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+  @keyframes fallRain{to{transform:translate(-40px,var(--h)) rotate(12deg)}}
+  @keyframes fallSnow{50%{margin-left:14px}to{transform:translateY(var(--h))}}
+  @keyframes squish{0%{transform:scale(1,1)}40%{transform:scale(1.08,.9)}100%{transform:scale(1,1)}}
+  .squish{animation:squish .22s ease-out}
+  @keyframes steam{0%{opacity:0;transform:translateY(0)}50%{opacity:.8}100%{opacity:0;transform:translateY(-24px)}}
+  .grid{display:grid;gap:12px}
+  .card{background:#fff;border-radius:16px;box-shadow:0 4px 0 var(--line);padding:14px;display:flex;flex-direction:column;gap:10px}
+  .tag{padding:3px 8px;border-radius:999px;background:#E9F0E4;color:var(--ok);font-size:11px;font-weight:800}
+  .muted{color:var(--ink2)}
+  .row{display:flex;gap:10px;align-items:center}
+  .between{display:flex;justify-content:space-between;align-items:center}
+  .bar{height:8px;border-radius:4px;background:#EADBB8;overflow:hidden}
+  .bar > i{display:block;height:100%;border-radius:4px}
+  .hot{position:absolute;border:0;border-radius:12px;background:var(--cream);box-shadow:0 3px 0 var(--line);padding:8px 14px;display:flex;flex-direction:column;align-items:center;gap:2px}
+  .hot b{font-family:var(--font-title);font-weight:600;font-size:16px}
+  .hot small{font-size:12px;font-weight:700;color:var(--ok)}
+  .hot.main{background:var(--terra);color:#fff;box-shadow:0 4px 0 var(--terra-d)}
+  .hot.main small{color:#fff}
+  .modal-bg{position:absolute;inset:0;background:rgba(46,36,32,.45);display:flex;align-items:center;justify-content:center;z-index:40}
+  .modal{width:560px;max-height:620px;overflow:auto}
+  .catsvg{animation:bob 3s ease-in-out infinite}
+  :focus-visible{outline:3px solid var(--sage);outline-offset:2px}
+</style>
+</head>
+<body>
+<div id="stage" aria-live="polite"></div>
+<!-- Points et pièces du lanceur Mes Jeux (ignoré si le jeu est ouvert seul) -->
+<script src="https://pierreflory-web.github.io/jeux/points.js"></script>
+<script>
+"use strict";
+/* =========================================================
+   Les Ronrons de Bruyère — prototype jouable
+   Un seul fichier, aucune dépendance. Résolution logique 1280×720,
+   mise à l'échelle automatique dans la fenêtre du lanceur.
+   ========================================================= */
+
+// ---------- Données ----------
+const SEASONS = ["Printemps", "Été", "Automne", "Hiver"];
+const SEASON_TINT = { "Printemps": "#B7D0A8", "Été": "#C9D99A", "Automne": "#D9B98A", "Hiver": "#DCE6EA" };
+const DAYS_PER_SEASON = 7;
+
+const ITEMS = {
+  // Épicerie
+  farine:   { n: "Farine",          p: 6,  c: "#F3E7CF", shop: "epicerie" },
+  beurre:   { n: "Beurre",          p: 7,  c: "#F7DFA0", shop: "epicerie" },
+  oeufs:    { n: "Œufs",            p: 6,  c: "#FFFFFF", shop: "epicerie" },
+  lait:     { n: "Lait frais",      p: 8,  c: "#EAF3F6", shop: "epicerie" },
+  miel:     { n: "Miel",            p: 15, c: "#F2C46D", shop: "epicerie" },
+  // produits de saison : vendus seulement pendant leur saison
+  rhubarbe: { n: "Rhubarbe",        p: 9,  c: "#E9A9B0", shop: "epicerie", season: "Printemps" },
+  fraises:  { n: "Fraises",         p: 10, c: "#E06A6A", shop: "epicerie", season: "Printemps" },
+  sureau:   { n: "Fleurs de sureau",p: 14, c: "#DCEBD6", shop: "epicerie", season: "Printemps" },
+  peches:   { n: "Pêches",          p: 10, c: "#F5B38A", shop: "epicerie", season: "Été" },
+  menthe:   { n: "Menthe fraîche",  p: 8,  c: "#8FC79A", shop: "epicerie", season: "Été" },
+  framboises:{ n: "Framboises",     p: 12, c: "#D9506A", shop: "epicerie", season: "Été" },
+  potiron:  { n: "Potiron",         p: 9,  c: "#E8893A", shop: "epicerie", season: "Automne" },
+  chataignes:{ n: "Châtaignes",     p: 11, c: "#8A5A3B", shop: "epicerie", season: "Automne" },
+  figues:   { n: "Figues",          p: 12, c: "#7A4F7A", shop: "epicerie", season: "Automne" },
+  oranges:  { n: "Oranges",         p: 9,  c: "#F29A3A", shop: "epicerie", season: "Hiver" },
+  gingembre:{ n: "Gingembre",       p: 10, c: "#D9B56A", shop: "epicerie", season: "Hiver" },
+  clementines:{ n: "Clémentines",   p: 9,  c: "#F2A65A", shop: "epicerie", season: "Hiver" },
+  citron:   { n: "Citrons",         p: 9,  c: "#F7E37A", shop: "epicerie" },
+  pomme:    { n: "Pommes",          p: 8,  c: "#C9D46A", shop: "epicerie" },
+  creme:    { n: "Crème fraîche",   p: 9,  c: "#FFFDF4", shop: "epicerie" },
+
+  // Autre rive
+  cacao:    { n: "Cacao",           p: 12, c: "#8A5A3B", shop: "epicerie" },
+  cannelle: { n: "Cannelle",        p: 11, c: "#B8733F", shop: "epicerie" },
+  vanille:  { n: "Vanille",         p: 16, c: "#3E3433", shop: "epicerie" },
+  amandes:  { n: "Amandes",         p: 12, c: "#D9B98A", shop: "epicerie" },
+  // Boulangerie (autre rive)
+  levure:   { n: "Levure du boulanger", p: 8,  c: "#EFE3C2", shop: "boulangerie" },
+  feuillete:{ n: "Pâte feuilletée", p: 14, c: "#F1D9A6", shop: "boulangerie" },
+  pepites:  { n: "Pépites de chocolat", p: 13, c: "#5A3E2B", shop: "boulangerie" },
+  sucreglace:{ n: "Sucre glace",    p: 9,  c: "#FFFFFF", shop: "boulangerie" },
+  levain:   { n: "Pain au levain",  p: 10, c: "#C9965E", shop: "boulangerie" },
+  saumon:   { n: "Saumon frais",    p: 14, c: "#F2A08A", shop: "poissonnerie" },
+  truite:   { n: "Truite fumée",    p: 13, c: "#E8A47E", shop: "poissonnerie" },
+  crevetteg:{ n: "Crevettes grises", p: 15, c: "#E9B9A4", shop: "poissonnerie" },
+  thon:     { n: "Thon",            p: 12, c: "#C98A8A", shop: "poissonnerie" },
+  cabillaud:{ n: "Cabillaud",       p: 16, c: "#E6E1D6", shop: "poissonnerie" },
+  // Animalerie : tout pour les chats
+  croquettes:{ n: "Croquettes",     p: 12, c: "#C99A6B", shop: "animalerie", cat: true, fx: 40 },
+  sardines: { n: "Sardines pour chats", p: 10, c: "#B9C6CC", shop: "animalerie", cat: true, fx: 50 },
+  friandises:{ n: "Friandises",     p: 16, c: "#E9A9B0", shop: "animalerie", cat: true, fx: 55 },
+  poisson:  { n: "Poisson pour chats", p: 18, c: "#9CC3D2", shop: "animalerie", cat: true, fx: 70 },
+  crevettes:{ n: "Crevettes pour chats", p: 26, c: "#F2A08A", shop: "animalerie", cat: true, fx: 90 },
+};
+
+const RECIPES = {
+  // --- recettes de saison (la première de chaque saison est offerte par Madame Rose)
+  pecheT:  { n: "Tarte aux pêches",    c: "#F5B38A", season: "Été", gift: true, needs: { peches: 2, farine: 1, beurre: 1 }, steps: ["Pétrir la pâte", "Garnir de pêches", "Cuire au four"], yield: 4, price: 24, book: 0, shop: "saison", d: "Le goût de l'été." },
+  theglace:{ n: "Thé glacé à la menthe", c: "#8FC79A", season: "Été", needs: { menthe: 1, citron: 1, miel: 1 }, steps: ["Chauffer l'eau", "Laisser infuser"], yield: 6, price: 15, book: 60, shop: "librairie", d: "Pour les après-midis brûlants." },
+  sorbet:  { n: "Sorbet framboise",    c: "#D9506A", season: "Été", needs: { framboises: 2, miel: 1 }, steps: ["Mélanger", "Façonner"], yield: 6, price: 16, book: 70, shop: "librairie", d: "Rose vif et tout frais." },
+  potironS:{ n: "Velouté de potiron",  c: "#E8893A", season: "Automne", gift: true, needs: { potiron: 1, creme: 1, lait: 1 }, steps: ["Chauffer le bouillon", "Mélanger"], yield: 6, price: 19, book: 0, shop: "saison", d: "Doux et réconfortant." },
+  chataigneG:{ n: "Gâteau à la châtaigne", c: "#8A5A3B", season: "Automne", needs: { chataignes: 2, farine: 1, oeufs: 1 }, steps: ["Mélanger", "Cuire au four"], yield: 6, price: 20, book: 80, shop: "librairie", d: "Comme une promenade en forêt." },
+  figueT:  { n: "Tartelettes figue-miel", c: "#7A4F7A", season: "Automne", needs: { figues: 2, feuillete: 1, miel: 1 }, steps: ["Garnir de figues", "Cuire au four"], yield: 4, price: 23, book: 90, shop: "librairie", d: "Fondantes et parfumées." },
+  chocoOrange:{ n: "Chocolat à l'orange", c: "#B5652E", season: "Hiver", gift: true, needs: { lait: 1, cacao: 1, oranges: 1 }, steps: ["Chauffer le lait", "Fouetter le cacao"], yield: 4, price: 18, book: 0, shop: "saison", d: "Le réconfort des jours de neige." },
+  gingembreB:{ n: "Biscuits au gingembre", c: "#D9B56A", season: "Hiver", needs: { farine: 1, beurre: 1, gingembre: 1, miel: 1 }, steps: ["Mélanger", "Façonner", "Cuire au four"], yield: 6, price: 16, book: 80, shop: "librairie", d: "En forme de petits chats !" },
+  clementineC:{ n: "Cake aux clémentines", c: "#F2A65A", season: "Hiver", needs: { clementines: 2, farine: 1, oeufs: 1, beurre: 1 }, steps: ["Mélanger", "Cuire au four"], yield: 6, price: 21, book: 90, shop: "librairie", d: "Un rayon de soleil en hiver." },
+  tarte:  { n: "Tarte à la rhubarbe", c: "#E9A9B0", season: "Printemps", needs: { rhubarbe: 1, farine: 1, beurre: 1, oeufs: 1 }, steps: ["Pétrir la pâte", "Garnir de rhubarbe", "Cuire au four"], yield: 4, price: 22 },
+  the:    { n: "Thé au sureau",       c: "#A9C4A0", season: "Printemps", needs: { sureau: 1, miel: 1 }, steps: ["Chauffer l'eau", "Laisser infuser"], yield: 6, price: 16 },
+  fraise: { n: "Tartelette fraises",  c: "#E06A6A", season: "Printemps", needs: { fraises: 2, farine: 1, beurre: 1 }, steps: ["Fonçer les moules", "Disposer les fraises", "Cuire au four"], yield: 4, price: 24 },
+  // Livres de recettes vendus à la Librairie (autre rive)
+  citronnade: { n: "Citronnade au miel", c: "#F7E37A", needs: { citron: 2, miel: 1 }, steps: ["Presser les citrons", "Mélanger"], yield: 6, price: 13, book: 40, shop: "librairie", d: "Fraîche et acidulée." },
+  crepes: { n: "Crêpes",              c: "#F3D9A0", needs: { farine: 1, oeufs: 1, lait: 1 }, steps: ["Fouetter la pâte", "Cuire à la poêle"], yield: 6, price: 14, book: 50, shop: "librairie", d: "Le goûter préféré des enfants." },
+  cookie: { n: "Cookies au miel",     c: "#F2C46D", needs: { farine: 1, beurre: 1, miel: 1 }, steps: ["Mélanger", "Façonner", "Cuire au four"], yield: 6, price: 13, book: 60, shop: "librairie", d: "Croquants dehors, fondants dedans." },
+  chausson: { n: "Chaussons aux pommes", c: "#D9A55B", needs: { pomme: 2, feuillete: 1 }, steps: ["Garnir de pommes", "Façonner", "Cuire au four"], yield: 4, price: 20, book: 70, shop: "librairie", d: "Une recette de grand-mère." },
+  brioche: { n: "Brioche au miel",    c: "#E9B872", needs: { farine: 1, beurre: 1, oeufs: 1, miel: 1, levure: 1 }, steps: ["Pétrir la pâte", "Façonner", "Cuire au four"], yield: 4, price: 26, book: 110, shop: "librairie", d: "Moelleuse, elle se vend très bien." },
+  chantilly: { n: "Fraises chantilly",  c: "#F5C6CF", needs: { fraises: 2, creme: 1 }, steps: ["Fouetter la crème", "Disposer les fraises"], yield: 4, price: 21, book: 60, shop: "librairie", d: "Simple et irrésistible." },
+  // Librairie (autre rive)
+  flan:    { n: "Flan à la vanille",  c: "#F4D58D", needs: { lait: 1, oeufs: 2, vanille: 1 }, steps: ["Fouetter", "Cuire au four"], yield: 6, price: 18, book: 90, shop: "librairie", d: "Tremblotant à souhait." },
+  roule:   { n: "Roulés à la cannelle", c: "#C98B55", needs: { farine: 1, cannelle: 1, miel: 1, levure: 1 }, steps: ["Pétrir la pâte", "Façonner", "Cuire au four"], yield: 6, price: 20, book: 95, shop: "librairie", d: "L'odeur attire tout le village." },
+  saumonT: { n: "Tartelettes au saumon", c: "#F2A08A", needs: { saumon: 1, creme: 1, feuillete: 1 }, steps: ["Garnir de saumon", "Cuire au four"], yield: 4, price: 23, book: 90, shop: "librairie", d: "La spécialité de Papi Jules." },
+  muffin:  { n: "Muffins aux pépites", c: "#7A5238", needs: { farine: 1, oeufs: 1, lait: 1, pepites: 1 }, steps: ["Mélanger", "Cuire au four"], yield: 6, price: 18, book: 80, shop: "librairie", d: "Les touristes en raffolent." },
+  gaufre:  { n: "Gaufres au sucre glace", c: "#E8C27A", needs: { farine: 1, oeufs: 1, lait: 1, sucreglace: 1 }, steps: ["Fouetter la pâte", "Cuire au gaufrier"], yield: 6, price: 17, book: 70, shop: "librairie", d: "Croustillantes, avec un nuage de sucre." },
+  tartine: { n: "Tartines miel-amandes", c: "#C9965E", needs: { levain: 1, miel: 1, amandes: 1 }, steps: ["Garnir les tartines", "Griller au four"], yield: 6, price: 15, book: 50, shop: "librairie", d: "Le petit-déjeuner de Léon." },
+  soupe:   { n: "Soupe du pêcheur",   c: "#E8C9A0", needs: { cabillaud: 1, creme: 1, lait: 1 }, steps: ["Chauffer le bouillon", "Mélanger"], yield: 6, price: 21, book: 90, shop: "librairie", d: "La recette de Jeanne, la femme de Papi Jules." },
+  truiteT: { n: "Tartines à la truite", c: "#E8A47E", needs: { levain: 1, truite: 1, creme: 1 }, steps: ["Garnir les tartines", "Griller au four"], yield: 6, price: 20, book: 70, shop: "librairie", d: "Fumée, fondante, sur pain grillé." },
+  salade:  { n: "Salade crevettes-citron", c: "#F3D2B8", needs: { crevetteg: 1, citron: 1, creme: 1 }, steps: ["Presser les citrons", "Mélanger"], yield: 4, price: 22, book: 80, shop: "librairie", d: "Fraîche comme un matin sur le quai." },
+  sandwich:{ n: "Sandwichs au thon",  c: "#D8B08C", needs: { levain: 1, thon: 1, oeufs: 1 }, steps: ["Garnir les tartines", "Façonner"], yield: 6, price: 18, book: 60, shop: "librairie", d: "Le déjeuner préféré des touristes." },
+  financier: { n: "Financiers aux amandes", c: "#E2B979", needs: { amandes: 1, beurre: 1, oeufs: 1 }, steps: ["Mélanger", "Cuire au four"], yield: 6, price: 19, book: 90, shop: "librairie", d: "Petits, dorés, parfaits avec un thé." },
+  choco:  { n: "Chocolat chaud",      c: "#8A5A3B", needs: { lait: 1, cacao: 1 }, steps: ["Chauffer le lait", "Fouetter le cacao"], yield: 4, price: 15, book: 80, shop: "librairie", d: "Pour les jours gris." },
+  brownie: { n: "Brownies",           c: "#6B4A33", needs: { cacao: 1, farine: 1, beurre: 1, oeufs: 1 }, steps: ["Mélanger", "Cuire au four"], yield: 6, price: 19, book: 100, shop: "librairie", d: "Le péché mignon de Basile." },
+};
+
+// Jour d'arrivée des nouveautés dans les boutiques (le reste est là dès le début)
+const UNLOCK = {
+  // recettes à la librairie
+  chausson: 4, chantilly: 4, sandwich: 4, gaufre: 4,
+  brioche: 7, choco: 7, muffin: 7, truiteT: 7,
+  flan: 10, roule: 10, financier: 10, saumonT: 10,
+  brownie: 13, salade: 13, soupe: 13,
+  // brocante
+  guirlande: 3, griffoir: 3, plante: 3, tableau: 3,
+  lampe: 6, tapis: 6, fauteuil: 6,
+  gramophone: 9, aquarium: 9,
+  // animalerie
+  brume: 3, biscotte: 3, pompon: 3,
+  moka: 6, caline: 6,
+  plume: 9, noisette: 9, filou: 9,
+};
+const unlocked = (id) => S.day >= (UNLOCK[id] || 1);
+const DECOR = {
+  // tip : bonus de pourboires · toy : les chats s'ennuient moins vite
+  coussin:    { n: "Coussin moelleux",    p: 40,  c: "#F2C46D", d: "Un chat timide pourrait l'adopter…" },
+  panier:     { n: "Panier en osier",     p: 45,  c: "#D8B78A", d: "Parfait pour les siestes." },
+  pelote:     { n: "Pelote de laine",     p: 20,  c: "#E9A9B0", d: "Jouet : les chats restent heureux plus longtemps.", toy: 0.15 },
+  griffoir:   { n: "Griffoir en corde",   p: 35,  c: "#C9A27A", d: "Jouet : les chats restent heureux plus longtemps.", toy: 0.15 },
+  bougies:    { n: "Bougies de table",    p: 25,  c: "#F7DFA0", d: "+5 % de pourboires", tip: 0.05 },
+  pot:        { n: "Pot de fleurs",       p: 30,  c: "#D9826B", d: "+5 % de pourboires", tip: 0.05 },
+  guirlande:  { n: "Guirlande lumineuse", p: 35,  c: "#E9A9B0", d: "+5 % de pourboires", tip: 0.05 },
+  plante:     { n: "Plante suspendue",    p: 40,  c: "#8FAF8A", d: "+5 % de pourboires", tip: 0.05 },
+  tableau:    { n: "Tableau de paysage",  p: 50,  c: "#9CC3D2", d: "+5 % de pourboires", tip: 0.05 },
+  lampe:      { n: "Lampe tamisée",       p: 55,  c: "#F7DFA0", d: "+5 % de pourboires", tip: 0.05 },
+  tapis:      { n: "Grand tapis tressé",  p: 60,  c: "#C9677A", d: "+5 % de pourboires", tip: 0.05 },
+  fauteuil:   { n: "Fauteuil en velours", p: 80,  c: "#8C5E9E", d: "Une chatte très élégante en rêve…" },
+  gramophone: { n: "Gramophone",          p: 120, c: "#C99A3E", d: "+10 % de pourboires et une jolie mélodie", tip: 0.10 },
+  aquarium:   { n: "Aquarium",            p: 150, c: "#86B3C6", d: "Jouet géant ! Et un chat curieux pourrait venir…", toy: 0.30 },
+};
+
+const CATS = {
+  caramel:  { n: "Caramel",  fur: "#E59A5B", eye: "#4A3326", trait: "Gourmand",    likes: "Le poisson grillé, les genoux des clients", story: "Il dormait déjà sur le comptoir le jour où tu as ouvert les volets.", hint: "" },
+  brume:    { price: 90, n: "Brume",    fur: "#9A9490", eye: "#F2C46D", trait: "Timide",      likes: "Les coussins près de la fenêtre, la pluie", story: "Elle observait le café depuis la ruelle, n'osant pas entrer.", hint: "Elle cherche un coussin moelleux où se blottir." },
+  biscotte: { price: 90, n: "Biscotte", fur: "#F6EEDF", eye: "#4A3326", trait: "Joueur",      likes: "Les paniers en osier, les pelotes", story: "Il est arrivé caché dans un panier livré par la brocante.", hint: "Il adore les paniers en osier." },
+  moka:     { price: 120, n: "Moka",     fur: "#3E3433", eye: "#F2C46D", trait: "Câlin",       likes: "Les cafés animés, les caresses", story: "Elle choisit toujours le client qui a le plus besoin de réconfort.", hint: "Elle aime les cafés bien animés (20 clients servis)." },
+  plume:    { price: 150, n: "Plume",    fur: "#E8E2DA", eye: "#6E8FB0", trait: "Majestueuse", likes: "Le velours, qu'on l'admire", story: "Elle est entrée un matin, s'est installée dans le fauteuil, et n'en est plus jamais repartie.", hint: "Elle rêve d'un fauteuil en velours." },
+  noisette: { price: 150, n: "Noisette", fur: "#A4724A", eye: "#4F6B4A", trait: "Curieux",     likes: "Les poissons rouges (de loin), les boîtes", story: "Il a passé trois jours le nez collé à l'aquarium avant d'oser entrer.", hint: "Il resterait des heures devant un aquarium." },
+  mistigri: { price: 70,  refuge: true, n: "Mistigri", fur: "#8C8580", eye: "#F2C46D", trait: "Rescapé",   likes: "Le calme, les plaids", story: "Trouvé sous la pluie par Suzon, il ronronne dès qu'on prononce son nom.", hint: "Il attend à l'Animalerie Les Moustaches." },
+  reglisse: { price: 100, refuge: true, n: "Réglisse", fur: "#2F2826", eye: "#9CC3D2", trait: "Farceur",   likes: "Faire tomber les cuillères", story: "Il a déjà volé trois sachets de sucre. Personne ne sait où il les cache.", hint: "Il attend à l'Animalerie Les Moustaches." },
+  pompon:   { price: 120, refuge: true, n: "Pompon",   fur: "#F2B37A", eye: "#4A3326", trait: "Paresseux", likes: "Dormir, dormir encore", story: "Il dort 20 heures par jour et considère que c'est déjà beaucoup d'efforts.", hint: "Il attend à l'Animalerie Les Moustaches." },
+  caline:   { price: 140, refuge: true, n: "Câline",   fur: "#F6EEDF", eye: "#6F9468", trait: "Douce",     likes: "Les genoux, les chansons", story: "Une chatte tricolore qui choisit toujours les clients un peu tristes.", hint: "Elle attend à l'Animalerie Les Moustaches." },
+  filou:    { price: 170, refuge: true, n: "Filou",    fur: "#F1E4CF", eye: "#6E8FB0", trait: "Bavard",    likes: "Parler (beaucoup), les cartons", story: "Un siamois qui commente chaque commande d'un long miaulement.", hint: "Il attend à l'Animalerie Les Moustaches." },
+  pistache: { n: "Pistache", fur: "#B9A27A", eye: "#4F6B4A", trait: "Explorateur", likes: "Les quais, l'odeur du poisson", story: "Il a traversé le pont réparé le premier jour, la queue bien haute.", hint: "Il vit de l'autre côté de la rivière…" },
+};
+
+const VILLAGERS = [
+  { n: "Léon", role: "le facteur", c: "#F2C46D", fav: "tarte", stories: [
+    "Léon t'avoue qu'il connaît chaque chat du village par son prénom. « C'est le métier ! »",
+    "Il te montre une vieille carte postale du café, du temps où il s'appelait déjà « Les Ronrons ».",
+    "Léon prend sa retraite l'an prochain. Il dit qu'il viendra ici tous les matins, « pour le facteur, c'est la meilleure tournée »." ] },
+  { n: "Margot", role: "la fleuriste", c: "#E9A9B0", fav: "the", stories: [
+    "Margot te confie qu'elle parle à ses fleurs. « Elles poussent mieux, je te jure. »",
+    "Elle rêve de faire un jardin sur le toit de sa boutique. Tu lui promets d'y goûter le premier thé.",
+    "Margot a planté des tulipes devant ton café pendant la nuit. Elles forment un petit chat." ] },
+  { n: "Papi Jules", role: "le pêcheur", c: "#9CC3D2", fav: "soupe", stories: [
+    "Papi Jules raconte qu'il a pêché une truite « grande comme ça » en 1974. Personne ne l'a crue.",
+    "Il sort de sa poche une photo de Jeanne, souriante devant ce même café.",
+    "« Jeanne aurait adoré ce que tu as fait de l'endroit. » Il te laisse sa vieille canne en souvenir." ] },
+  { n: "Madame Rose", role: "l'épicière", c: "#C9B4C9", fav: "fraise", stories: [
+    "Madame Rose a un potager secret derrière l'épicerie. Elle t'y emmène goûter une fraise.",
+    "Elle t'apprend à reconnaître une rhubarbe bien mûre. « La couleur ne ment jamais. »",
+    "Madame Rose te donne la clé de son potager. « Sers-toi quand tu veux, ma grande. »" ] },
+  { n: "Lucie", role: "l'institutrice", c: "#A9C4A0", fav: "cookie", stories: [
+    "Lucie corrige ses copies au café. Elle dit que les chats l'aident à être plus indulgente.",
+    "Ses élèves ont dessiné tes chats. Elle t'offre les dessins pour le mur.",
+    "Lucie organise la sortie de fin d'année… au café ! Vingt enfants et cinq chats, ça promet." ] },
+  { n: "Basile", role: "le menuisier", c: "#D8B78A", fav: "brioche", stories: [
+    "Basile a fabriqué la moitié des meubles du village. Il reconnaît ses chaises au café.",
+    "Il te montre ses plans pour un arbre à chat géant. « Juste au cas où. »",
+    "Basile a sculpté une petite enseigne en bois pour le café, avec un chat endormi dessus." ] },
+  { n: "Inès", role: "l'étudiante", c: "#B5C7E6", fav: "choco", stories: [
+    "Inès révise ses examens au fond du café. Moka vient toujours s'asseoir sur ses notes.",
+    "Elle a eu son examen ! Elle dit que c'est grâce au chocolat chaud. Et un peu à Moka.",
+    "Inès écrit un roman qui se passe dans un café à chats. Tu es le personnage principal." ] },
+];
+const STORY_AT = [2, 5, 8]; // cœurs nécessaires pour chaque confidence
+
+
+const LETTERS = [
+  { from: "Léon", text: "Le café sent si bon le matin que je fais un détour exprès. Tiens, quelques pièces pour la caisse du pont !", coins: 20 },
+  { from: "Margot", text: "Merci pour le thé de l'autre jour. Je t'ai laissé un bouquet sur le pas de la porte.", rep: 1 },
+  { from: "Papi Jules", text: "Ton chat roux m'a volé une sardine. Je ne lui en veux pas. Enfin, un peu.", coins: 0 },
+  { from: "Lucie", text: "Les enfants voudraient venir voir les chats mercredi. Prépare des cookies !", coins: 10 },
+  { from: "Basile", text: "Si un jour le pont est réparé, je t'aiderai à installer les planches.", coins: 0 },
+];
+
+const PROJECTS = { // un nouveau projet apparaît tous les 3 jours, dans cet ordre
+  pont:      { n: "Le vieux pont",        goal: 300, c: "#A97C5A", d: "Réparer le pont pour rejoindre l'autre rive.", fx: "Ouvre la boulangerie, la librairie (recettes) et la poissonnerie" },
+  lanternes: { n: "Lanternes du village", goal: 120, c: "#F2C46D", d: "Des lanternes sur la place pour les soirées d'été.", fx: "+1 réputation chaque jour" },
+  fontaine:  { n: "Fontaine fleurie",     goal: 150, c: "#86B3C6", d: "Remettre l'eau dans la vieille fontaine et l'entourer de fleurs.", fx: "Les clients sont 25 % plus patients" },
+  jardin:    { n: "Jardin des chats",     goal: 350, c: "#8FAF8A", d: "Un jardin clos plein d'herbe à chat et de cachettes.", fx: "Les chats restent heureux plus longtemps" },
+  kiosque:   { n: "Kiosque à musique",    goal: 250, c: "#D9826B", d: "Un kiosque où Basile joue de l'accordéon le dimanche.", fx: "+5 % de pourboires" },
+  terrasse:  { n: "Terrasse du café",     goal: 400, c: "#E9A9B0", d: "Des parasols et des tables dehors, devant le café.", fx: "+2 clients par jour et +5 % de pourboires" },
+  moulin:    { n: "Le moulin de la colline", goal: 600, c: "#C9A27A", d: "Faire tourner à nouveau les ailes du vieux moulin.", fx: "2 farines et 1 miel offerts chaque matin", req: "pont" },
+  gare:      { n: "La gare de Bruyère",   goal: 900, c: "#6E8FB0", d: "Rouvrir la petite gare : le train repasse par le village !", fx: "Des touristes arrivent : +3 clients par jour, ils paient 50 % de plus", req: "pont" },
+};
+const PROJECT_EVERY = 3;
+const projDay = (id) => 1 + Object.keys(PROJECTS).indexOf(id) * PROJECT_EVERY;
+const TOURISTS = [
+  { n: "Hans", c: "#9FC2A8" }, { n: "Emma", c: "#F2B6A0" }, { n: "Kenji", c: "#B5C7E6" },
+  { n: "Sofia", c: "#E6C17A" }, { n: "Liam", c: "#C9B4C9" }, { n: "Ana", c: "#F2C46D" },
+];
+const BRIDGE_GOAL = 300;
+// une sauvegarde par joueur du lanceur (sinon une seule, « local »)
+const JOUEUR = (() => { try { return (window.MesJeux && MesJeux.session()) || JSON.parse(localStorage.getItem("mesjeux_session")); } catch (e) { return null; } })();
+const SAVE_KEY = "ronrons-bruyere-save-v1-" + (JOUEUR && JOUEUR.id ? JOUEUR.id : "local");
+
+// ---------- État ----------
+function newGame() {
+  return {
+    day: 1, phase: "matin", coins: 300, rep: 0, servedTotal: 0,
+    pantry: { farine: 1, oeufs: 2 },
+    showcase: {},
+    recipes: ["tarte", "the", "fraise"],
+    decor: [],
+    cats: ["caramel"],
+    mood: { caramel: 70 },
+    bridge: 0,
+    letterRead: false,
+    bouquet: false,
+    projects: {},    // pièces versées pour chaque projet
+    weather: "soleil",
+    friend: {},      // points d'amitié par villageois
+    stories: {},     // nombre de confidences débloquées
+  };
+}
+let S = null;               // état sauvegardé
+let ui = { screen: "title", shopTab: "epicerie", cart: {}, kitchenSel: "tarte", cook: null, modal: null };
+let cafe = null;            // état temporaire du service
+
+function save() { try { localStorage.setItem(SAVE_KEY, JSON.stringify(S)); } catch (e) {} }
+function load() { try { const r = localStorage.getItem(SAVE_KEY); return r ? JSON.parse(r) : null; } catch (e) { return null; } }
+function clearSave() { try { localStorage.removeItem(SAVE_KEY); } catch (e) {} }
+
+const season = () => SEASONS[Math.floor((S.day - 1) / DAYS_PER_SEASON) % 4];
+const dayInSeason = () => ((S.day - 1) % DAYS_PER_SEASON) + 1;
+const projDone = (id) => ((S.projects || {})[id] || 0) >= PROJECTS[id].goal;
+const projVisible = (id) => S.day >= projDay(id) || ((S.projects || {})[id] || 0) > 0;
+const projOpen = (id) => projVisible(id) && (!PROJECTS[id].req || projDone(PROJECTS[id].req));
+const bridgeDone = () => projDone("pont");
+const WEATHER = { soleil: "Ensoleillé", pluie: "Pluie", neige: "Neige" };
+const WEATHER_ODDS = { "Printemps": { soleil: 0.6, pluie: 0.4 }, "Été": { soleil: 0.85, pluie: 0.15 }, "Automne": { soleil: 0.4, pluie: 0.6 }, "Hiver": { neige: 0.55, soleil: 0.25, pluie: 0.2 } };
+const FESTIVALS = { "Printemps": "Fête des fleurs", "Été": "Marché nocturne", "Automne": "Fête des récoltes", "Hiver": "Marché de Noël" };
+const festival = () => dayInSeason() === 6 ? FESTIVALS[season()] : null;
+const weather = () => S.weather || "soleil";
+function rollWeather() { const o = WEATHER_ODDS[season()]; let r = Math.random(); for (const [k, p] of Object.entries(o)) { if ((r -= p) <= 0) return k; } return "soleil"; }
+const clientsPerDay = () => 8 + (projDone("terrasse") ? 2 : 0) + (projDone("gare") ? 3 : 0) + (weather() === "pluie" ? 2 : 0) + (weather() === "neige" ? 1 : 0) + (festival() ? 3 : 0);
+const qty = (k) => S.pantry[k] || 0;
+const canCook = (id) => Object.entries(RECIPES[id].needs).every(([k, v]) => qty(k) >= v);
+const decorBonus = () => (festival() ? 0.2 : 0) + S.decor.reduce((t, d) => t + (DECOR[d]?.tip || 0), 0) + (projDone("kiosque") ? 0.05 : 0) + (projDone("terrasse") ? 0.05 : 0) + (typeof S.bouquet === "number" ? S.bouquet : S.bouquet ? 0.1 : 0);
+const toyFactor = () => Math.max(0.4, 1 - S.decor.reduce((t, d) => t + (DECOR[d]?.toy || 0), 0) - (S.bouquetId === "lavande" ? 0.15 : 0) - (projDone("jardin") ? 0.1 : 0));
+const avgMood = () => { const m = S.cats.map((c) => S.mood[c] ?? 60); return m.reduce((a, b) => a + b, 0) / m.length; };
+const catBonus = () => Math.max(0, (avgMood() - 50) / 250); // jusqu'à +20 %
+const repLevel = () => 1 + Math.floor(S.rep / 10);
+const hearts = (name) => Math.min(10, Math.floor(((S.friend || {})[name] || 0) / 3));
+
+// ---------- Utilitaires d'affichage ----------
+const $stage = document.getElementById("stage");
+const esc = (s) => String(s).replace(/[&<>"']/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]));
+const coinPill = () => `<span class="pill dark"><span class="coin"></span>${S.coins}</span>`;
+const datePill = (time) => `<span class="pill">${season()} · Jour ${dayInSeason()}${time ? " · " + time : ""} · ${festival() ? festival() : WEATHER[weather()]}</span>`;
+function weatherFX(w, h, n = 60) {
+  if (weather() === "soleil") return "";
+  const snow = weather() === "neige";
+  let out = "";
+  for (let i = 0; i < n; i++) {
+    const x = (i * 97.3) % w, d = (i * 0.37) % (snow ? 6 : 1.2), dur = snow ? 5 + (i % 5) : 0.7 + (i % 4) * 0.12;
+    out += snow
+      ? `<i style="position:absolute;left:${x}px;top:-10px;width:${4 + (i % 3) * 2}px;height:${4 + (i % 3) * 2}px;border-radius:50%;background:#fff;opacity:.9;animation:fallSnow ${dur}s linear ${-d}s infinite;--h:${h + 20}px"></i>`
+      : `<i style="position:absolute;left:${x}px;top:-30px;width:2px;height:18px;border-radius:1px;background:rgba(220,236,245,.8);transform:rotate(12deg);animation:fallRain ${dur}s linear ${-d}s infinite;--h:${h + 40}px"></i>`;
+  }
+  return `<div aria-hidden="true" style="position:absolute;left:0;top:0;width:${w}px;height:${h}px;overflow:hidden;pointer-events:none">${out}</div>`;
+}
+
+function catSVG(id, size = 64, sleeping = false) {
+  const c = CATS[id];
+  const eyes = sleeping
+    ? `<path d="M20 36 q4 -3 8 0 M36 36 q4 -3 8 0" stroke="#4A3326" stroke-width="2.5" fill="none" stroke-linecap="round"/>`
+    : `<circle cx="24" cy="34" r="3.2" fill="${c.eye}"/><circle cx="40" cy="34" r="3.2" fill="${c.eye}"/>`;
+  const stroke = c.fur === "#F6EEDF" || c.fur === "#F1E4CF" ? ` stroke="#C99A6B" stroke-width="2"` : "";
+  const patch = {
+    biscotte: `<path d="M14 20 L18 6 L28 15Z" fill="#E59A5B"/>`,
+    pistache: `<path d="M22 18 h20 M20 24 h24" stroke="#8A7350" stroke-width="3" stroke-linecap="round"/>`,
+    mistigri: `<path d="M22 18 h20 M20 24 h24 M10 34 h6 M48 34 h6" stroke="#6B6461" stroke-width="3" stroke-linecap="round"/>`,
+    reglisse: `<path d="M24 38 Q32 30 40 38 Q44 50 32 56 Q20 50 24 38Z" fill="#F6F2EA"/>`,
+    pompon:   `<path d="M24 40 Q32 34 40 40 Q42 52 32 56 Q22 52 24 40Z" fill="#FBF5EA"/><path d="M8 30 q-6 2 -4 8 M56 30 q6 2 4 8" stroke="#F2B37A" stroke-width="4" stroke-linecap="round"/>`,
+    caline:   `<path d="M14 22 L18 6 L28 15 Q24 26 14 30Z" fill="#E59A5B"/><path d="M50 22 L46 6 L38 15 Q42 28 54 30Z" fill="#3E3433"/>`,
+    filou:    `<path d="M12 22 L16 4 L26 14Z M52 22 L48 4 L38 14Z" fill="#5A4234"/><ellipse cx="32" cy="42" rx="11" ry="9" fill="#7A5A44"/>`,
+  }[id] || "";
+  return `<svg class="catsvg" width="${size}" height="${size}" viewBox="0 0 64 64" aria-hidden="true">
+    <path d="M12 22 L16 4 L28 15 Q32 14 36 15 L48 4 L52 22 Q57 31 54 42 Q50 58 32 58 Q14 58 10 42 Q7 31 12 22Z" fill="${c.fur}"${stroke}/>
+    ${patch}${eyes}<path d="M29 41 h6 l-3 3z" fill="#B76A55"/></svg>`;
+}
+function silhouetteSVG(size = 64) {
+  return `<svg width="${size}" height="${size}" viewBox="0 0 64 64" aria-hidden="true"><path d="M12 22 L16 4 L28 15 Q32 14 36 15 L48 4 L52 22 Q57 31 54 42 Q50 58 32 58 Q14 58 10 42 Q7 31 12 22Z" fill="#D8C7A8"/><text x="32" y="44" text-anchor="middle" font-size="22" font-weight="800" fill="#A99878" font-family="sans-serif">?</text></svg>`;
+}
+
+let toastTimer = null;
+function toast(msg) {
+  const old = $stage.querySelector(".toast"); if (old) old.remove();
+  const t = document.createElement("div"); t.className = "toast"; t.textContent = msg; $stage.appendChild(t);
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.remove(), 2200);
+}
+
+// ---------- Son (Web Audio, tout est synthétisé : aucun fichier) ----------
+const SND = { ctx: null, master: null, music: null, sfx: null, delay: null, on: true, timer: null, next: 0, beat: 0 };
+try { SND.on = localStorage.getItem("ronrons-sound") !== "off"; } catch (e) {}
+function audioInit() {
+  if (SND.ctx || !(window.AudioContext || window.webkitAudioContext)) { if (SND.ctx && SND.ctx.state === "suspended") SND.ctx.resume(); return; }
+  const ctx = new (window.AudioContext || window.webkitAudioContext)();
+  SND.ctx = ctx;
+  SND.master = ctx.createGain(); SND.master.gain.value = SND.on ? 0.7 : 0; SND.master.connect(ctx.destination);
+  SND.music = ctx.createGain(); SND.music.gain.value = 0.22;
+  const lp = ctx.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 3200; lp.Q.value = 0.4;
+  SND.music.connect(lp); lp.connect(SND.master);
+  SND.sfx = ctx.createGain(); SND.sfx.gain.value = 0.5; SND.sfx.connect(SND.master);
+  // petit écho doux pour la musique
+  SND.delay = ctx.createDelay(); SND.delay.delayTime.value = 0.5625; // une croche pointée à 80 bpm
+  const fb = ctx.createGain(); fb.gain.value = 0.28; const wet = ctx.createGain(); wet.gain.value = 0.35;
+  SND.delay.connect(fb); fb.connect(SND.delay); SND.delay.connect(wet); wet.connect(SND.music);
+  SND.next = ctx.currentTime + 0.1;
+  SND.timer = setInterval(scheduleMusic, 120);
+}
+function toggleSound() {
+  SND.on = !SND.on;
+  try { localStorage.setItem("ronrons-sound", SND.on ? "on" : "off"); } catch (e) {}
+  if (SND.master) SND.master.gain.setTargetAtTime(SND.on ? 0.7 : 0, SND.ctx.currentTime, 0.1);
+}
+const mtof = (m) => 440 * Math.pow(2, (m - 69) / 12);
+function tone(freq, t, dur, { type = "sine", vol = 0.3, attack = 0.01, out = SND.sfx, glide = 0 } = {}) {
+  const ctx = SND.ctx, o = ctx.createOscillator(), g = ctx.createGain();
+  o.type = type; o.frequency.setValueAtTime(freq, t); if (glide) o.frequency.exponentialRampToValueAtTime(glide, t + dur);
+  g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + attack); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+  o.connect(g); g.connect(out); o.start(t); o.stop(t + dur + 0.05);
+  return g;
+}
+function noise(t, dur, { freq = 800, q = 1, vol = 0.2, type = "bandpass", lfo = 0, out = SND.sfx } = {}) {
+  const ctx = SND.ctx, len = Math.floor(ctx.sampleRate * dur), buf = ctx.createBuffer(1, len, ctx.sampleRate), d = buf.getChannelData(0);
+  for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+  const src = ctx.createBufferSource(); src.buffer = buf;
+  const f = ctx.createBiquadFilter(); f.type = type; f.frequency.value = freq; f.Q.value = q;
+  const g = ctx.createGain(); g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + 0.05); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+  src.connect(f); f.connect(g); g.connect(out);
+  if (lfo) { const l = ctx.createOscillator(), lg = ctx.createGain(); l.frequency.value = lfo; lg.gain.value = vol * 0.9; l.connect(lg); lg.connect(g.gain); l.start(t); l.stop(t + dur); }
+  src.start(t); src.stop(t + dur);
+}
+function sfx(name) {
+  if (!SND.ctx || !SND.on) return;
+  const t = SND.ctx.currentTime;
+  switch (name) {
+    case "click": tone(740, t, 0.06, { vol: 0.12 }); break;
+    case "pop": tone(380, t, 0.12, { vol: 0.25, glide: 900 }); break;
+    case "knead": tone(140, t, 0.15, { vol: 0.35, type: "triangle", glide: 90 }); break;
+    case "swish": noise(t, 0.12, { freq: 1800, q: 0.8, vol: 0.08 }); break;
+    case "step": [72, 76].forEach((m, i) => tone(mtof(m), t + i * 0.08, 0.25, { type: "triangle", vol: 0.18 })); break;
+    case "done": [72, 76, 79, 84].forEach((m, i) => tone(mtof(m), t + i * 0.1, 0.5, { type: "triangle", vol: 0.2 })); break;
+    case "coin": tone(988, t, 0.12, { type: "square", vol: 0.06 }); tone(1319, t + 0.08, 0.3, { type: "square", vol: 0.06 }); break;
+    case "bell": [1568, 2093].forEach((f, i) => tone(f, t + i * 0.12, 1.1, { vol: 0.12 })); break;
+    case "ding": tone(1760, t, 1.2, { vol: 0.16 }); tone(2637, t, 0.8, { vol: 0.05 }); break;
+    case "oven": noise(t, 0.5, { freq: 300, q: 0.5, vol: 0.12, type: "lowpass" }); break;
+    case "purr": noise(t, 1.2, { freq: 220, q: 0.7, vol: 0.35, type: "lowpass", lfo: 24 }); break;
+    case "heart": [79, 83, 86].forEach((m, i) => tone(mtof(m), t + i * 0.09, 0.45, { vol: 0.14 })); break;
+    case "page": noise(t, 0.18, { freq: 3000, q: 0.6, vol: 0.06 }); break;
+  }
+}
+// Musique : une petite valse lo-fi composée (16 mesures en fa majeur, 80 bpm),
+// piano électrique, basse ronde, boîte à musique et percussions feutrées.
+const EIGHTH = 0.375;
+const PROG = [
+  { v: [53, 57, 60, 64], b: 41 }, { v: [52, 57, 60, 64], b: 45 }, { v: [50, 57, 60, 65], b: 38 }, { v: [50, 53, 57, 62], b: 46 },
+  { v: [55, 58, 62, 65], b: 43 }, { v: [52, 55, 58, 64], b: 36 }, { v: [53, 57, 60, 64], b: 41 }, { v: [52, 55, 58, 64], b: 36 },
+];
+const MELODY = [ // [note MIDI ou null, durée en croches] — 8 croches par mesure
+  [[69,2],[72,2],[76,3],[74,1]], [[72,2],[69,2],[67,2],[69,2]], [[65,2],[69,2],[74,3],[72,1]], [[70,4],[69,2],[67,2]],
+  [[67,2],[70,2],[74,2],[72,2]], [[70,2],[69,2],[67,4]], [[69,2],[72,2],[77,3],[76,1]], [[74,2],[72,2],[null,4]],
+  [[77,3],[76,1],[74,2],[72,2]], [[76,2],[72,2],[69,4]], [[74,3],[72,1],[69,2],[65,2]], [[67,2],[69,2],[70,4]],
+  [[70,2],[74,2],[77,2],[76,2]], [[74,2],[72,2],[70,2],[67,2]], [[69,4],[72,2],[69,2]], [[65,6],[null,2]],
+];
+const MEL_AT = MELODY.map((bar) => { const m = {}; let e = 0; bar.forEach(([n, d]) => { if (n) m[e] = [n, d]; e += d; }); return m; });
+function ePiano(m, t, dur, vol) {
+  const f = mtof(m);
+  tone(f, t, dur, { type: "sine", vol, attack: 0.015, out: SND.music });
+  tone(f * 2.003, t, dur * 0.35, { type: "sine", vol: vol * 0.25, attack: 0.005, out: SND.music });
+}
+function musicBox(m, t, dur, vol) {
+  const f = mtof(m);
+  const g1 = tone(f, t, Math.max(0.9, dur), { type: "sine", vol, attack: 0.005, out: SND.music });
+  tone(f * 3, t, 0.35, { type: "triangle", vol: vol * 0.12, attack: 0.002, out: SND.music });
+  g1.connect(SND.delay);
+}
+function scheduleMusic() {
+  const ctx = SND.ctx; if (!ctx) return;
+  while (SND.next < ctx.currentTime + 0.5) {
+    const t = SND.next, e = SND.beat % 128, loop = Math.floor(SND.beat / 128);
+    const bar = Math.floor(e / 8), pos = e % 8, ch = PROG[bar % 8];
+    const swing = pos % 2 ? 0.04 : 0; // léger swing
+    // piano électrique : temps 1 et contretemps du 3
+    if (pos === 0) ch.v.forEach((m, i) => ePiano(m, t + i * 0.012, EIGHTH * 5, 0.045));
+    if (pos === 5) ch.v.slice(1).forEach((m) => ePiano(m, t + swing, EIGHTH * 2.5, 0.03));
+    // basse ronde
+    if (pos === 0) tone(mtof(ch.b), t, EIGHTH * 3.6, { type: "triangle", vol: 0.16, attack: 0.02, out: SND.music });
+    if (pos === 4) tone(mtof(ch.b + 7), t, EIGHTH * 3.2, { type: "triangle", vol: 0.12, attack: 0.02, out: SND.music });
+    // percussions feutrées
+    if (pos === 0 || pos === 4) tone(80, t, 0.16, { type: "sine", vol: 0.22, attack: 0.003, glide: 42, out: SND.music });
+    if (pos === 2 || pos === 6) noise(t, 0.09, { freq: 2200, q: 0.7, vol: 0.035, out: SND.music });
+    if (pos % 2) noise(t + swing, 0.04, { freq: 7000, q: 0.9, vol: 0.018, type: "highpass", out: SND.music });
+    // boîte à musique (une boucle sur trois : seulement les accords, pour respirer)
+    if (loop % 3 !== 2) {
+      const n = MEL_AT[bar][pos];
+      if (n) {
+        musicBox(n[0], t + swing, n[1] * EIGHTH, 0.11);
+        if (S && S.decor && S.decor.includes("gramophone")) tone(mtof(n[0] - 12), t + swing, n[1] * EIGHTH, { type: "triangle", vol: 0.04, attack: 0.03, out: SND.music });
+      }
+    } else if (pos === 0 || pos === 3 || pos === 6) {
+      musicBox(ch.v[(pos / 3) % 4] + 12, t, 0.9, 0.06); // arpège doux
+    }
+    SND.next += EIGHTH; SND.beat++;
+  }
+}
+function soundButton() {
+  return `<button data-a="sound" aria-label="${SND.on ? "Couper le son" : "Activer le son"}" aria-pressed="${SND.on}" title="Son" style="position:absolute;left:50%;top:18px;transform:translateX(-50%);z-index:30;width:46px;height:46px;border:0;border-radius:50%;background:var(--cream);box-shadow:0 4px 0 var(--line);display:flex;align-items:center;justify-content:center">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#4A3326" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z" fill="#F2C46D"/>${SND.on ? `<path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a7.5 7.5 0 0 1 0 11"/>` : `<path d="M16 9l5 6M21 9l-5 6"/>`}</svg></button>`;
+}
+
+// ---------- Navigation ----------
+function go(screen) {
+  ui.screen = screen; ui.modal = null;
+  if (screen === "shop") ui.cart = {};
+  if (screen === "kitchen" && !cafe) S.phase = "midi";
+  render();
+}
+
+// ---------- Écrans ----------
+function render() {
+  if (ui.screen !== "cafe") stopCafe();
+  const views = { projects: viewProjects, friends: viewFriends, title: viewTitle, village: viewVillage, shop: viewShop, kitchen: viewKitchen, cafe: viewCafe, album: viewAlbum, summary: viewSummary };
+  $stage.innerHTML = views[ui.screen]() + soundButton() + (ui.modal ? ui.modal() : "");
+  if (ui.screen === "cafe" && cafe) animateCats();
+  syncCookTimer();
+}
+
+function viewTitle() {
+  const has = !!load();
+  return `
+  <div style="position:absolute;inset:0;background:#CFE3E6"></div>
+  <svg width="1280" height="720" viewBox="0 0 1280 720" aria-hidden="true" style="position:absolute;inset:0">
+    <circle cx="1080" cy="130" r="56" fill="#F7DFA0"/>
+    <ellipse cx="260" cy="120" rx="90" ry="26" fill="#EAF3F4"/><ellipse cx="330" cy="104" rx="60" ry="22" fill="#EAF3F4"/><ellipse cx="860" cy="80" rx="70" ry="20" fill="#EAF3F4"/>
+    <ellipse cx="300" cy="640" rx="620" ry="210" fill="#A9C4A0"/><ellipse cx="1060" cy="660" rx="560" ry="230" fill="#8FAF8A"/>
+    <rect x="0" y="600" width="1280" height="120" fill="#7C9C76"/>
+    <g transform="translate(760 300)">
+      <rect x="0" y="80" width="320" height="230" rx="6" fill="#F6EEDF"/><path d="M-24 92 L160 -10 L344 92 Z" fill="#D9826B"/>
+      <rect x="210" y="-6" width="34" height="60" fill="#8A5A3B"/>
+      <rect x="30" y="130" width="90" height="80" rx="8" fill="#F2C46D"/><rect x="72" y="130" width="6" height="80" fill="#8A5A3B"/><rect x="30" y="167" width="90" height="6" fill="#8A5A3B"/>
+      <rect x="200" y="160" width="80" height="150" rx="40" fill="#8A5A3B"/><circle cx="264" cy="240" r="5" fill="#F2C46D"/>
+      <rect x="40" y="100" width="240" height="22" rx="11" fill="#4F6B4A"/>
+      <path d="M30 230 h100 v14 h-100z" fill="#B76A55"/><circle cx="50" cy="226" r="9" fill="#E9A9B0"/><circle cx="74" cy="224" r="10" fill="#F2C46D"/><circle cx="100" cy="226" r="9" fill="#E9A9B0"/>
+    </g>
+  </svg>
+  <div style="position:absolute;left:700px;top:520px">${catSVG("caramel", 72)}</div>
+  <div style="position:absolute;left:1100px;top:548px">${catSVG("brume", 52, true)}</div>
+  <div style="position:absolute;left:96px;top:96px;display:flex;flex-direction:column;gap:28px;width:560px">
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <p style="margin:0;font-family:var(--font-title);font-weight:600;font-size:20px;letter-spacing:.08em;text-transform:uppercase;color:var(--sage)">Un café, des chats, quatre saisons</p>
+      <h1 style="font-weight:700;font-size:84px;line-height:.95">Les Ronrons<br>de Bruyère</h1>
+    </div>
+    <nav aria-label="Menu principal" style="display:flex;flex-direction:column;gap:12px;width:340px">
+      ${has ? `<button class="btn" data-a="continue" style="text-align:left;font-size:24px">Continuer</button>` : ""}
+      <button class="btn ${has ? "light" : ""}" data-a="new" style="text-align:left;font-size:22px">Nouvelle partie</button>
+      <button class="btn light" data-a="help" style="text-align:left;font-size:22px">Comment jouer</button>
+      <button class="btn light" data-a="launcher" style="text-align:left;font-size:22px">← Retour au lanceur</button>
+    </nav>
+  </div>
+  <p style="position:absolute;right:32px;bottom:20px;margin:0;font-size:13px;font-weight:700;color:#2F4A2C">${JOUEUR && JOUEUR.pseudo ? "Café de " + esc(JOUEUR.pseudo) + " · " : ""}version 1.0</p>`;
+}
+
+function hudTop(time, extraRight = "") {
+  return `<div class="hud"><div>${datePill(time)}<span class="pill">Réputation ${repLevel()}</span></div><div>${extraRight}${coinPill()}</div></div>`;
+}
+
+function viewVillage() {
+  const done = bridgeDone();
+  const far = done ? "" : "filter:grayscale(.9);opacity:.45;";
+  const letter = !S.letterRead;
+  return `
+  <div style="position:absolute;inset:0;background:${SEASON_TINT[season()]}"></div>
+  <svg width="1280" height="720" viewBox="0 0 1280 720" aria-hidden="true" style="position:absolute;inset:0">
+    <path d="M610 40 C 560 200, 700 290, 640 420 S 590 600, 680 760" stroke="rgba(0,0,0,.06)" stroke-width="112" fill="none"/>
+    <path d="M610 40 C 560 200, 700 290, 640 420 S 590 600, 680 760" stroke="#86B3C6" stroke-width="78" fill="none"/>
+    <path d="M610 40 C 560 200, 700 290, 640 420 S 590 600, 680 760" stroke="#A4CBDA" stroke-width="40" fill="none"/>
+    <g fill="none" stroke-linecap="round">
+      <path d="M160 250 C 220 290, 250 300, 300 300 C 360 300, 380 270, 430 250 M300 300 C 300 360, 330 400, 370 450 M300 300 C 250 340, 190 380, 140 450 M300 300 C 400 320, 480 330, 575 330 M150 450 C 160 520, 170 560, 180 600" stroke="#D8C7A8" stroke-width="34"/>
+      <path d="M160 250 C 220 290, 250 300, 300 300 C 360 300, 380 270, 430 250 M300 300 C 300 360, 330 400, 370 450 M300 300 C 250 340, 190 380, 140 450 M300 300 C 400 320, 480 330, 575 330 M150 450 C 160 520, 170 560, 180 600" stroke="#EFE2C3" stroke-width="24"/>
+    </g>
+    <circle cx="300" cy="300" r="50" fill="#EADBB8"/><circle cx="300" cy="300" r="20" fill="#B9AA8C"/><circle cx="300" cy="300" r="14" fill="#86B3C6"/>
+    ${house(76, 112, "#F6EEDF", "#D9826B", "#F2C46D")}
+    ${shopHouse(356, 104, "#FBF5EA", "#4F6B4A", "#D9826B")}
+    ${house(64, 408, "#F6EEDF", "#6E8FB0", "#BFD8E0")}
+    ${shopHouse(300, 400, "#FCEFF0", "#C9677A", "#E9A9B0")}
+    ${house(130, 590, "#F6EEDF", "#A97C5A", "#F2C46D", .8)}
+    <g fill="#6F9468"><circle cx="420" cy="640" r="24"/><circle cx="452" cy="662" r="18"/></g>
+    <g fill="#6F9468"><circle cx="40" cy="96" r="30"/><circle cx="520" cy="110" r="26"/><circle cx="490" cy="470" r="24"/>${projDone("jardin") ? "" : `<circle cx="40" cy="580" r="28"/>`}</g>
+    <g fill="#7FA478"><circle cx="72" cy="80" r="26"/><circle cx="540" cy="140" r="20"/><circle cx="516" cy="496" r="18"/>${projDone("jardin") ? "" : `<circle cx="20" cy="620" r="22"/>`}</g>
+    <!-- détails du village -->
+    ${[[188,118],[468,112],[166,410],[880,96]].map(([x,y],i)=>`<g fill="#F1F1EE">${[0,1,2].map(k=>`<circle cx="${x}" cy="${y}" r="${6+k*2}" opacity="0"><animate attributeName="opacity" values="0;.85;0" dur="4s" begin="${k*1.3+i*.4}s" repeatCount="indefinite"/><animateTransform attributeName="transform" type="translate" values="0 0;${6+k*3} -34" dur="4s" begin="${k*1.3+i*.4}s" repeatCount="indefinite"/></circle>`).join("")}</g>`).join("")}
+    <g stroke="#C9A27A" stroke-width="4" stroke-linecap="round">${Array.from({length:9},(_,i)=>`<path d="M${30+i*16} 372 v-22"/>`).join("")}<path d="M26 356 h140 M26 366 h140"/></g>
+    <g>${[[30,380],[60,386],[92,380],[120,388],[148,380]].map(([x,y],i)=>`<circle cx="${x}" cy="${y}" r="6" fill="${["#E9A9B0","#F2C46D","#F7F0D0","#E06A6A","#B48ACB"][i]}"/>`).join("")}</g>
+    <g transform="translate(336 360)"><rect x="0" y="0" width="56" height="8" rx="3" fill="#A97C5A"/><rect x="0" y="-14" width="56" height="6" rx="3" fill="#A97C5A"/><rect x="4" y="8" width="5" height="14" fill="#6B4A33"/><rect x="47" y="8" width="5" height="14" fill="#6B4A33"/></g>
+    <g transform="translate(226 246)"><rect x="0" y="0" width="4" height="40" fill="#4A3326"/><path d="M-6 0 h16 l-3 -12 h-10z" fill="#4A3326"/><circle cx="2" cy="-6" r="4" fill="#F7DFA0"/></g>
+    <g transform="translate(476 300)"><rect x="0" y="0" width="4" height="40" fill="#4A3326"/><path d="M-6 0 h16 l-3 -12 h-10z" fill="#4A3326"/><circle cx="2" cy="-6" r="4" fill="#F7DFA0"/></g>
+    <g transform="translate(206 486)"><rect width="6" height="30" fill="#6B4A33"/><rect x="-8" y="-14" width="22" height="16" rx="6" fill="#E0B94F"/></g>
+    <!-- canards -->
+    <g><animateTransform attributeName="transform" type="translate" values="0 0;14 30;0 0" dur="14s" repeatCount="indefinite"/>
+      <g transform="translate(616 470)"><ellipse cx="0" cy="0" rx="12" ry="7" fill="#FBF5EA"/><circle cx="9" cy="-6" r="5" fill="#FBF5EA"/><path d="M13 -6 l6 1 l-6 2z" fill="#E0A04F"/></g>
+      <g transform="translate(596 486) scale(.7)"><ellipse cx="0" cy="0" rx="12" ry="7" fill="#F2C46D"/><circle cx="9" cy="-6" r="5" fill="#F2C46D"/><path d="M13 -6 l6 1 l-6 2z" fill="#E0A04F"/></g></g>
+    <!-- nénuphars -->
+    <g fill="#7FA478"><ellipse cx="660" cy="560" rx="10" ry="5"/><ellipse cx="640" cy="600" rx="8" ry="4"/></g><circle cx="662" cy="556" r="3" fill="#E9A9B0"/>
+    <!-- oiseaux -->
+    <g stroke="#4A3326" stroke-width="2.5" fill="none" stroke-linecap="round"><animateTransform attributeName="transform" type="translate" values="-80 0;1100 -40" dur="26s" repeatCount="indefinite"/><path d="M0 70 q6 -6 12 0 q6 -6 12 0"/><path d="M30 86 q5 -5 10 0 q5 -5 10 0"/></g>
+    <!-- papillons -->
+    ${[[250,380,"#F2C46D"],[460,560,"#E9A9B0"],[120,330,"#B5C7E6"]].map(([x,y,c],i)=>`<g><animateTransform attributeName="transform" type="translate" values="0 0;30 -20;60 6;20 24;0 0" dur="${7+i*2}s" repeatCount="indefinite"/><g transform="translate(${x} ${y})"><ellipse cx="-4" cy="0" rx="5" ry="7" fill="${c}"><animate attributeName="rx" values="5;1;5" dur=".4s" repeatCount="indefinite"/></ellipse><ellipse cx="4" cy="0" rx="5" ry="7" fill="${c}"><animate attributeName="rx" values="5;1;5" dur=".4s" repeatCount="indefinite"/></ellipse><rect x="-1" y="-6" width="2" height="12" fill="#4A3326"/></g></g>`).join("")}
+    <!-- petit chat qui se balade -->
+    <g><animateTransform attributeName="transform" type="translate" values="0 0;60 10;60 10;0 0" dur="16s" repeatCount="indefinite"/><g transform="translate(240 330) scale(.4)"><path d="M12 22 L16 4 L28 15 Q32 14 36 15 L48 4 L52 22 Q57 31 54 42 Q50 58 32 58 Q14 58 10 42 Q7 31 12 22Z" fill="#E59A5B"/><path d="M50 50 q26 4 20 -20" stroke="#E59A5B" stroke-width="8" fill="none" stroke-linecap="round"/></g></g>
+    <!-- herbes et fleurs éparses -->
+    <g stroke="#7FA478" stroke-width="2.5" stroke-linecap="round">${[[90,240],[420,380],[200,690],[470,640],[30,470],[540,250],[350,520]].map(([x,y])=>`<path d="M${x} ${y} v-8 M${x+5} ${y} v-11 M${x+10} ${y} v-7"/>`).join("")}</g>
+    <!-- refuge d'adoption -->
+    <g transform="translate(250 136) scale(.6)"><ellipse cx="80" cy="132" rx="92" ry="10" fill="rgba(0,0,0,.08)"/><rect x="6" y="48" width="148" height="82" rx="6" fill="#EEF5EC"/><path d="M-8 56 L80 4 L168 56Z" fill="#5E8C6A"/><rect x="64" y="80" width="32" height="50" rx="16" fill="#8A5A3B"/><circle cx="80" cy="36" r="14" fill="#FBF5EA"/><g transform="translate(68 24) scale(.38)"><path d="M12 22 L16 4 L28 15 Q32 14 36 15 L48 4 L52 22 Q57 31 54 42 Q50 58 32 58 Q14 58 10 42 Q7 31 12 22Z" fill="#5E8C6A"/></g><rect x="18" y="70" width="36" height="30" rx="6" fill="#F2C46D"/><rect x="108" y="70" width="36" height="30" rx="6" fill="#F2C46D"/></g>
+    <!-- projets réalisés -->
+    ${projDone("lanternes") ? `<path d="M226 250 Q300 226 380 252" stroke="#4A3326" stroke-width="1.5" fill="none"/>${[246,272,300,328,356].map((x,i)=>`<circle cx="${x}" cy="${244+Math.abs(i-2)*-3+8}" r="5" fill="#F7DFA0"><animate attributeName="opacity" values="1;.6;1" dur="${2+i*.3}s" repeatCount="indefinite"/></circle>`).join("")}<circle cx="228" cy="240" r="16" fill="#FFE9A8" opacity=".4"/><circle cx="478" cy="294" r="16" fill="#FFE9A8" opacity=".4"/>` : ""}
+    ${projDone("fontaine") ? `${Array.from({length:12},(_,i)=>{const a=i/12*Math.PI*2;return `<circle cx="${300+Math.cos(a)*40}" cy="${300+Math.sin(a)*40}" r="6" fill="${["#E9A9B0","#F2C46D","#F7F0D0","#B48ACB"][i%4]}"/>`;}).join("")}<g stroke="#CFE7EF" stroke-width="3" fill="none"><path d="M300 296 q-10 -22 -18 -2"><animate attributeName="opacity" values="1;.4;1" dur="1.2s" repeatCount="indefinite"/></path><path d="M300 296 q10 -22 18 -2"><animate attributeName="opacity" values=".4;1;.4" dur="1.2s" repeatCount="indefinite"/></path></g>` : ""}
+    ${projDone("kiosque") ? `<g transform="translate(14 258)"><ellipse cx="40" cy="78" rx="44" ry="8" fill="rgba(0,0,0,.08)"/><rect x="2" y="66" width="76" height="10" rx="3" fill="#A97C5A"/><rect x="8" y="30" width="5" height="36" fill="#FBF5EA"/><rect x="38" y="30" width="5" height="36" fill="#FBF5EA"/><rect x="67" y="30" width="5" height="36" fill="#FBF5EA"/><path d="M-4 32 L40 4 L84 32Z" fill="#D9826B"/><path d="M-4 32 h88" stroke="#B76A55" stroke-width="3"/><circle cx="40" cy="2" r="4" fill="#F2C46D"/><text x="54" y="56" font-size="14" fill="#8A5A3B" font-family="serif"><animate attributeName="opacity" values="0;1;0" dur="2s" repeatCount="indefinite"/>♪</text></g>` : ""}
+    ${projDone("jardin") ? `<g transform="translate(2 600)"><rect x="0" y="0" width="124" height="112" rx="10" fill="#9DC08B"/><g stroke="#C9A27A" stroke-width="4" stroke-linecap="round">${Array.from({length:9},(_,i)=>`<path d="M${6+i*14} 4 v-16"/>`).join("")}<path d="M2 -6 h120"/></g><circle cx="30" cy="40" r="16" fill="#6F9468"/><circle cx="92" cy="70" r="18" fill="#7FA478"/>${[[60,30],[20,80],[100,30],[56,90]].map(([x,y],i)=>`<circle cx="${x}" cy="${y}" r="4" fill="${["#E9A9B0","#F2C46D","#B48ACB","#F7F0D0"][i]}"/>`).join("")}<g transform="translate(48 52) scale(.4)"><path d="M12 22 L16 4 L28 15 Q32 14 36 15 L48 4 L52 22 Q57 31 54 42 Q50 58 32 58 Q14 58 10 42 Q7 31 12 22Z" fill="#9A9490"/></g></g>` : ""}
+    ${projDone("terrasse") ? `<g transform="translate(6 168)"><path d="M0 22 Q28 0 56 22Z" fill="#E9A9B0"/><path d="M0 22 h56" stroke="#C9677A" stroke-width="2"/><rect x="26" y="22" width="4" height="36" fill="#6B4A33"/><ellipse cx="28" cy="58" rx="20" ry="5" fill="#A97C5A"/></g><g transform="translate(200 236) scale(.8)"><path d="M0 22 Q28 0 56 22Z" fill="#9CC3D2"/><rect x="26" y="22" width="4" height="30" fill="#6B4A33"/><ellipse cx="28" cy="52" rx="20" ry="5" fill="#A97C5A"/></g>` : ""}
+    ${projDone("moulin") ? `<g transform="translate(886 300) scale(.8)"><ellipse cx="38" cy="128" rx="40" ry="8" fill="rgba(0,0,0,.08)"/><path d="M14 126 L22 50 H54 L62 126Z" fill="#F6EEDF"/><path d="M18 52 L38 26 L58 52Z" fill="#A97C5A"/><rect x="30" y="96" width="16" height="30" rx="8" fill="#8A5A3B"/><g transform="translate(38 44)"><g><animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="9s" repeatCount="indefinite"/>${[0,90,180,270].map(a=>`<g transform="rotate(${a})"><rect x="-3" y="-46" width="6" height="46" fill="#6B4A33"/><rect x="3" y="-44" width="14" height="34" fill="#FBF5EA" stroke="#C9B48E" stroke-width="1.5"/></g>`).join("")}</g><circle r="5" fill="#4A3326"/></g></g>` : ""}
+    ${projDone("gare") ? `<g><path d="M560 92 H960 M560 100 H960" stroke="#6B4A33" stroke-width="2.5"/>${Array.from({length:26},(_,i)=>`<rect x="${562+i*16}" y="88" width="4" height="16" fill="#A97C5A"/>`).join("")}<g transform="translate(820 22)"><rect x="0" y="22" width="120" height="44" rx="4" fill="#F6EEDF"/><path d="M-8 26 L60 0 L128 26Z" fill="#6E8FB0"/><circle cx="60" cy="16" r="6" fill="#FBF5EA" stroke="#4A3326" stroke-width="1.5"/><rect x="14" y="34" width="22" height="32" fill="#8A5A3B"/><rect x="50" y="34" width="56" height="16" rx="2" fill="#BFD8E0"/><rect x="-6" y="66" width="132" height="6" fill="#B9AA8C"/></g><g><animateTransform attributeName="transform" type="translate" values="-520 0;-520 0;0 0;0 0;460 0" keyTimes="0;.3;.55;.75;1" dur="18s" repeatCount="indefinite"/><g transform="translate(700 64)"><rect x="0" y="6" width="56" height="26" rx="6" fill="#C9677A"/><rect x="40" y="-6" width="16" height="14" rx="3" fill="#C9677A"/><rect x="6" y="12" width="12" height="9" rx="2" fill="#FBF5EA"/><rect x="22" y="12" width="12" height="9" rx="2" fill="#FBF5EA"/><circle cx="12" cy="34" r="5" fill="#4A3326"/><circle cx="44" cy="34" r="5" fill="#4A3326"/><rect x="-46" y="10" width="42" height="22" rx="5" fill="#6E8FB0"/><rect x="-40" y="15" width="10" height="8" rx="2" fill="#FBF5EA"/><rect x="-24" y="15" width="10" height="8" rx="2" fill="#FBF5EA"/><circle cx="-36" cy="34" r="4" fill="#4A3326"/><circle cx="-12" cy="34" r="4" fill="#4A3326"/></g></g></g>` : ""}
+    <g style="${far}">
+      <path d="M705 330 C 740 320, 770 280, 800 250 M705 330 C 760 380, 800 440, 812 500 M812 500 C 810 560, 800 600, 790 640" stroke="#EFE2C3" stroke-width="24" fill="none" stroke-linecap="round"/>
+      ${house(736, 92, "#FBF0DA", "#E0A04F", "#F7DFA0")}
+      ${house(744, 394, "#F6EEDF", "#4E8A86", "#DDEEF2")}
+      ${shopHouse(720, 590, "#FBF5EA", "#6E8FB0", "#6E8FB0", .9)}
+      <g fill="#6F9468"><circle cx="920" cy="140" r="26"/><circle cx="920" cy="420" r="22"/><circle cx="910" cy="680" r="26"/></g>
+    </g>
+    ${done ? `<g transform="translate(560 300)"><path d="M0 44 Q75 4 150 44 L150 58 Q75 18 0 58Z" fill="#A97C5A"/><path d="M0 30 Q75 -10 150 30" stroke="#6B4A33" stroke-width="5" fill="none"/><circle cx="0" cy="0" r="7" fill="#F7DFA0"/><circle cx="150" cy="0" r="7" fill="#F7DFA0"/></g>`
+      : `<g transform="translate(565 312)"><rect x="0" y="6" width="44" height="28" rx="3" fill="#A97C5A"/><rect x="104" y="6" width="44" height="28" rx="3" fill="#A97C5A"/><rect x="-8" y="-14" width="54" height="12" rx="3" fill="#F2C46D"/></g>`}
+  </svg>
+  ${bridgeDone() ? "" : `
+  <button data-a="jules" aria-label="Parler à Papi Jules, qui pêche au bord de la rivière" title="Papi Jules" style="position:absolute;left:494px;top:356px;width:130px;height:100px;border:0;background:none;padding:0">
+    <svg width="130" height="100" viewBox="0 0 130 100" aria-hidden="true">
+      <path d="M58 40 L122 6" stroke="#6B4A33" stroke-width="3" stroke-linecap="round"/>
+      <path d="M122 6 Q126 40 120 70" stroke="#FFFFFF" stroke-width="1.2" fill="none" opacity=".9"/>
+      <circle cx="120" cy="72" r="4" fill="#E06A6A"><animate attributeName="cy" values="72;75;72" dur="2s" repeatCount="indefinite"/></circle>
+      <ellipse cx="44" cy="92" rx="34" ry="6" fill="rgba(0,0,0,.1)"/>
+      <rect x="28" y="70" width="34" height="8" rx="3" fill="#A97C5A"/><rect x="32" y="78" width="4" height="14" fill="#6B4A33"/><rect x="54" y="78" width="4" height="14" fill="#6B4A33"/>
+      <rect x="26" y="44" width="38" height="30" rx="14" fill="#4C6F94"/>
+      <circle cx="45" cy="30" r="17" fill="#F1C9A5"/>
+      <path d="M28 26 Q30 10 45 10 Q60 10 62 26Z" fill="#4C6F94"/><path d="M45 24 h24 q3 0 2 4 h-26z" fill="#3B5876"/>
+      <path d="M33 36 Q36 50 45 50 Q54 50 57 36 Q50 42 45 42 Q40 42 33 36Z" fill="#EDEAE6"/>
+      <circle cx="39" cy="30" r="2" fill="#4A3326"/><circle cx="51" cy="30" r="2" fill="#4A3326"/>
+      <path d="M56 50 L60 42" stroke="#F1C9A5" stroke-width="5" stroke-linecap="round"/>
+      <g transform="translate(76 74)"><path d="M0 0 h20 l-3 18 h-14z" fill="#9CC3D2"/><path d="M2 0 q8 -10 16 0" stroke="#6B4A33" stroke-width="2" fill="none"/>${S.julesFish ? `<path d="M4 2 q6 -6 12 0 l4 -3 v6 l-4 -3 q-6 6 -12 0z" fill="#B9B4B0"/>` : ""}</g>
+    </svg>
+  </button>
+  `}
+  ${weatherFX(960, 720, 90)}
+  ${festival() ? `<svg width="960" height="60" viewBox="0 0 960 60" aria-hidden="true" style="position:absolute;left:0;top:64px;pointer-events:none"><path d="M0 10 Q240 40 480 10 T960 10" stroke="#8A5A3B" stroke-width="2" fill="none"/>${Array.from({length:24},(_,i)=>`<path d="M${20+i*40} ${14+Math.sin(i/3.8*Math.PI)*-10+12} l10 18 l10 -18z" fill="${["#E9A9B0","#F2C46D","#8FAF8A","#9CC3D2"][i%4]}"/>`).join("")}</svg>` : ""}
+  <button class="hot" data-a="${cafe ? "opencafe" : "kitchen"}" style="left:112px;top:254px"><b>Ton café</b><small>${cafe ? "Service en pause" : "Rentrer cuisiner"}</small></button>
+  <button class="hot main" data-a="shop" data-tab="epicerie" style="left:360px;top:248px"><b>Épicerie de Madame Rose</b><small>Ingrédients</small></button>
+  <button class="hot" data-a="letter" style="left:70px;top:524px"><b>La Poste</b><small>${letter ? "1 lettre pour toi" : "Rien de neuf"}</small></button>
+  <button class="hot" data-a="shop" data-tab="fleuriste" style="left:312px;top:546px"><b>Fleuriste de Margot</b><small style="color:#A9506A">${S.bouquet ? "Bouquet installé" : "Bouquets du jour"}</small></button>
+  <button class="hot" data-a="shop" data-tab="refuge" style="left:236px;top:84px;padding:6px 12px"><b style="font-size:15px">Animalerie Les Moustaches</b><small style="color:#3E6B4A">Chats &amp; nourriture</small></button>
+  ${projDone("gare") ? `<div class="hot" style="left:842px;top:2px;padding:4px 10px;pointer-events:none"><b style="font-size:13px">Gare de Bruyère</b></div>` : ""}
+  ${projDone("moulin") ? `<div class="hot" style="left:842px;top:386px;padding:4px 10px;pointer-events:none"><b style="font-size:13px">Moulin</b></div>` : ""}
+  <button class="hot" data-a="shop" data-tab="brocante" style="left:250px;top:664px"><b>Brocante</b><small>Déco &amp; confort des chats</small></button>
+  ${done ? `
+    <button class="hot" data-a="shop" data-tab="boulangerie" style="left:756px;top:244px"><b>Boulangerie Pain d'Épices</b><small>Levure, pâte feuilletée…</small></button>
+    <button class="hot" data-a="shop" data-tab="librairie" style="left:760px;top:524px"><b>Librairie Le Chat Lettré</b><small>Toutes les recettes</small></button>
+    <button class="hot" data-a="shop" data-tab="poissonnerie" style="left:744px;top:650px"><b>Poissonnerie du Quai</b><small>Saumon, truite, crevettes…</small></button>`
+  : `<div class="panel" style="position:absolute;left:712px;top:280px;width:210px;padding:12px 14px"><b style="font-family:var(--font-title)">L'autre rive</b><div style="font-size:13px;font-weight:700">Répare le pont pour découvrir 3 nouveaux commerces.</div></div>`}
+  <div class="hud" style="right:340px">${`<div>${datePill(cafe ? "Service en pause" : "Matin")}<span class="pill">Réputation ${repLevel()}</span></div><div></div>`}</div>
+  <aside class="panel" style="position:absolute;right:24px;top:18px;bottom:24px;width:290px;display:flex;flex-direction:column;gap:12px">
+    <div class="between"><h2 style="font-size:21px">Garde-manger</h2>${coinPill()}</div>
+    <div class="grid" style="grid-template-columns:1fr 1fr;gap:6px;font-size:13px;font-weight:700;max-height:150px;overflow:auto">
+      ${Object.keys(ITEMS).filter((k) => qty(k) > 0).map((k) => `<div class="row" style="background:#fff;border-radius:10px;padding:6px 8px;gap:6px"><span class="dot" style="background:${ITEMS[k].c}"></span><span style="flex:1">${ITEMS[k].n}</span><b>${qty(k)}</b></div>`).join("") || `<div class="muted">Vide : passe à l'épicerie !</div>`}
+    </div>
+    ${(() => { const ids = Object.keys(PROJECTS), doneN = ids.filter(projDone).length, nx = ids.find((id) => !projDone(id) && projOpen(id));
+      return `<div style="background:#fff;border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:8px">
+      <div class="between"><span style="font-size:12px;font-weight:800;letter-spacing:.06em;color:var(--ok)">PROJETS DU VILLAGE</span><span style="font-size:12px;font-weight:800">${doneN} / ${ids.length}</span></div>
+      ${nx ? `<b style="font-family:var(--font-title);font-size:17px">${PROJECTS[nx].n}</b>
+      <div class="bar" style="height:10px"><i style="width:${Math.min(100, (S.projects[nx] || 0) / PROJECTS[nx].goal * 100)}%;background:var(--terra)"></i></div>
+      <span style="font-size:12px;font-weight:700">${S.projects[nx] || 0} / ${PROJECTS[nx].goal} pièces · ${esc(PROJECTS[nx].fx)}</span>
+      <div class="row" style="gap:6px"><button class="btn small" data-a="donate" data-id="${nx}" data-amt="25" style="flex:1" ${S.coins < 25 ? "disabled" : ""}>Donner 25</button><button class="btn light small" data-a="projects" style="flex:1">Tous les projets</button></div>`
+      : doneN === ids.length ? `<b style="font-family:var(--font-title);font-size:17px;color:var(--ok)">Tous les projets sont terminés !</b><button class="btn light small" data-a="projects">Voir les projets</button>`
+      : `<b style="font-family:var(--font-title);font-size:16px">Le village prépare un nouveau projet…</b><span class="muted" style="font-size:12px;font-weight:700">${(() => { const h = ids.find((id) => !projVisible(id)); return h ? "Il sera annoncé dans " + (projDay(h) - S.day) + " jour(s)." : ""; })()}</span><button class="btn light small" data-a="projects">Voir les projets</button>`}
+    </div>`; })()}
+    <div style="font-size:14px" class="muted">Chats au café : <b style="color:var(--ink)">${S.cats.map((c) => CATS[c].n).join(", ")}</b></div>
+    <div style="margin-top:auto;display:flex;flex-direction:column;gap:8px">
+      <div class="row" style="gap:6px"><button class="btn light small" data-a="album" style="flex:1;padding:8px 4px">Chats</button><button class="btn light small" data-a="friends" style="flex:1;padding:8px 4px">Villageois</button><button class="btn light small" data-a="help" style="flex:1;padding:8px 4px">Aide</button></div>
+      ${cafe ? `<button class="btn green" data-a="opencafe">Retour au café →</button>` : `<button class="btn green" data-a="kitchen">Rentrer cuisiner →</button>`}
+    </div>
+  </aside>`;
+}
+function house(x, y, wall, roof, win, s = 1) {
+  return `<g transform="translate(${x} ${y}) scale(${s})"><ellipse cx="80" cy="132" rx="92" ry="10" fill="rgba(0,0,0,.08)"/><rect x="6" y="48" width="148" height="82" rx="6" fill="${wall}"/><path d="M-8 56 L80 4 L168 56Z" fill="${roof}"/><rect x="112" y="6" width="18" height="30" fill="#8A5A3B"/><rect x="20" y="70" width="38" height="30" rx="6" fill="${win}"/><rect x="104" y="70" width="38" height="30" rx="6" fill="${win}"/><rect x="64" y="80" width="32" height="50" rx="16" fill="#8A5A3B"/></g>`;
+}
+function shopHouse(x, y, wall, roof, awn, s = 1) {
+  let stripes = ""; for (let i = 0; i < 8; i += 2) stripes += `<path d="M${i * 20} 62 h20 v16 h-20z" fill="${wall}"/>`;
+  return `<g transform="translate(${x} ${y}) scale(${s})"><ellipse cx="80" cy="134" rx="92" ry="10" fill="rgba(0,0,0,.08)"/><rect x="6" y="46" width="148" height="86" rx="6" fill="${wall}"/><path d="M-6 52 L80 6 L166 52Z" fill="${roof}"/><path d="M0 62 h160 v16 h-160z" fill="${awn}"/>${stripes}<rect x="64" y="92" width="32" height="40" rx="4" fill="#8A5A3B"/><g transform="translate(12 104)"><rect width="44" height="22" rx="4" fill="#A97C5A"/><circle cx="10" cy="4" r="6" fill="#E06A6A"/><circle cx="22" cy="2" r="6" fill="#F2C46D"/><circle cx="34" cy="4" r="6" fill="#8FAF8A"/></g></g>`;
+}
+
+// ---------- Commerces ----------
+const SHOPS = {
+  epicerie:     { n: "Épicerie de Madame Rose", who: "Madame Rose", c: "#B04F3A", hair: "chignon", hello: "Bonjour ! La rhubarbe est arrivée ce matin, parfaite pour une tarte." },
+  brocante:     { n: "Brocante du Moulin", who: "Basile", c: "#8A5A3B", hair: "court", hello: "Un coussin, un panier… Les chats savent reconnaître un bon fauteuil." },
+  boulangerie:  { n: "Boulangerie Pain d'Épices", who: "Monsieur Fernand", c: "#B9772F", hair: "toque", hello: "Levure, pâte feuilletée, pépites… Tout ce qu'il faut pour des viennoiseries dignes d'un vrai boulanger !" },
+  refuge:       { n: "Animalerie Les Moustaches", who: "Suzon", c: "#5E8C6A", hair: "tresses", hello: "Croquettes, friandises, poisson… et des chats qui attendent une famille ! Tout pour tes petits pensionnaires est ici." },
+  fleuriste:    { n: "Fleuriste de Margot", who: "Margot", c: "#C9677A", hair: "rose", hello: "Un bouquet sur chaque table, et tout le monde sourit. Il dure toute la journée !" },
+  ecole:        { n: "École de cuisine de Colette", who: "Colette", c: "#8C5E9E", hair: "carre", hello: "Bienvenue, petite cheffe ! Chaque recette que tu apprends ici fera sourire un villageois." },
+  librairie:    { n: "Librairie Le Chat Lettré", who: "Mademoiselle Odile", c: "#2F6B67", hair: "long", hello: "Toutes les recettes du pays sont ici ! Chaque livre fera sourire un villageois. Lequel te tente ?" },
+  poissonnerie: { n: "Poissonnerie du Quai", who: "Papi Jules", c: "#4C6F94", hair: "casquette", hello: "Depuis que le pont est réparé, je ne pêche plus au bord de l'eau : je vends ma pêche ici : saumon, truite fumée, crevettes, thon, cabillaud… Les recettes sont à la librairie. Et si tu fais la soupe de ma Jeanne, je viendrai la goûter !" },
+};
+// Coiffures des commerçants (dessinées derrière / devant le visage / par-dessus)
+const BOUQUETS = {
+  marguerites: { n: "Marguerites",  p: 12, c: "#F7F0D0", tip: 0.08, d: "+8 % de pourboires aujourd'hui" },
+  tulipes:     { n: "Tulipes",      p: 15, c: "#E9A9B0", tip: 0.10, d: "+10 % de pourboires aujourd'hui" },
+  lavande:     { n: "Lavande",      p: 20, c: "#B48ACB", tip: 0.08, calm: true, d: "+8 % et les chats sont plus sereins" },
+  roses:       { n: "Roses",        p: 25, c: "#E06A6A", tip: 0.15, d: "+15 % de pourboires aujourd'hui" },
+  tournesols:  { n: "Tournesols",   p: 30, c: "#F2C46D", tip: 0.20, d: "+20 % de pourboires aujourd'hui" },
+};
+const HAIR_BACK = {
+  tresses: `<path d="M64 96 Q56 130 66 160 L78 156 Q70 128 76 100Z M156 96 Q164 130 154 160 L142 156 Q150 128 144 100Z" fill="#E0B94F"/>`,
+  rose: `<path d="M60 92 Q58 40 110 40 Q162 40 160 92 L166 150 Q110 166 54 150Z" fill="#C9677A"/>`,
+  carre: `<path d="M60 96 Q58 44 110 44 Q162 44 160 96 L160 128 Q150 136 140 128 L140 100 L80 100 L80 128 Q70 136 60 128Z" fill="#B5533C"/>`,
+  long: `<path d="M62 92 Q60 40 110 40 Q160 40 158 92 L162 168 Q110 182 58 168Z" fill="#3E3433"/>`,
+};
+const HAIR_FRONT = {
+  tresses: `<path d="M64 92 Q66 48 110 48 Q154 48 156 92 Q148 66 110 64 Q72 66 64 92Z" fill="#E0B94F"/><circle cx="70" cy="160" r="6" fill="#5E8C6A"/><circle cx="150" cy="160" r="6" fill="#5E8C6A"/>`,
+  rose:    `<path d="M64 92 Q70 50 110 50 Q150 50 156 92 Q130 70 110 62 Q90 72 64 92Z" fill="#C9677A"/><circle cx="146" cy="58" r="8" fill="#F2C46D"/><circle cx="146" cy="58" r="3" fill="#E06A6A"/>`,
+  carre:   `<path d="M66 88 Q66 50 110 50 Q154 50 154 88 Q146 70 130 76 Q120 66 110 74 Q98 64 88 76 Q74 70 66 88Z" fill="#B5533C"/><path d="M90 46 q20 -10 40 0" stroke="#F2C46D" stroke-width="5" fill="none" stroke-linecap="round"/>`,
+  chignon: `<circle cx="110" cy="40" r="20" fill="#C9C4C0"/><path d="M64 92 Q68 46 110 46 Q154 46 156 92 Q146 66 110 64 Q76 66 64 92Z" fill="#C9C4C0"/><path d="M92 34 q18 -8 36 0" stroke="#E9A9B0" stroke-width="5" fill="none" stroke-linecap="round"/>`,
+  court:   `<path d="M64 86 Q66 46 110 46 Q154 46 156 86 Q150 64 128 62 Q118 72 100 66 Q80 66 64 86Z" fill="#6B4A33"/>`,
+  long:    `<path d="M64 92 Q70 50 110 50 Q150 50 156 92 Q130 70 110 62 Q90 72 64 92Z" fill="#3E3433"/>`,
+  toque:   `<path d="M66 70 h88 v-14 h-88z" fill="#FFFFFF" stroke="#E2DCD3" stroke-width="2"/><circle cx="82" cy="40" r="20" fill="#FFFFFF"/><circle cx="110" cy="30" r="24" fill="#FFFFFF"/><circle cx="138" cy="40" r="20" fill="#FFFFFF"/><path d="M66 78 Q70 70 76 70 M154 78 Q150 70 144 70" stroke="#EDEAE6" stroke-width="6" stroke-linecap="round"/>`,
+  casquette: `<path d="M64 80 Q66 44 110 44 Q154 44 156 80Z" fill="#4C6F94"/><path d="M110 76 h60 q6 0 4 6 h-64z" fill="#3B5876"/>`,
+};
+const HAIR_EXTRA = {
+  casquette: `<path d="M80 116 Q86 146 110 148 Q134 146 140 116 Q130 128 110 128 Q90 128 80 116Z" fill="#EDEAE6"/><path d="M100 114 Q110 122 120 114" stroke="#4A3326" stroke-width="3" fill="none" stroke-linecap="round"/>`,
+  court: `<rect x="84" y="88" width="20" height="14" rx="6" fill="none" stroke="#4A3326" stroke-width="2.5"/><rect x="116" y="88" width="20" height="14" rx="6" fill="none" stroke="#4A3326" stroke-width="2.5"/><path d="M104 94 h12" stroke="#4A3326" stroke-width="2.5"/>`,
+};
+function shopCatalog(tab) {
+  const all = shopCatalogAll(tab);
+  return all.filter((x) => x.owned || unlocked(x.id));
+}
+function nextUnlockIn(tab) {
+  const days = shopCatalogAll(tab).filter((x) => !x.owned && !unlocked(x.id)).map((x) => UNLOCK[x.id] - S.day);
+  return days.length ? { days: Math.min(...days), n: days.length } : null;
+}
+function shopCatalogAll(tab) {
+  if (tab === "refuge") return [
+    ...Object.entries(ITEMS).filter(([, it]) => it.shop === "animalerie").map(([id, it]) => ({ id, kind: "item", n: it.n, p: it.p, c: it.c, sub: "Nourriture · +" + it.fx + " de bonne humeur · stock : " + qty(id) })),
+    ...Object.entries(CATS).filter(([, c]) => c.price).map(([id, c]) => ({ id, kind: "cat", n: "Adopter " + c.n, p: c.price, c: c.fur, sub: c.trait + " · " + c.likes, owned: S.cats.includes(id) })),
+  ];
+  if (tab === "fleuriste") return Object.entries(BOUQUETS).map(([id, b]) => ({ id, kind: "bouquet", n: "Bouquet de " + b.n.toLowerCase(), p: b.p, c: b.c, sub: b.d, owned: S.bouquetId === id }));
+  if (tab === "brocante") return Object.entries(DECOR).map(([id, d]) => ({ id, kind: "decor", n: d.n, p: d.p, c: d.c, sub: d.d, owned: S.decor.includes(id) }));
+  if (tab === "librairie" || tab === "ecole") return Object.entries(RECIPES).filter(([id, r]) => r.shop === tab && (!r.season || r.season === season() || S.recipes.includes(id))).map(([id, r]) => ({ id, kind: "book", n: r.n, p: r.book, c: r.c, sub: (r.d ? r.d + " " : "") + r.price + " pièces la part · " + Object.keys(r.needs).map((k) => ITEMS[k].n.toLowerCase()).join(", "), owned: S.recipes.includes(id) }));
+  return Object.entries(ITEMS).filter(([, it]) => it.shop === tab && (!it.season || it.season === season())).map(([id, it]) => ({ id, kind: "item", n: it.n, p: it.p, c: it.c, seasonal: !!it.season, sub: it.cat ? "Pour les chats" : "En stock : " + qty(id) }));
+}
+function cartTotal() {
+  return Object.entries(ui.cart).reduce((s, [id, q]) => s + q * (shopCatalog(ui.shopTab).find((x) => x.id === id)?.p || 0), 0);
+}
+function viewShop() {
+  const sh = SHOPS[ui.shopTab];
+  const list = shopCatalog(ui.shopTab);
+  const total = cartTotal();
+  const lines = list.filter((x) => ui.cart[x.id]);
+  return `
+  <div style="position:absolute;inset:0;background:#E8D6B8"></div>
+  <div style="position:absolute;left:0;top:0;width:1280px;height:64px;background:repeating-linear-gradient(90deg, ${sh.c} 0 64px, #F6EEDF 64px 128px)"></div>
+  <div style="position:absolute;left:32px;top:96px;width:300px;display:flex;flex-direction:column;gap:16px">
+    <div style="position:relative;height:240px;border-radius:24px;background:#F3E4C9;display:flex;align-items:flex-end;justify-content:center;overflow:hidden">
+      <svg width="300" height="240" viewBox="0 0 300 240" aria-hidden="true" style="position:absolute;inset:0">
+        <rect width="300" height="240" fill="#F3E4C9"/>
+        <g fill="#8A5A3B"><rect x="0" y="62" width="300" height="8"/><rect x="0" y="132" width="300" height="8"/></g>
+        ${[14,40,66,92,198,224,250,276].map((x,i)=>`<rect x="${x-10}" y="${34+(i%3)*4}" width="20" height="${28-(i%3)*4}" rx="5" fill="#FBF5EA" stroke="#C9B48E" stroke-width="1.5"/><rect x="${x-7}" y="${46+(i%3)*2}" width="14" height="12" rx="3" fill="${["#F2C46D","#E9A9B0","#A9C4A0","#9CC3D2","#E06A6A"][i%5]}"/>`).join("")}
+        ${[16,46,76,206,236,266].map((x,i)=>`<rect x="${x-12}" y="${100+(i%2)*6}" width="24" height="${32-(i%2)*6}" rx="4" fill="${["#D9826B","#4F6B4A","#E0B94F","#6E8FB0"][i%4]}"/><rect x="${x-12}" y="${108+(i%2)*6}" width="24" height="6" fill="#FBF5EA" opacity=".8"/>`).join("")}
+        <path d="M0 0 h300 v18 q-18 14 -37.5 0 q-18 14 -37.5 0 q-18 14 -37.5 0 q-18 14 -37.5 0 q-18 14 -37.5 0 q-18 14 -37.5 0 q-18 14 -37.5 0 q-18 14 -37.5 0z" fill="${sh.c}" opacity=".9"/>
+      </svg>
+      <svg width="220" height="220" style="position:relative" viewBox="0 0 220 220" aria-hidden="true"><path d="M50 220 Q50 130 110 130 Q170 130 170 220Z" fill="${sh.c}"/>${HAIR_BACK[sh.hair] || ""}<circle cx="110" cy="96" r="46" fill="#F1C9A5"/>${HAIR_FRONT[sh.hair] || ""}<circle cx="94" cy="98" r="4" fill="#4A3326"/><circle cx="126" cy="98" r="4" fill="#4A3326"/><path d="M100 114 Q110 122 120 114" stroke="#4A3326" stroke-width="3" fill="none" stroke-linecap="round"/><circle cx="84" cy="110" r="7" fill="#E9A9B0" opacity=".7"/><circle cx="136" cy="110" r="7" fill="#E9A9B0" opacity=".7"/>${HAIR_EXTRA[sh.hair] || ""}</svg>
+      <svg width="300" height="54" viewBox="0 0 300 54" aria-hidden="true" style="position:absolute;left:0;bottom:0"><rect y="8" width="300" height="46" fill="#A97C5A"/><rect width="300" height="12" rx="4" fill="#8A5A3B"/><g transform="translate(24 -22)"><rect width="46" height="24" rx="5" fill="#C99A6B"/><circle cx="12" cy="4" r="7" fill="#E06A6A"/><circle cx="24" cy="2" r="7" fill="#F2C46D"/><circle cx="36" cy="4" r="7" fill="#8FAF8A"/></g><g transform="translate(222 -26)"><rect width="56" height="28" rx="5" fill="#4F6B4A"/><rect x="8" y="5" width="40" height="9" rx="2" fill="#DCEBD6"/></g></svg>
+    </div>
+    <div class="panel" style="padding:16px 18px"><b style="font-family:var(--font-title);font-size:18px;color:${sh.c}">${sh.who}</b><p style="margin:4px 0 0;font-size:15px;line-height:1.45">${esc(sh.hello)}</p></div>
+  </div>
+  <div style="position:absolute;left:356px;top:96px;width:560px;display:flex;flex-direction:column;gap:14px">
+    <div class="between"><h1 style="font-weight:700;font-size:28px">${sh.n}</h1><button class="btn light small" data-a="village">← Village</button></div>
+    <div class="grid" style="grid-template-columns:repeat(3,minmax(0,1fr));max-height:568px;overflow:auto;padding:4px 4px 10px">
+      ${(() => { const nx = nextUnlockIn(ui.shopTab); return nx ? `<div class="card" style="order:99;align-items:center;justify-content:center;text-align:center;border:3px dashed var(--line);background:#FBF5EA;box-shadow:none"><b style="font-family:var(--font-title);font-size:16px">${nx.n} nouveauté(s)</b><span class="muted" style="font-size:13px;font-weight:700">Arrivage dans ${nx.days} jour(s)</span></div>` : ""; })()}
+      ${list.map((it) => {
+        const q = ui.cart[it.id] || 0;
+        const single = it.kind !== "item";
+        return `<div class="card" style="padding:12px;gap:6px;${q ? "outline:3px solid var(--terra)" : ""}">
+          <div class="between">${it.kind === "cat" ? catSVG(it.id, 50) : `<span style="width:34px;height:34px;border-radius:11px;background:${it.c};border:4px solid rgba(0,0,0,.12)"></span>`}${it.seasonal ? `<span class="tag">SAISON</span>` : ""}${it.owned && it.kind === "cat" ? `<span class="tag">ADOPTÉ</span>` : ""}</div>
+          <b style="font-family:var(--font-title);font-size:16px">${it.n}</b>
+          <span class="muted" style="font-size:12px;font-weight:700">${esc(it.sub || "")}</span>
+          <div class="between"><span class="row" style="gap:5px;font-weight:800"><span class="coin" style="width:16px;height:16px"></span>${it.p}</span>
+          ${it.owned ? (it.kind === "cat" ? `<span class="tag">AU CAFÉ</span>` : `<span class="tag">ACQUIS</span>`) : `<div class="row" style="gap:6px">
+            ${q ? `<button class="btn light small" data-a="cart-" data-id="${it.id}" aria-label="Retirer ${esc(it.n)}" style="width:34px;padding:6px 0">−</button><b>${q}</b>` : ""}
+            <button class="btn small" data-a="cart+" data-id="${it.id}" aria-label="Ajouter ${esc(it.n)}" style="width:34px;padding:6px 0" ${single && q ? "disabled" : ""}>+</button></div>`}
+          </div></div>`;
+      }).join("")}
+    </div>
+  </div>
+  <aside class="panel" style="position:absolute;right:32px;top:96px;width:316px;height:600px;display:flex;flex-direction:column;gap:12px">
+    <div class="between"><h2 style="font-size:22px">Panier</h2>${coinPill()}</div>
+    <div style="flex:1;display:flex;flex-direction:column;gap:8px;overflow:auto">
+      ${lines.length ? lines.map((x) => `<div class="between" style="background:#fff;border-radius:12px;padding:10px 12px;font-weight:700"><span>${x.n} × ${ui.cart[x.id]}</span><span>${x.p * ui.cart[x.id]}</span></div>`).join("") : `<p class="muted" style="text-align:center;margin-top:20px">Ton panier est vide.</p>`}
+    </div>
+    <div class="between" style="font-family:var(--font-title);font-weight:600;font-size:20px;border-top:2px dashed var(--line);padding-top:10px"><span>Total</span><span>${total} pièces</span></div>
+    ${total > S.coins ? `<p style="margin:0;color:var(--bad);font-weight:800;font-size:14px">Pas assez de pièces.</p>` : ""}
+    <button class="btn green" data-a="pay" ${!total || total > S.coins ? "disabled" : ""}>Payer</button>
+  </aside>`;
+}
+
+// ---------- Cuisine ----------
+// ---------- Gestes de cuisine ----------
+const stepKind = (label) => /^Ajouter/.test(label) ? "add" : /Pétrir/.test(label) ? "knead" : /Mélanger|Fouetter/.test(label) ? "stir" : /four/i.test(label) ? "oven" : /Chauffer|infuser|poêle|gaufrier/i.test(label) ? "wait" : "tap";
+const allSteps = (r) => ["Ajouter les ingrédients", ...r.steps];
+const TAPS = { knead: 8, tap: 6 };
+const WAIT_SECS = { wait: 2.6, oven: 3.6 };
+function unitsOf(r) { const u = []; for (const [k, v] of Object.entries(r.needs)) for (let i = 0; i < v; i++) u.push(k); return u; }
+function curKind() { if (!ui.cook) return null; const r = RECIPES[ui.cook.id]; return stepKind(allSteps(r)[ui.cook.i]); }
+function advanceCook() {
+  const c = ui.cook, r = RECIPES[c.id];
+  c.i++; c.prog = 0; c.taps = 0; c.ovenIn = false; c.stirring = false; c.ang = 0;
+  if (c.i >= allSteps(r).length) {
+    S.showcase[c.id] = (S.showcase[c.id] || 0) + r.yield; ui.cook = null; save();
+    sfx("done"); toast(r.n + " en vitrine (+" + r.yield + ")");
+  } else sfx("step");
+  render();
+}
+let cookTimer = null, cookLast = 0;
+function syncCookTimer() {
+  const k = curKind();
+  const need = ui.screen === "kitchen" && !ui.modal && ui.cook && (k === "wait" || (k === "oven" && ui.cook.ovenIn && ui.cook.prog < 1));
+  if (need && !cookTimer) { cookLast = performance.now(); cookTimer = setInterval(cookTick, 100); }
+  if (!need && cookTimer) { clearInterval(cookTimer); cookTimer = null; }
+}
+function cookTick() {
+  const now = performance.now(), dt = (now - cookLast) / 1000; cookLast = now;
+  const k = curKind(); if (!k) return syncCookTimer();
+  ui.cook.prog = Math.min(1, ui.cook.prog + dt / WAIT_SECS[k]);
+  const bar = document.getElementById("cookbar"); if (bar) bar.style.width = (ui.cook.prog * 100) + "%";
+  if (ui.cook.prog >= 1) { if (k === "wait") advanceCook(); else { sfx("ding"); render(); } }
+}
+function stirMove(e) {
+  const c = ui.cook; if (!c || !c.stirring) return;
+  const bowl = document.getElementById("bowl"); if (!bowl) return;
+  const b = bowl.getBoundingClientRect();
+  const ang = Math.atan2(e.clientY - (b.top + b.height * 0.35), e.clientX - (b.left + b.width / 2));
+  if (c.lastAng != null) {
+    let d = ang - c.lastAng; if (d > Math.PI) d -= 2 * Math.PI; if (d < -Math.PI) d += 2 * Math.PI;
+    c.prog = Math.min(1, c.prog + Math.abs(d) / (Math.PI * 2 * 3)); c.ang += d * 180 / Math.PI;
+    if (Math.abs(d) > 0.35) sfx("swish");
+  }
+  c.lastAng = ang;
+  const sp = document.getElementById("spoon"); if (sp) sp.style.transform = `rotate(${c.ang}deg)`;
+  const bar = document.getElementById("cookbar"); if (bar) bar.style.width = (c.prog * 100) + "%";
+  if (c.prog >= 1) { c.stirring = false; advanceCook(); }
+}
+
+function viewKitchen() {
+  const cooking = !!ui.cook;
+  if (cooking) ui.kitchenSel = ui.cook.id;
+  const r = RECIPES[ui.kitchenSel];
+  const steps = allSteps(r);
+  const missing = Object.entries(r.needs).filter(([k, v]) => qty(k) < v).map(([k]) => ITEMS[k].n);
+  const si = cooking ? ui.cook.i : -1;
+  const kind = cooking ? stepKind(steps[si]) : null;
+  const c = ui.cook || {};
+  const ovenOn = kind === "oven" && c.ovenIn;
+  let title = r.n, hint, button = "";
+  if (!cooking) {
+    hint = missing.length ? "Il manque : " + missing.join(", ") + "." : `Donne ${r.yield} parts, vendues ${r.price} pièces chacune.`;
+    button = `<button class="btn" data-a="cook" ${missing.length ? "disabled" : ""}>Commencer la recette</button>`;
+  } else {
+    title = `Étape ${si + 1} / ${steps.length} · ${steps[si]}`;
+    hint = {
+      add: "Clique sur chaque ingrédient pour le verser dans le bol.",
+      knead: `Clique sur la pâte pour la pétrir (${c.taps} / ${TAPS.knead}).`,
+      tap: `Clique dans le bol, geste après geste (${c.taps} / ${TAPS.tap}).`,
+      stir: "Maintiens le clic dans le bol et tourne en rond : 3 tours.",
+      wait: "Ça chauffe doucement… patiente un instant.",
+      oven: !c.ovenIn ? "Le four est chaud. Enfourne quand tu veux !" : c.prog < 1 ? "Ça cuit… les chats adorent l'odeur." : "Ding ! C'est doré à point.",
+    }[kind];
+    if (kind === "oven") button = !c.ovenIn ? `<button class="btn" data-a="oven">Enfourner</button>` : c.prog >= 1 ? `<button class="btn green" data-a="oven">Sortir du four</button>` : "";
+  }
+  const units = unitsOf(r);
+  const bowlAction = kind === "knead" || kind === "tap" ? "tapbowl" : kind === "stir" ? "stirbowl" : "";
+  const filled = cooking && (kind !== "add" || c.drops.some(Boolean));
+  return `
+  <div style="position:absolute;inset:0;background:#EFE1C6;background-image:linear-gradient(#E6D5B5 2px,transparent 2px),linear-gradient(90deg,#E6D5B5 2px,transparent 2px);background-size:48px 48px"></div>
+  <div class="hud"><div><span class="pill dark">Cuisine</span>${datePill(cafe ? "Service en pause" : "Midi")}</div><div><button class="btn light small" data-a="help" aria-label="Comment jouer">?</button>${cafe ? "" : `<button class="btn light small" data-a="village">Carte</button>`}<button class="btn green small" data-a="opencafe">${cafe ? "Retour au café →" : "Ouvrir le café →"}</button></div></div>
+  <section class="panel" aria-label="Livre de recettes" style="position:absolute;left:24px;top:92px;width:300px;height:604px;display:flex;flex-direction:column;gap:10px">
+    <h2 style="font-size:21px">Livre de recettes</h2>
+    <div style="flex:1;overflow:auto;display:flex;flex-direction:column;gap:8px;padding:3px">
+    ${S.recipes.map((id) => { const x = RECIPES[id], on = id === ui.kitchenSel, ok = canCook(id);
+      return `<button data-a="pick" data-id="${id}" aria-pressed="${on}" style="display:flex;gap:12px;align-items:center;padding:10px 12px;border-radius:16px;border:3px solid ${on ? "var(--terra)" : "transparent"};background:${on ? "#fff" : "#F3E9D6"};text-align:left;flex-shrink:0" ${cooking ? "disabled" : ""}>
+        <span style="width:34px;height:34px;border-radius:50%;background:${x.c};border:3px solid #fff;box-shadow:0 0 0 2px ${ok ? "var(--sage-l)" : "var(--line)"};flex-shrink:0"></span>
+        <span><b style="font-family:var(--font-title);font-size:16px;display:block">${x.n}</b><span class="muted" style="font-size:12px;font-weight:700">${ok ? "Ingrédients OK" : "Il manque des ingrédients"} · ${x.yield} parts · ${x.price} p.</span></span></button>`; }).join("")}
+    </div>
+    <div class="muted" style="padding:10px 12px;border-radius:14px;border:2px dashed var(--line);font-size:13px;font-weight:700">Nouvelles recettes à la <b>Librairie Le Chat Lettré</b>, de l'autre côté du pont.</div>
+  </section>
+  <section aria-label="Plan de travail" style="position:absolute;left:348px;top:92px;width:560px;height:604px;border-radius:22px;overflow:hidden;background:#F3E4C9;box-shadow:0 6px 0 var(--line)">
+    <svg width="560" height="604" viewBox="0 0 560 604" aria-hidden="true" style="position:absolute;inset:0">
+      <rect x="30" y="40" width="200" height="14" rx="4" fill="#A97C5A"/>
+      <g transform="translate(46 4)"><rect width="26" height="36" rx="6" fill="#F6EEDF" stroke="#C9B48E" stroke-width="2"/><rect x="4" y="16" width="18" height="16" rx="3" fill="#F2C46D"/></g>
+      <g transform="translate(86 0)"><rect width="30" height="40" rx="6" fill="#F6EEDF" stroke="#C9B48E" stroke-width="2"/><rect x="4" y="18" width="22" height="18" rx="3" fill="#E9A9B0"/></g>
+      <g transform="translate(130 8)"><rect width="24" height="32" rx="6" fill="#F6EEDF" stroke="#C9B48E" stroke-width="2"/><rect x="4" y="14" width="16" height="14" rx="3" fill="#A9C4A0"/></g>
+      <g transform="translate(380 120)"><rect width="160" height="240" rx="14" fill="#B9B4B0"/><rect x="10" y="10" width="140" height="40" rx="8" fill="#9A9490"/><circle cx="40" cy="30" r="9" fill="#4A3326"/><circle cx="80" cy="30" r="9" fill="#4A3326"/><circle cx="120" cy="30" r="9" fill="#4A3326"/>
+        <rect x="18" y="70" width="124" height="110" rx="10" fill="${ovenOn ? "#F2A65A" : "#4A3326"}"/>${ovenOn ? `<rect x="18" y="70" width="124" height="110" rx="10" fill="#F2C46D" opacity=".5"><animate attributeName="opacity" values=".2;.6;.2" dur="1.6s" repeatCount="indefinite"/></rect>` : ""}</g>
+      <!-- carrelage -->
+      <g fill="none" stroke="#E8D4AE" stroke-width="2">${Array.from({length:6},(_,r)=>`<path d="M0 ${70+r*48} H370"/>`).join("")}${Array.from({length:8},(_,c)=>`<path d="M${c*48} 60 V360"/>`).join("")}</g>
+      <!-- fenêtre -->
+      <g transform="translate(250 70)"><clipPath id="kwin"><rect width="100" height="100" rx="6"/></clipPath><rect x="-6" y="-6" width="112" height="112" rx="10" fill="#8A5A3B"/><g clip-path="url(#kwin)"><rect width="100" height="100" fill="#CFE3E6"/><ellipse cx="40" cy="104" rx="70" ry="30" fill="${SEASON_TINT[season()]}"/><circle cx="76" cy="26" r="12" fill="#F7DFA0"/></g><rect x="47" width="6" height="100" fill="#8A5A3B"/><rect y="47" width="100" height="6" fill="#8A5A3B"/>
+        <path d="M-10 -8 h120 v20 q-15 12 -30 0 q-15 12 -30 0 q-15 12 -30 0 q-15 12 -30 0z" fill="#E9A9B0"/>
+        <g transform="translate(6 92)"><path d="M0 0 h22 l-3 14 h-16z" fill="#D9826B"/><path d="M11 0 q-8 -14 0 -22 q8 8 0 22" fill="#6F9468"/></g></g>
+      <!-- casseroles suspendues -->
+      <rect x="36" y="80" width="190" height="6" rx="3" fill="#6B4A33"/>
+      ${[[60,"#C77E4F",22],[110,"#B9B4B0",18],[160,"#C77E4F",26],[204,"#9A9490",14]].map(([x,c,r])=>`<path d="M${x} 86 v18" stroke="#4A3326" stroke-width="2"/><circle cx="${x}" cy="${104+r}" r="${r}" fill="${c}"/><circle cx="${x}" cy="${104+r}" r="${r-6}" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="3"/>`).join("")}
+      <!-- herbes séchées -->
+      <g stroke="#6F9468" stroke-width="3" stroke-linecap="round">${[56,80,104].map(x=>`<path d="M${x} 186 v30 M${x} 200 l-8 14 M${x} 200 l8 14"/>`).join("")}</g><rect x="44" y="182" width="72" height="6" rx="3" fill="#A97C5A"/>
+      <!-- sur le plan de travail -->
+      <g transform="translate(14 296)"><path d="M0 64 Q-4 20 18 8 L42 8 Q62 20 58 64Z" fill="#EADBB8"/><path d="M14 8 q16 -12 32 0" stroke="#C9B48E" stroke-width="4" fill="none"/><text x="29" y="44" text-anchor="middle" font-size="12" font-weight="800" fill="#A97C5A" font-family="sans-serif">FARINE</text></g>
+      <g transform="translate(86 318)"><path d="M0 42 h30 l-4 -36 h-22z" fill="#FBF5EA" stroke="#C9B48E" stroke-width="2"/><g stroke="#A97C5A" stroke-width="3" stroke-linecap="round"><path d="M8 6 l-6 -26 M15 6 v-30 M22 6 l6 -24"/></g><circle cx="15" cy="-26" r="5" fill="none" stroke="#A97C5A" stroke-width="3"/></g>
+            <rect x="0" y="360" width="560" height="244" fill="#A97C5A"/><rect x="0" y="360" width="560" height="22" fill="#8A5A3B"/>
+      <g fill="none" stroke="#977050" stroke-width="3">${[30,170,310,450].map(x=>`<rect x="${x}" y="396" width="110" height="200" rx="8"/>`).join("")}</g>
+    </svg>
+    <div style="position:absolute;left:122px;top:316px">${catSVG(S.cats[S.cats.length - 1], 46, !cooking)}</div>
+    ${kind === "add" ? `<div style="position:absolute;left:120px;top:150px;width:280px;display:flex;flex-wrap:wrap;justify-content:center;gap:8px;z-index:2">
+      ${units.map((k, i) => c.drops[i] ? "" : `<button data-a="drop" data-i="${i}" style="display:flex;gap:6px;align-items:center;padding:8px 12px;border:0;border-radius:999px;background:#fff;font-weight:800;font-size:14px;box-shadow:0 3px 0 var(--line)"><span class="dot" style="background:${ITEMS[k].c}"></span>${ITEMS[k].n}</button>`).join("")}</div>` : ""}
+    <div id="bowl" ${bowlAction ? `data-a="${bowlAction}" role="button" tabindex="0" aria-label="${esc(steps[si] || "Bol")}"` : ""} class="${c.justTapped ? "squish" : ""}" style="position:absolute;left:160px;top:250px;width:200px;height:100px;touch-action:none;${bowlAction ? "cursor:pointer;" : ""}">
+      ${kind === "stir" ? `<div id="spoon" style="position:absolute;left:95px;top:-46px;width:10px;height:84px;border-radius:5px;background:#C29770;box-shadow:inset -3px 0 0 #A97C5A;transform-origin:5px 72px;transform:rotate(${c.ang || 0}deg);z-index:2"><div style="position:absolute;left:-7px;bottom:-4px;width:24px;height:22px;border-radius:50%;background:#C29770"></div></div>` : ""}
+      <div style="position:absolute;left:0;top:10px;width:200px;height:90px;border-radius:0 0 100px 100px;background:#9CC3D2;box-shadow:inset 0 -10px 0 #86B3C6;overflow:hidden">
+        <div style="position:absolute;left:14px;right:14px;top:-2px;height:24px;border-radius:50%;background:${filled ? r.c : "#B5D3DF"}"></div>
+      </div>
+      ${kind === "knead" || kind === "tap" ? `<div style="position:absolute;left:60px;top:-14px;width:80px;height:46px;border-radius:50%;background:${kind === "knead" ? "#F3E2BE" : r.c};box-shadow:inset 0 -6px 0 rgba(0,0,0,.08)"></div>` : ""}
+      ${cooking && kind !== "add" ? `<div style="position:absolute;left:70px;top:-36px;width:12px;height:20px;border-radius:6px;background:#fff;animation:steam 1.8s infinite"></div><div style="position:absolute;left:112px;top:-36px;width:12px;height:20px;border-radius:6px;background:#fff;animation:steam 1.8s .6s infinite"></div>` : ""}
+    </div>
+    <div style="position:absolute;left:24px;right:24px;bottom:22px;display:flex;flex-direction:column;gap:10px;padding:16px 18px;border-radius:18px;background:var(--paper)">
+      <div class="between"><b style="font-family:var(--font-title);font-size:19px">${esc(title)}</b>
+        <div class="row" style="gap:6px">${steps.map((_, i) => `<span style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;${i < si ? "background:var(--sage);color:#fff" : i === si ? "background:var(--terra);color:#fff" : "background:#EADBB8;color:var(--ink2)"}">${i + 1}</span>`).join("")}</div></div>
+      <p class="muted" style="margin:0;font-weight:700">${esc(hint)}</p>
+      ${cooking ? `<div class="bar" style="height:10px"><i id="cookbar" style="width:${kind === "add" ? (c.drops.filter(Boolean).length / units.length * 100) : (kind === "knead" || kind === "tap") ? (c.taps / TAPS[kind] * 100) : c.prog * 100}%;background:var(--terra);transition:width .1s"></i></div>` : ""}
+      ${button || (!cooking && missing.length && !cafe) ? `<div class="row">${button}${!cooking && missing.length && !cafe ? `<button class="btn light small" data-a="shop" data-tab="epicerie">Acheter chez Madame Rose</button>` : ""}</div>` : ""}
+    </div>
+  </section>
+  <aside style="position:absolute;right:24px;top:92px;width:324px;height:604px;display:flex;flex-direction:column;gap:12px">
+    <section class="panel" style="display:flex;flex-direction:column;gap:10px">
+      <h2 style="font-size:20px">Garde-manger</h2>
+      <div class="grid" style="grid-template-columns:1fr 1fr;gap:8px">
+        ${Object.keys(ITEMS).filter((k) => !ITEMS[k].cat && (qty(k) > 0 || r.needs[k])).map((k) => { const need = r.needs[k] || 0, short = need > qty(k);
+          return `<div class="row" style="gap:8px;padding:8px 10px;border-radius:10px;background:#fff;font-size:14px;font-weight:700;${need ? (short ? "outline:2px solid #C9503A" : "outline:2px solid var(--sage-l)") : ""}"><span class="dot" style="background:${ITEMS[k].c}"></span><span style="flex:1">${ITEMS[k].n}</span><b>${qty(k)}</b></div>`; }).join("")}
+      </div>
+    </section>
+    <section class="panel" style="flex:1;display:flex;flex-direction:column;gap:8px;overflow:auto">
+      <h2 style="font-size:20px">Vitrine · prêt à servir</h2>
+      ${S.recipes.map((id) => `<div class="between" style="padding:10px 12px;border-radius:12px;background:#fff;font-weight:700"><span class="row"><span class="dot" style="background:${RECIPES[id].c};border:0"></span>${RECIPES[id].n}</span><b style="color:${S.showcase[id] ? "var(--ok)" : "var(--bad)"}">${S.showcase[id] || 0}</b></div>`).join("")}
+    </section>
+  </aside>`;
+}
+
+// ---------- Café ----------
+function startCafe() {
+  S.phase = "apresmidi";
+  cafe = { spawned: 0, served: 0, missed: 0, earned: 0, tips: 0, seats: [null, null, null], events: [], nextSpawn: 1 + Math.random() * 4, time: 0, petCd: {}, timer: null, last: performance.now() };
+  cafe.timer = setInterval(tickCafe, 200);
+}
+// ---------- Chats qui se promènent dans le café ----------
+const CAT_SPOTS = [
+  { x: 372, y: 426 }, { x: 470, y: 222 }, { x: 1176, y: 112 }, { x: 560, y: 494 }, { x: 1180, y: 252 },
+  { x: 780, y: 490 }, { x: 244, y: 222 }, { x: 1170, y: 392 }, { x: 1000, y: 490 }, { x: 70, y: 444 },
+  { x: 272, y: 486, req: "panier" }, { x: 176, y: 440, req: "fauteuil" }, { x: 1000, y: 112, req: "aquarium" },
+];
+const nowS = () => performance.now() / 1000;
+function catSpots() { return CAT_SPOTS.map((p, i) => ({ ...p, i })).filter((p) => !p.req || S.decor.includes(p.req)); }
+function catPos(c, t = nowS()) { const k = c.dur ? Math.min(1, (t - c.start) / c.dur) : 1; return { x: c.x + (c.tx - c.x) * k, y: c.y + (c.ty - c.y) * k, moving: k < 1 }; }
+function ensureCatPositions() {
+  cafe.cp = cafe.cp || {};
+  const spots = catSpots();
+  const used = new Set(Object.values(cafe.cp).map((c) => c.spot));
+  S.cats.forEach((id) => {
+    if (cafe.cp[id]) return;
+    const free = spots.find((p) => !used.has(p.i)); if (!free) return;
+    used.add(free.i); cafe.cp[id] = { x: free.x, y: free.y, tx: free.x, ty: free.y, start: 0, dur: 0, spot: free.i };
+  });
+}
+function moveCats(dt) {
+  cafe.moveCd = (cafe.moveCd ?? 2) - dt;
+  if (cafe.moveCd > 0) return;
+  cafe.moveCd = 2 + Math.random() * 3;
+  const t = nowS();
+  const idle = Object.keys(cafe.cp).filter((id) => (S.mood[id] ?? 60) >= 30 && !catPos(cafe.cp[id], t).moving);
+  if (!idle.length) return;
+  const id = idle[Math.floor(Math.random() * idle.length)], c = cafe.cp[id];
+  const used = new Set(Object.values(cafe.cp).map((o) => o.spot));
+  const free = catSpots().filter((p) => !used.has(p.i)); if (!free.length) return;
+  const dest = free[Math.floor(Math.random() * free.length)];
+  const cur = catPos(c, t);
+  const dist = Math.hypot(dest.x - cur.x, dest.y - cur.y);
+  Object.assign(c, { x: cur.x, y: cur.y, tx: dest.x, ty: dest.y, start: t, dur: Math.min(6, Math.max(1.5, dist / 110)), spot: dest.i });
+}
+function animateCats() {
+  const t = nowS();
+  $stage.querySelectorAll("[data-cat]").forEach((el) => {
+    const c = cafe && cafe.cp && cafe.cp[el.dataset.cat]; if (!c) return;
+    const p = catPos(c, t); if (!p.moving) return;
+    const rem = c.start + c.dur - t;
+    void el.offsetLeft; // force le navigateur à prendre la position de départ
+    el.style.transition = `left ${rem}s linear, top ${rem}s linear`;
+    el.style.left = c.tx + "px"; el.style.top = c.ty + "px";
+  });
+}
+
+function stopCafe() { if (cafe && cafe.timer) { clearInterval(cafe.timer); cafe.timer = null; } }
+function pickOrder() {
+  const avail = S.recipes.filter((id) => (S.showcase[id] || 0) > 0);
+  if (avail.length && Math.random() < 0.8) return avail[Math.floor(Math.random() * avail.length)];
+  return S.recipes[Math.floor(Math.random() * S.recipes.length)];
+}
+function tickCafe() {
+  if (ui.screen !== "cafe" || ui.modal) return;
+  const now = performance.now(); const dt = Math.min(0.5, (now - cafe.last) / 1000); cafe.last = now;
+  cafe.time += dt;
+  // humeur des chats
+  S.cats.forEach((c) => { S.mood[c] = Math.max(0, (S.mood[c] ?? 60) - dt * 0.9 * toyFactor()); });
+  ensureCatPositions(); moveCats(dt);
+  // patience
+  cafe.seats.forEach((cl, i) => {
+    if (!cl) return;
+    if (cl.leaving) { cl.leaving -= dt; if (cl.leaving <= 0) cafe.seats[i] = null; return; }
+    cl.patience -= dt / cl.maxPat;
+    if (cl.patience <= 0) { cl.leaving = 1.6; cl.msg = "Tant pis, une autre fois !"; cafe.missed++; }
+  });
+  // arrivées
+  cafe.nextSpawn -= dt;
+  const free = cafe.seats.indexOf(null);
+  if (cafe.spawned < clientsPerDay() && cafe.nextSpawn <= 0 && free >= 0) {
+    // un villageois qui n'est pas déjà assis (ou un touriste)
+    const present = cafe.seats.filter(Boolean).map((c) => c.v.n);
+    const pool = VILLAGERS.filter((x) => !present.includes(x.n));
+    const v = projDone("gare") && Math.random() < 0.35
+      ? Object.assign({ role: "touriste", tourist: true, fav: null }, TOURISTS[Math.floor(Math.random() * TOURISTS.length)])
+      : pool[Math.floor(Math.random() * pool.length)] || VILLAGERS[0];
+    const favOk = S.recipes.includes(v.fav) && (S.showcase[v.fav] || 0) > 0 && Math.random() < 0.5;
+    sfx("bell");
+    cafe.seats[free] = { v, order: favOk ? v.fav : pickOrder(), patience: 1, maxPat: (30 + avgMood() / 5) * (projDone("fontaine") ? 1.25 : 1) * (0.8 + Math.random() * 0.4), msg: null, leaving: 0 };
+    cafe.spawned++;
+    // arrivées irrégulières : parfois un petit groupe, parfois un long moment calme
+    const r = Math.random();
+    cafe.nextSpawn = r < 0.18 ? 0.3 + Math.random() * 0.8   // quelqu'un entre juste derrière
+                   : r < 0.75 ? 2 + Math.random() * 5       // rythme normal
+                   : 7 + Math.random() * 6;                 // accalmie
+    if (r < 0.18) setTimeout(() => toast("Un petit groupe arrive !"), 200);
+  }
+  // fin du service
+  if (cafe.spawned >= clientsPerDay() && cafe.seats.every((x) => !x)) { endDay(); return; }
+  render();
+}
+function serve(i) {
+  const cl = cafe.seats[i]; if (!cl || cl.leaving) return;
+  let dish = cl.order, swapped = false;
+  if (!(S.showcase[dish] > 0)) {
+    // plus en vitrine : on propose autre chose (pas de pourboire, mais personne ne repart fâché)
+    dish = S.recipes.find((r) => S.showcase[r] > 0);
+    if (!dish) { toast("La vitrine est vide…"); return; }
+    swapped = true;
+  }
+  S.showcase[dish]--;
+  const price = Math.round(RECIPES[dish].price * (cl.v.tourist ? 1.5 : 1));
+  const tip = swapped ? 0 : Math.round(price * (0.1 + catBonus() + decorBonus()) * (0.5 + cl.patience / 2));
+  S.coins += price + tip; cafe.earned += price; cafe.tips += tip; cafe.served++; S.servedTotal++; S.rep++;
+  cl.leaving = 1.6; cl.msg = swapped ? "Bon, je vais goûter ça alors !" : tip >= 4 ? "Délicieux ! Merci beaucoup !" : "Merci, c'était bon !";
+  cl.paid = `+${price + tip}`;
+  // amitié (pas pour les touristes)
+  S.friend = S.friend || {}; S.stories = S.stories || {};
+  if (cl.v.tourist) { sfx("coin"); render(); return; }
+  const name = cl.v.n, before = hearts(name);
+  S.friend[name] = (S.friend[name] || 0) + 1 + (!swapped && dish === cl.v.fav ? 2 : 0);
+  const seen = S.stories[name] || 0;
+  if (seen < STORY_AT.length && hearts(name) >= STORY_AT[seen]) {
+    S.stories[name] = seen + 1;
+    const gift = [{ coins: 20 }, { coins: 35 }, { coins: 60, rep: 3 }][seen];
+    S.coins += gift.coins; S.rep += gift.rep || 0;
+    cafe.events.push({ name, text: cl.v.stories[seen], gift });
+    setTimeout(() => { toast("♥ " + name + " se confie à toi ! (+" + gift.coins + " pièces)"); sfx("heart"); }, 400);
+  } else if (hearts(name) > before) { setTimeout(() => { toast("♥ " + name + " t'apprécie de plus en plus"); sfx("heart"); }, 400); }
+  else sfx("coin");
+  render();
+}
+function pet(id) {
+  const now = performance.now();
+  if (cafe && cafe.petCd[id] && now - cafe.petCd[id] < 2500) { toast(CATS[id].n + " fait sa toilette, réessaie dans un instant."); return; }
+  if (cafe) cafe.petCd[id] = now;
+  S.mood[id] = Math.min(100, (S.mood[id] ?? 60) + 15);
+  sfx("purr"); toast(CATS[id].n + " ronronne…"); render();
+}
+function feed(id) {
+  const FOOD = Object.fromEntries(Object.entries(ITEMS).filter(([, it]) => it.cat).map(([k, it]) => [k, it.fx]).sort((a, b) => b[1] - a[1]));
+  const food = Object.keys(FOOD).find((k) => qty(k) > 0);
+  if (!food) { toast("Plus rien pour les chats : passe à l'Animalerie Les Moustaches."); return; }
+  S.pantry[food]--; S.mood[id] = Math.min(100, (S.mood[id] ?? 60) + FOOD[food]); sfx("pop");
+  toast(CATS[id].n + " se régale (" + ITEMS[food].n.toLowerCase() + ")"); render();
+}
+function moodWord(m) { return m > 75 ? "Très heureux" : m > 50 ? "Content" : m > 25 ? "A faim" : "Boude un peu"; }
+
+function cafeTable(x, y, cloth, candle = false) {
+  // table ronde avec nappe, deux chaises et un petit vase
+  return `<g transform="translate(${x} ${y})">
+    <g fill="#8A5A3B"><rect x="-118" y="-36" width="12" height="70" rx="5"/><rect x="-128" y="-6" width="44" height="10" rx="4"/><rect x="-124" y="2" width="6" height="40"/><rect x="-94" y="2" width="6" height="40"/></g>
+    <g fill="#8A5A3B"><rect x="106" y="-36" width="12" height="70" rx="5"/><rect x="84" y="-6" width="44" height="10" rx="4"/><rect x="88" y="2" width="6" height="40"/><rect x="118" y="2" width="6" height="40"/></g>
+    <ellipse cx="0" cy="66" rx="70" ry="10" fill="rgba(74,51,38,.18)"/>
+    <rect x="-8" y="10" width="16" height="56" fill="#6B4A33"/><ellipse cx="0" cy="64" rx="30" ry="6" fill="#6B4A33"/>
+    <path d="M-92 0 Q-96 40 -80 44 Q0 58 80 44 Q96 40 92 0Z" fill="${cloth}"/>
+    <path d="M-80 44 Q-60 36 -40 48 Q-20 38 0 50 Q20 38 40 48 Q60 36 80 44" fill="none" stroke="#FFFFFF" stroke-width="3" opacity=".7"/>
+    <ellipse cx="0" cy="0" rx="94" ry="20" fill="#FBF5EA"/>
+    <ellipse cx="0" cy="0" rx="80" ry="14" fill="none" stroke="${cloth}" stroke-width="2" stroke-dasharray="4 5"/>
+    ${candle ? `<g transform="translate(-50 -24)"><rect x="0" y="6" width="12" height="20" rx="2" fill="#FBF5EA"/><rect x="-3" y="24" width="18" height="4" rx="2" fill="#C99A3E"/><path d="M6 6 q-5 -6 0 -14 q5 8 0 14z" fill="#F2A65A"><animate attributeName="opacity" values="1;.6;1" dur="1.2s" repeatCount="indefinite"/></path><circle cx="6" cy="0" r="14" fill="#FFE9A8" opacity=".25"/></g>` : ""}
+    <g transform="translate(40 -26)"><path d="M0 26 q-6 -12 0 -20 h10 q6 8 0 20z" fill="#9CC3D2"/><path d="M5 6 v-10" stroke="#6F9468" stroke-width="2"/><circle cx="5" cy="-8" r="5" fill="#E9A9B0"/><circle cx="0" cy="-2" r="3" fill="#F2C46D"/></g>
+  </g>`;
+}
+function pendant(x, len) {
+  return `<g><path d="M${x} 0 V${len}" stroke="#4A3326" stroke-width="2"/><path d="M${x - 26} ${len + 26} Q${x - 24} ${len} ${x} ${len} Q${x + 24} ${len} ${x + 26} ${len + 26}Z" fill="#4F6B4A"/><ellipse cx="${x}" cy="${len + 28}" rx="10" ry="5" fill="#FFF3C4"/><ellipse cx="${x}" cy="${len + 90}" rx="90" ry="70" fill="#FFE9A8" opacity=".16"/></g>`;
+}
+function steamPuffs(x, y) {
+  return `<g fill="#FFFFFF">${[0, .7, 1.4].map((d, i) => `<ellipse cx="${x + i * 7}" cy="${y}" rx="4" ry="7" opacity="0"><animate attributeName="opacity" values="0;.8;0" dur="2.1s" begin="${d}s" repeatCount="indefinite"/><animateTransform attributeName="transform" type="translate" values="0 0;0 -26" dur="2.1s" begin="${d}s" repeatCount="indefinite"/></ellipse>`).join("")}</g>`;
+}
+
+function viewCafe() {
+  if (!cafe) startCafe();
+  else if (!cafe.timer) { cafe.last = performance.now(); cafe.timer = setInterval(tickCafe, 200); } // reprise après la cuisine
+  const hour = 14 + Math.floor((cafe.spawned / clientsPerDay()) * 4);
+  const seatsX = [640, 860, 1060];
+  const cloths = ["#E9A9B0", "#A9C4A0", "#9CC3D2"];
+  const deco = (id) => S.decor.includes(id);
+  const tint = SEASON_TINT[season()];
+  return `
+  <svg width="1280" height="720" viewBox="0 0 1280 720" aria-hidden="true" style="position:absolute;inset:0">
+    <defs>
+      <pattern id="wallp" width="56" height="56" patternUnits="userSpaceOnUse">
+        <rect width="56" height="56" fill="#F5E8CF"/>
+        <g fill="#E3CFA8"><circle cx="14" cy="14" r="3"/><circle cx="42" cy="42" r="3"/></g>
+        <g fill="#C9D8BE"><ellipse cx="14" cy="7" rx="2" ry="4"/><ellipse cx="14" cy="21" rx="2" ry="4"/><ellipse cx="7" cy="14" rx="4" ry="2"/><ellipse cx="21" cy="14" rx="4" ry="2"/></g>
+        <path d="M36 14 q6 -6 12 0 M36 14 q6 6 12 0" stroke="#E7C4C4" stroke-width="2" fill="none"/>
+      </pattern>
+      <pattern id="planks" width="160" height="56" patternUnits="userSpaceOnUse">
+        <rect width="160" height="56" fill="#C29770"/><rect y="28" width="160" height="28" fill="#BA8F68"/>
+        <path d="M0 0 H160 M0 28 H160 M60 0 V28 M130 28 V56 M20 28 V56" stroke="#A97F5A" stroke-width="2"/>
+        <circle cx="100" cy="12" r="2" fill="#A97F5A"/><circle cx="40" cy="44" r="2" fill="#A97F5A"/>
+      </pattern>
+    </defs>
+    <rect width="1280" height="440" fill="url(#wallp)"/>
+    <rect y="0" width="1280" height="14" fill="#A97C5A"/>
+    <rect y="320" width="1280" height="120" fill="#C9A27A"/><rect y="316" width="1280" height="10" fill="#8A5A3B"/>
+    <g fill="none" stroke="#B38B63" stroke-width="3">${Array.from({ length: 10 }, (_, i) => `<rect x="${150 + i * 116}" y="342" width="96" height="78" rx="6"/>`).join("")}</g>
+    <rect y="440" width="1280" height="280" fill="url(#planks)"/>
+    <rect y="436" width="1280" height="8" fill="#6B4A33"/>
+
+    <!-- porte de la cuisine -->
+    <g transform="translate(16 150)">
+      <rect x="0" y="0" width="120" height="290" rx="8" fill="#6B4A33"/>
+      <rect x="10" y="10" width="100" height="280" rx="4" fill="#8A5A3B"/>
+      <circle cx="60" cy="70" r="30" fill="#F7DFA0" stroke="#6B4A33" stroke-width="6"/>
+      <path d="M44 66 h32 M60 50 v40" stroke="#E0B94F" stroke-width="3"/>
+      <rect x="24" y="130" width="72" height="120" rx="6" fill="none" stroke="#6B4A33" stroke-width="4"/>
+      <rect x="92" y="160" width="10" height="34" rx="4" fill="#C99A3E"/>
+    </g>
+
+    <!-- tableau noir -->
+    <g transform="translate(160 64)"><rect width="200" height="168" rx="10" fill="#8A5A3B"/><rect x="10" y="10" width="180" height="148" rx="6" fill="#33503A"/>
+      <g transform="translate(150 118) scale(.45)" stroke="#E8EFE6" stroke-width="4" fill="none"><path d="M12 22 L16 4 L28 15 Q32 14 36 15 L48 4 L52 22 Q57 31 54 42 Q50 58 32 58 Q14 58 10 42 Q7 31 12 22Z"/></g>
+      <rect x="40" y="168" width="120" height="6" rx="3" fill="#6B4A33"/></g>
+
+    <!-- étagères -->
+    <g transform="translate(390 70)">
+      <rect x="0" y="70" width="180" height="10" rx="3" fill="#8A5A3B"/><rect x="0" y="160" width="180" height="10" rx="3" fill="#8A5A3B"/>
+      <g><rect x="10" y="34" width="26" height="36" rx="6" fill="#FBF5EA" stroke="#C9B48E" stroke-width="2"/><rect x="14" y="48" width="18" height="18" rx="3" fill="#F2C46D"/>
+         <rect x="44" y="28" width="30" height="42" rx="6" fill="#FBF5EA" stroke="#C9B48E" stroke-width="2"/><rect x="48" y="44" width="22" height="22" rx="3" fill="#E9A9B0"/>
+         <rect x="82" y="38" width="22" height="32" rx="6" fill="#FBF5EA" stroke="#C9B48E" stroke-width="2"/><rect x="86" y="50" width="14" height="16" rx="3" fill="#A9C4A0"/>
+         <path d="M120 70 q0 -26 20 -26 q20 0 20 26z" fill="#D9826B"/><path d="M160 54 q12 0 12 -8" stroke="#D9826B" stroke-width="5" fill="none"/><circle cx="140" cy="42" r="4" fill="#D9826B"/></g>
+      <g><path d="M10 160 h36 l-5 -26 h-26z" fill="#D9826B"/><path d="M28 134 q-16 -20 -4 -34 M28 134 q10 -24 22 -28 M28 134 q-2 -30 6 -40" stroke="#6F9468" stroke-width="5" fill="none" stroke-linecap="round"/>
+         <rect x="62" y="120" width="12" height="40" rx="2" fill="#6E8FB0"/><rect x="76" y="114" width="12" height="46" rx="2" fill="#D9826B"/><rect x="90" y="124" width="12" height="36" rx="2" fill="#F2C46D"/><rect x="104" y="118" width="12" height="42" rx="2" fill="#4F6B4A" transform="rotate(8 110 160)"/>
+         <g transform="translate(134 128)"><rect width="34" height="32" rx="4" fill="#FBF5EA"/><path d="M34 8 q10 0 10 10 q0 8 -10 8" stroke="#FBF5EA" stroke-width="4" fill="none"/><rect y="6" width="34" height="6" fill="#9CC3D2"/></g></g>
+    </g>
+
+    <!-- fenêtre -->
+    <g transform="translate(600 60)">
+      <rect x="-10" y="-6" width="240" height="226" rx="14" fill="#8A5A3B"/>
+      <rect x="4" y="6" width="212" height="200" rx="8" fill="#CFE3E6"/>
+      <circle cx="170" cy="50" r="20" fill="#F7DFA0"/>
+      <ellipse cx="50" cy="40" rx="30" ry="9" fill="#EAF3F4"/>
+      <ellipse cx="60" cy="190" rx="90" ry="44" fill="${tint}"/><ellipse cx="180" cy="196" rx="80" ry="36" fill="#8FAF8A"/>
+      <g transform="translate(140 130)"><rect x="0" y="14" width="40" height="30" fill="#F6EEDF"/><path d="M-4 16 L20 0 L44 16Z" fill="#D9826B"/></g>
+      <circle cx="30" cy="150" r="16" fill="#6F9468"/><circle cx="46" cy="140" r="12" fill="#7FA478"/>
+      <rect x="106" y="6" width="8" height="200" fill="#8A5A3B"/><rect x="4" y="100" width="212" height="8" fill="#8A5A3B"/>
+      <path d="M-14 -10 Q30 40 6 120 Q-6 170 -14 216Z" fill="#E9A9B0"/><path d="M234 -10 Q190 40 214 120 Q226 170 234 216Z" fill="#E9A9B0"/>
+      <g fill="#D78F98"><circle cx="-2" cy="120" r="6"/><circle cx="222" cy="120" r="6"/></g>
+      <rect x="-20" y="-16" width="260" height="10" rx="5" fill="#6B4A33"/>
+      <rect x="-16" y="210" width="252" height="16" rx="4" fill="#A97C5A"/>
+      <g transform="translate(10 196)"><rect width="200" height="18" rx="4" fill="#B76A55"/>${[16, 40, 64, 88, 112, 136, 160, 184].map((cx, i) => `<circle cx="${cx}" cy="0" r="8" fill="${["#E9A9B0", "#F2C46D", "#F7F0D0", "#E06A6A"][i % 4]}"/>`).join("")}</g>
+    </g>
+
+    <!-- mur de droite : cadres, horloge, plante -->
+    <g transform="translate(860 70)">
+      <rect x="0" y="0" width="70" height="86" rx="6" fill="#C99A3E"/><rect x="7" y="7" width="56" height="72" rx="3" fill="#FFF4E0"/>
+      <g transform="translate(12 18) scale(.72)"><path d="M12 22 L16 4 L28 15 Q32 14 36 15 L48 4 L52 22 Q57 31 54 42 Q50 58 32 58 Q14 58 10 42 Q7 31 12 22Z" fill="#E59A5B"/></g>
+      <rect x="86" y="30" width="60" height="70" rx="6" fill="#8A5A3B"/><rect x="92" y="36" width="48" height="58" rx="3" fill="#EAF3F6"/>
+      <g transform="translate(98 48) scale(.56)"><path d="M12 22 L16 4 L28 15 Q32 14 36 15 L48 4 L52 22 Q57 31 54 42 Q50 58 32 58 Q14 58 10 42 Q7 31 12 22Z" fill="#9A9490"/></g>
+      <circle cx="210" cy="40" r="30" fill="#FBF5EA" stroke="#6B4A33" stroke-width="6"/><path d="M210 40 V22 M210 40 L222 46" stroke="#4A3326" stroke-width="3" stroke-linecap="round"/>
+    </g>
+    <!-- arbre à chat -->
+    <g transform="translate(1150 160)">
+      <rect x="44" y="20" width="18" height="280" fill="#D8B78A"/><g stroke="#C29E6E" stroke-width="2">${Array.from({ length: 14 }, (_, i) => `<path d="M44 ${30 + i * 20} h18"/>`).join("")}</g>
+      <rect x="0" y="10" width="110" height="18" rx="9" fill="#A9C4A0"/><rect x="10" y="150" width="96" height="16" rx="8" fill="#A9C4A0"/>
+      <rect x="-10" y="290" width="130" height="20" rx="8" fill="#A9C4A0"/>
+      <path d="M100 166 v40" stroke="#C9B48E" stroke-width="2"/><circle cx="100" cy="212" r="8" fill="#E9A9B0"/>
+    </g>
+    <!-- plante en pot au sol -->
+    <g transform="translate(520 400)"><path d="M0 40 h50 l-6 40 h-38z" fill="#D9826B"/><path d="M25 40 q-30 -30 -14 -60 M25 40 q24 -36 40 -40 M25 40 q0 -50 4 -70 M25 40 q-36 -6 -40 -26" stroke="#6F9468" stroke-width="7" fill="none" stroke-linecap="round"/></g>
+
+    <!-- comptoir -->
+    <g transform="translate(150 280)">
+      <rect x="0" y="0" width="360" height="22" rx="6" fill="#6B4A33"/>
+      <rect x="10" y="22" width="340" height="150" fill="#8A5A3B"/>
+      <g fill="none" stroke="#6B4A33" stroke-width="4">${[24, 136, 248].map((x) => `<rect x="${x}" y="40" width="92" height="112" rx="8"/>`).join("")}</g>
+      <g transform="translate(20 -78)"><rect width="78" height="78" rx="10" fill="#C77E4F"/><rect x="8" y="10" width="62" height="20" rx="4" fill="#E4A574"/><circle cx="24" cy="20" r="5" fill="#4A3326"/><circle cx="54" cy="20" r="5" fill="#4A3326"/><rect x="28" y="40" width="22" height="10" fill="#4A3326"/><rect x="26" y="58" width="26" height="20" rx="3" fill="#FBF5EA"/>${steamPuffs(34, 50)}</g>
+      <g transform="translate(120 -62)"><path d="M0 60 Q0 0 40 0 Q80 0 80 60Z" fill="#DDEEF2" opacity=".8"/><circle cx="40" cy="-2" r="5" fill="#B9B4B0"/><path d="M8 56 Q40 26 72 56Z" fill="${RECIPES[S.recipes[0]].c}"/><ellipse cx="40" cy="60" rx="48" ry="6" fill="#FBF5EA"/></g>
+      <g transform="translate(220 -50)"><rect width="40" height="50" rx="8" fill="#DDEEF2" opacity=".85"/><rect x="4" y="-8" width="32" height="10" rx="4" fill="#A97C5A"/><circle cx="12" cy="30" r="7" fill="#F2C46D"/><circle cx="26" cy="22" r="7" fill="#E0B94F"/><circle cx="22" cy="38" r="7" fill="#F2C46D"/></g>
+      <g transform="translate(280 -44)"><rect width="60" height="44" rx="6" fill="#4F6B4A"/><rect x="8" y="6" width="44" height="14" rx="3" fill="#DCEBD6"/><g fill="#3B5237"><rect x="10" y="26" width="10" height="6" rx="2"/><rect x="25" y="26" width="10" height="6" rx="2"/><rect x="40" y="26" width="10" height="6" rx="2"/></g></g>
+    </g>
+    <!-- gamelles -->
+    <g transform="translate(440 476)"><ellipse cx="0" cy="0" rx="22" ry="8" fill="#D9826B"/><ellipse cx="0" cy="-2" rx="16" ry="5" fill="${qty("croquettes") ? "#C99A6B" : "#B76A55"}"/><ellipse cx="50" cy="0" rx="22" ry="8" fill="#6E8FB0"/><ellipse cx="50" cy="-2" rx="16" ry="5" fill="#A4CBDA"/></g>
+
+    <!-- tapis -->
+    ${deco("tapis") ? `<ellipse cx="860" cy="632" rx="400" ry="70" fill="#C9677A" opacity=".75"/><ellipse cx="860" cy="632" rx="370" ry="58" fill="none" stroke="#F6EEDF" stroke-width="5" stroke-dasharray="14 10"/><ellipse cx="860" cy="632" rx="320" ry="44" fill="none" stroke="#F2C46D" stroke-width="4"/><ellipse cx="860" cy="632" rx="250" ry="30" fill="none" stroke="#F6EEDF" stroke-width="3" stroke-dasharray="6 8"/>` : `<rect x="20" y="440" width="130" height="18" rx="6" fill="#A97C5A" opacity=".8"/>`}
+
+    ${pendant(690, 40)}${pendant(910, 70)}${pendant(1110, 40)}
+    ${deco("guirlande") ? `<path d="M0 26 Q160 70 320 26 T640 26 T960 26 T1280 26" stroke="#4F6B4A" stroke-width="2" fill="none"/>${Array.from({ length: 16 }, (_, i) => `<circle cx="${40 + i * 80}" cy="${40 + (i % 2) * 8}" r="6" fill="${["#F2C46D", "#E9A9B0", "#9CC3D2"][i % 3]}"><animate attributeName="opacity" values="1;.55;1" dur="${2 + (i % 3) * .5}s" repeatCount="indefinite"/></circle>`).join("")}` : ""}
+    ${deco("lampe") ? `<g transform="translate(1110 300)"><rect x="18" y="20" width="5" height="250" fill="#4A3326"/><ellipse cx="20" cy="272" rx="26" ry="6" fill="#4A3326"/><path d="M-6 22 h52 l-12 -36 h-28z" fill="#F7DFA0"/><ellipse cx="20" cy="40" rx="70" ry="60" fill="#FFE9A8" opacity=".2"/></g>` : ""}
+    ${deco("pot") ? `<g transform="translate(470 230)"><path d="M0 20 h40 l-6 30 h-28z" fill="#D9826B"/><circle cx="10" cy="14" r="9" fill="#E9A9B0"/><circle cx="24" cy="8" r="9" fill="#F2C46D"/><circle cx="34" cy="16" r="8" fill="#E9A9B0"/></g>` : ""}
+    ${deco("coussin") ? `<ellipse cx="710" cy="268" rx="58" ry="12" fill="#F2C46D"/><ellipse cx="710" cy="264" rx="48" ry="7" fill="#F7DFA0"/>` : ""}
+    ${deco("panier") ? `<g transform="translate(300 540)"><ellipse cx="0" cy="0" rx="72" ry="24" fill="#D8B78A"/><path d="M-70 0 q70 44 140 0" stroke="#A97C5A" stroke-width="6" fill="none"/><ellipse cx="0" cy="-4" rx="58" ry="14" fill="#F7DFA0"/></g>` : ""}
+    ${S.bouquetId ? `<g transform="translate(424 214)"><path d="M0 22 h30 l-5 44 h-20z" fill="#DDEEF2" opacity=".85"/>${[[4,8],[15,0],[26,8],[9,-6],[21,-6]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="7" fill="${BOUQUETS[S.bouquetId].c}" stroke="rgba(0,0,0,.08)"/>`).join("")}<path d="M10 22 v-10 M20 22 v-12" stroke="#6F9468" stroke-width="2"/></g>` : ""}
+    ${deco("plante") ? `<g transform="translate(560 14)"><path d="M0 0 V60 M-16 60 L0 0 L16 60" stroke="#A97C5A" stroke-width="2" fill="none"/><path d="M-20 60 h40 l-5 26 h-30z" fill="#F6EEDF" stroke="#C9B48E" stroke-width="2"/><path d="M-10 84 q-14 30 -4 60 M0 86 q4 40 -6 74 M10 84 q16 26 8 56 M-16 70 q-24 14 -20 40" stroke="#6F9468" stroke-width="5" fill="none" stroke-linecap="round"/>${[[-14,120],[-2,150],[14,128],[-30,104]].map(([x,y])=>`<ellipse cx="${x}" cy="${y}" rx="7" ry="4" fill="#7FA478"/>`).join("")}</g>` : ""}
+    ${deco("tableau") ? `<g transform="translate(1112 84)"><rect width="84" height="64" rx="5" fill="#C99A3E"/><rect x="6" y="6" width="72" height="52" fill="#CFE3E6"/><ellipse cx="30" cy="58" rx="40" ry="16" fill="#8FAF8A"/><ellipse cx="66" cy="60" rx="30" ry="12" fill="#A9C4A0"/><circle cx="60" cy="20" r="7" fill="#F7DFA0"/></g>` : ""}
+    ${deco("aquarium") ? `<g transform="translate(960 168)"><rect x="-6" y="62" width="112" height="10" rx="3" fill="#6B4A33"/><rect width="100" height="62" rx="6" fill="#BFE0EA" stroke="#8FB7C6" stroke-width="3"/><rect x="3" y="46" width="94" height="13" fill="#E8D4AE"/><path d="M20 46 q-6 -16 2 -28 M26 46 q6 -14 0 -24" stroke="#6F9468" stroke-width="3" fill="none"/><g><animateTransform attributeName="transform" type="translate" values="0 0;40 4;0 0" dur="6s" repeatCount="indefinite"/><path d="M34 24 q8 -7 16 0 q-8 7 -16 0z M50 24 l6 -5 v10z" fill="#F2A65A"/></g><g><animateTransform attributeName="transform" type="translate" values="30 0;-10 -4;30 0" dur="8s" repeatCount="indefinite"/><path d="M40 36 q6 -5 12 0 q-6 5 -12 0z M52 36 l5 -4 v8z" fill="#E06A6A"/></g><circle cx="80" cy="20" r="2" fill="#fff"><animate attributeName="cy" values="44;4" dur="2.5s" repeatCount="indefinite"/></circle></g>` : ""}
+    ${deco("gramophone") ? `<g transform="translate(566 372)"><rect x="0" y="40" width="44" height="26" rx="4" fill="#8A5A3B"/><path d="M22 40 v-10" stroke="#C99A3E" stroke-width="4"/><path d="M22 30 L0 0 Q22 -6 50 8Z" fill="#C99A3E"/><ellipse cx="25" cy="4" rx="22" ry="8" fill="#E0B94F" transform="rotate(-20 25 4)"/>${[0,1].map(i=>`<text x="${50+i*12}" y="${-4-i*10}" font-size="16" fill="#8A5A3B" font-family="serif"><animate attributeName="opacity" values="0;1;0" dur="2.4s" begin="${i*1.2}s" repeatCount="indefinite"/>♪</text>`).join("")}</g>` : ""}
+    ${deco("fauteuil") ? `<g transform="translate(150 444)"><rect x="6" y="54" width="8" height="22" fill="#6B4A33"/><rect x="96" y="54" width="8" height="22" fill="#6B4A33"/><rect x="10" y="0" width="90" height="56" rx="22" fill="#8C5E9E"/><rect x="0" y="26" width="26" height="42" rx="12" fill="#7A4F8C"/><rect x="84" y="26" width="26" height="42" rx="12" fill="#7A4F8C"/><rect x="18" y="38" width="74" height="26" rx="10" fill="#A27AB2"/></g>` : ""}
+    ${deco("griffoir") ? `<g transform="translate(1226 470)"><rect x="0" y="0" width="22" height="96" rx="6" fill="#C9A27A"/><g stroke="#B08A60" stroke-width="2">${Array.from({length:9},(_,i)=>`<path d="M0 ${8+i*10} h22"/>`).join("")}</g><rect x="-10" y="92" width="42" height="10" rx="4" fill="#8A5A3B"/></g>` : ""}
+    ${deco("pelote") ? `<g transform="translate(1180 560)"><circle r="14" fill="#E9A9B0"/><path d="M-10 -8 q10 8 20 0 M-12 2 q12 8 24 0 M-6 10 q8 -20 0 -24" stroke="#C9677A" stroke-width="2" fill="none"/><path d="M12 6 q20 10 30 -4" stroke="#E9A9B0" stroke-width="2" fill="none"/></g>` : ""}
+    ${seatsX.map((x, i) => cafeTable(x + 50, 545, cloths[i], deco("bougies"))).join("")}
+  </svg>
+  <div style="position:absolute;left:604px;top:66px;width:212px;height:200px;border-radius:8px;overflow:hidden;pointer-events:none">${weatherFX(212, 200, 26)}${weather() === "neige" ? `<div style="position:absolute;left:0;bottom:0;width:212px;height:24px;background:#F4F8FA;border-radius:50% 50% 0 0"></div>` : ""}</div>
+  ${festival() ? `<svg width="1280" height="50" viewBox="0 0 1280 50" aria-hidden="true" style="position:absolute;left:0;top:10px;pointer-events:none"><path d="M0 6 Q320 34 640 6 T1280 6" stroke="#8A5A3B" stroke-width="2" fill="none"/>${Array.from({length:32},(_,i)=>`<path d="M${20+i*40} ${10+Math.abs(Math.sin(i/16*Math.PI))*18} l10 16 l10 -16z" fill="${["#E9A9B0","#F2C46D","#8FAF8A","#9CC3D2"][i%4]}"/>`).join("")}</svg>` : ""}
+  <div style="position:absolute;left:174px;top:80px;width:172px;color:#F1F4EE;display:flex;flex-direction:column;gap:3px;font-family:'Comic Sans MS','Segoe Print',var(--font-body)">
+    <b style="font-size:16px;text-align:center;border-bottom:2px dashed rgba(241,244,238,.5);padding-bottom:3px">Menu du jour</b>
+    ${S.recipes.map((id) => `<span class="between" style="font-size:13px;font-weight:700"><span>${RECIPES[id].n.replace("Tarte à la ", "Tarte ").replace("Tartelette ", "Tartel. ")}</span><span>${RECIPES[id].price}</span></span>`).join("")}
+  </div>
+  ${hudTop(`${hour} h`, `<button class="pill" data-a="help" aria-label="Comment jouer (met le service en pause)" style="border:0">? Aide</button><span class="pill">Clients ${Math.min(cafe.spawned, clientsPerDay())} / ${clientsPerDay()}</span>`)}
+  <button data-a="kitchen" aria-label="Aller en cuisine (met le service en pause)" style="position:absolute;left:24px;top:300px;display:flex;align-items:center;gap:8px;padding:12px 18px 12px 12px;border:0;border-radius:999px;background:var(--terra);color:#fff;font-family:var(--font-title);font-weight:600;font-size:19px;box-shadow:0 5px 0 var(--terra-d);z-index:3">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>Cuisine</button>
+  <button data-a="tovillage" aria-label="Aller sur la carte du village (met le service en pause)" style="position:absolute;left:24px;top:372px;display:flex;align-items:center;gap:8px;padding:12px 18px 12px 14px;border:0;border-radius:999px;background:var(--sage);color:#fff;font-family:var(--font-title);font-weight:600;font-size:19px;box-shadow:0 5px 0 var(--sage-d);z-index:3">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z"/><path d="M9 4v14M15 6v14"/></svg>Carte</button>
+  ${cafe.seats.map((cl, i) => !cl ? "" : `
+    <div style="position:absolute;left:${seatsX[i] - 18}px;top:${cl.leaving ? 226 : 246}px;transition:top .3s;display:flex;flex-direction:column;align-items:center;gap:6px;opacity:${cl.leaving ? .75 : 1}">
+      <div class="card" style="width:200px;padding:10px 14px;gap:6px;position:relative">
+        <span class="between" style="font-size:12px;font-weight:800;color:var(--ok)"><span>${esc(cl.v.n.toUpperCase())} · ${esc(cl.v.role)}</span>${cl.v.tourist ? `<span style="color:#4C6F94">TOURISTE</span>` : `<span style="color:var(--terra)" aria-label="${hearts(cl.v.n)} cœurs d'amitié">♥ ${hearts(cl.v.n)}</span>`}</span>
+        <div class="row" style="gap:8px">${cl.msg ? "" : `<span style="width:22px;height:22px;border-radius:50%;background:${RECIPES[cl.order].c};flex-shrink:0;border:2px solid #fff;box-shadow:0 0 0 2px var(--line)"></span>`}<b style="font-family:var(--font-title);font-size:15px;line-height:1.2">${cl.msg ? esc(cl.msg) : esc(RECIPES[cl.order].n) + ", s'il te plaît !"}</b></div>
+        ${cl.leaving ? (cl.paid ? `<b style="color:var(--ok)">${cl.paid} pièces</b>` : "") : `
+        <div class="bar"><i style="width:${cl.patience * 100}%;background:${cl.patience > .4 ? "var(--sage-l)" : "var(--butter)"}"></i></div>
+        ${(S.showcase[cl.order] || 0) > 0
+          ? `<button class="btn small green" data-a="serve" data-i="${i}">Servir</button>`
+          : `<button class="btn small light" data-a="serve" data-i="${i}" ${S.recipes.some((r) => S.showcase[r] > 0) ? "" : "disabled"}>Plus en vitrine · proposer autre chose</button>`}`}
+        <span style="position:absolute;left:50%;bottom:-8px;width:16px;height:16px;background:#fff;transform:translateX(-50%) rotate(45deg)"></span>
+      </div>
+      ${villagerSVG(cl.v)}
+    </div>`).join("")}
+  ${(() => { ensureCatPositions(); const t = nowS(); return Object.entries(cafe.cp).map(([id, c]) => { const m = S.mood[id] ?? 60, p = catPos(c, t), flip = p.moving && c.tx < c.x;
+    return `<button data-a="pet" data-id="${id}" data-cat="${id}" aria-label="Caresser ${CATS[id].n}" title="${CATS[id].n} · ${moodWord(m)}" style="position:absolute;left:${p.x}px;top:${p.y}px;border:0;background:none;padding:0;z-index:2">
+      <span style="display:block;${flip ? "transform:scaleX(-1);" : ""}"><span style="display:block;${p.moving ? "animation:bob .45s ease-in-out infinite;" : ""}">${catSVG(id, 58, m < 30 && !p.moving)}</span></span>${m > 75 ? `<span style="position:absolute;right:-6px;top:-6px;font-size:13px;font-weight:800;color:var(--terra)">♥</span>` : ""}</button>`; }).join(""); })()}
+  <div style="position:absolute;left:24px;right:24px;bottom:16px;display:flex;gap:14px;align-items:stretch;z-index:4">
+    <div class="panel" style="flex:1;padding:10px 14px;display:flex;gap:10px;align-items:center">
+      <b style="font-family:var(--font-title);font-size:17px;margin-right:4px">Vitrine</b>
+      ${S.recipes.map((id) => `<div style="display:flex;flex-direction:column;align-items:center;gap:2px;width:96px;padding:6px;border-radius:14px;background:#fff"><span style="width:26px;height:26px;border-radius:50%;background:${RECIPES[id].c}"></span><span style="font-size:12px;font-weight:800;text-align:center;line-height:1.1">${RECIPES[id].n}</span><b style="color:${S.showcase[id] ? "var(--ok)" : "var(--bad)"}">${S.showcase[id] || 0}</b></div>`).join("")}
+    </div>
+    <div class="panel" style="width:360px;padding:10px 14px;display:flex;flex-direction:column;gap:5px">
+      <div class="between"><b style="font-family:var(--font-title);font-size:17px">Chats</b><span class="muted" style="font-size:12px;font-weight:700">Réserves : ${["croquettes", "friandises", "sardines", "poisson", "crevettes"].reduce((t, k) => t + qty(k), 0)}</span></div>
+      <div style="display:flex;flex-direction:column;gap:4px;max-height:74px;overflow:auto;padding-right:4px">
+      ${S.cats.map((id) => `<div class="between" style="font-size:14px;font-weight:700"><span style="width:70px">${CATS[id].n}</span><div class="bar" style="flex:1;margin:0 8px"><i style="width:${S.mood[id] ?? 60}%;background:${(S.mood[id] ?? 60) > 50 ? "var(--sage-l)" : "var(--terra)"}"></i></div><button class="btn light small" data-a="feed" data-id="${id}" style="padding:4px 10px;font-size:13px">Nourrir</button></div>`).join("")}
+      </div>
+    </div>
+  </div>`;
+}
+function villagerSVG(v) {
+  // petit personnage avec cheveux, tasse et joues roses
+  if (!v) return "";
+  const hair = { "Léon": "#6B4A33", "Margot": "#C9677A", "Papi Jules": "#EDEAE6", "Madame Rose": "#C9C4C0", "Lucie": "#8A5A3B", "Basile": "#4A3326", "Inès": "#2F2522" }[v.n] || "#6B4A33";
+  return `<svg width="76" height="96" viewBox="0 0 76 96" aria-hidden="true">
+    <rect x="10" y="58" width="56" height="38" rx="18" fill="${v.c}"/><path d="M28 58 l10 12 l10 -12" fill="#FBF5EA"/>
+    <circle cx="38" cy="34" r="25" fill="#F1C9A5"/>
+    <path d="M13 32 Q14 8 38 8 Q62 8 63 32 Q56 18 38 18 Q22 18 13 32Z" fill="${hair}"/>
+    ${v.n === "Margot" || v.n === "Inès" ? `<path d="M13 30 Q8 50 16 58 L20 34Z M63 30 Q68 50 60 58 L56 34Z" fill="${hair}"/>` : ""}
+    ${v.n === "Papi Jules" ? `<path d="M22 42 Q26 60 38 60 Q50 60 54 42 Q46 50 38 50 Q30 50 22 42Z" fill="#EDEAE6"/>` : ""}
+    ${v.tourist ? `<ellipse cx="38" cy="14" rx="30" ry="6" fill="#F3E2BE"/><path d="M22 14 Q24 -2 38 -2 Q52 -2 54 14Z" fill="#F3E2BE"/><rect x="22" y="9" width="32" height="5" fill="#D9826B"/><rect x="26" y="66" width="24" height="16" rx="4" fill="#4A3326"/><circle cx="38" cy="74" r="5" fill="#9CC3D2"/>` : ""}
+    <circle cx="29" cy="34" r="3" fill="#4A3326"/><circle cx="47" cy="34" r="3" fill="#4A3326"/>
+    <circle cx="24" cy="42" r="4" fill="#E9A9B0" opacity=".7"/><circle cx="52" cy="42" r="4" fill="#E9A9B0" opacity=".7"/>
+    <path d="M32 44 q6 4 12 0" stroke="#4A3326" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+  </svg>`;
+}
+
+// ---------- Fin de journée ----------
+let summaryData = null;
+function endDay() {
+  stopCafe();
+  const newcomers = [];
+  const cond = {
+    brume: () => S.decor.includes("coussin"),
+    biscotte: () => S.decor.includes("panier"),
+    plume: () => S.decor.includes("fauteuil"),
+    noisette: () => S.decor.includes("aquarium"),
+    moka: () => S.servedTotal >= 20,
+    pistache: () => bridgeDone(),
+  };
+  for (const id of Object.keys(cond)) if (!S.cats.includes(id) && cond[id]()) { S.cats.push(id); S.mood[id] = 60; newcomers.push(id); break; } // un nouveau chat par jour max
+  summaryData = { events: cafe.events, served: cafe.served, missed: cafe.missed, earned: cafe.earned, tips: cafe.tips, newcomers, mood: Math.round(avgMood()) };
+  // les plats non vendus restent (un peu moins frais, c'est cozy)
+  const morning = [];
+  if (projDone("lanternes")) { S.rep += 1; morning.push("Les lanternes ont attiré du monde sur la place : +1 réputation."); }
+  if (projDone("moulin")) { S.pantry.farine = qty("farine") + 2; S.pantry.miel = qty("miel") + 1; morning.push("Le meunier t'a livré 2 farines et 1 pot de miel."); }
+  summaryData.morning = morning;
+  S.day++; S.phase = "matin"; S.letterRead = false; S.bouquet = false; S.bouquetId = null;
+  S.weather = rollWeather();
+  if (dayInSeason() === 1) {
+    morning.push("Une nouvelle saison commence : " + season() + " ! L'épicerie a de nouveaux produits de saison.");
+    const gift = Object.entries(RECIPES).find(([id, r]) => r.gift && r.season === season() && !S.recipes.includes(id));
+    if (gift) { S.recipes.push(gift[0]); morning.push("Madame Rose t'offre la recette de saison : « " + gift[1].n + " » !"); }
+  }
+  if (festival()) morning.push("Demain, c'est la " + festival() + " : plus de clients et +20 % de pourboires !");
+  else if (S.weather === "pluie") morning.push("Il pleuvra demain : les villageois viendront se mettre à l'abri au café (+2 clients).");
+  else if (S.weather === "neige") morning.push("Il neigera demain : parfait pour un chocolat chaud (+1 client).");
+  const newIn = { librairie: "la librairie", brocante: "la brocante", refuge: "l'animalerie" };
+  Object.keys(newIn).forEach((tab) => { if (shopCatalogAll(tab).some((x) => UNLOCK[x.id] === S.day)) morning.push("Nouveautés à " + newIn[tab] + " !"); });
+  Object.keys(PROJECTS).forEach((id) => { if (projDay(id) === S.day) morning.push("Nouveau projet au village : « " + PROJECTS[id].n + " » ! Regarde la carte."); });
+  // points et pièces du lanceur Mes Jeux
+  if (window.MesJeux && summaryData.served > 0) {
+    const lignes = [[30, "Journée au café terminée"]];
+    lignes.push([summaryData.served * 2, summaryData.served + " client" + (summaryData.served > 1 ? "s servis" : " servi")]);
+    if (!summaryData.missed) lignes.push([10, "Personne n'est reparti les mains vides"]);
+    if (summaryData.newcomers.length) lignes.push([10, "Un nouveau chat s'installe"]);
+    if (summaryData.events.length) lignes.push([5 * summaryData.events.length, "Confidence d'un villageois"]);
+    try { MesJeux.award("ronrons", lignes, { score: summaryData.earned + summaryData.tips }); } catch (e) {}
+  }
+  cafe = null; save();
+  ui.screen = "summary"; render();
+}
+function viewSummary() {
+  const d = summaryData || { served: 0, missed: 0, earned: 0, tips: 0, newcomers: [], mood: 60 };
+  return `
+  <div style="position:absolute;inset:0;background:#3B3350"></div>
+  <svg width="1280" height="720" viewBox="0 0 1280 720" aria-hidden="true" style="position:absolute;inset:0"><circle cx="1050" cy="120" r="50" fill="#F7EBC4"/><circle cx="1070" cy="105" r="46" fill="#3B3350"/>${Array.from({ length: 30 }, (_, i) => `<circle cx="${(i * 137) % 1280}" cy="${(i * 71) % 300}" r="${1 + (i % 3)}" fill="#F7EBC4" opacity=".7"/>`).join("")}<ellipse cx="640" cy="760" rx="900" ry="200" fill="#2D2840"/></svg>
+  <div class="panel" style="position:absolute;left:340px;top:80px;width:600px;max-height:620px;overflow:auto;display:flex;flex-direction:column;gap:14px;padding:28px">
+    <h1 style="font-size:34px">Fin de journée</h1>
+    <p class="muted" style="margin:0;font-weight:700">Les chaises sont retournées, les chats s'étirent. Demain : ${season()} · Jour ${dayInSeason()}.</p>
+    <div class="grid" style="grid-template-columns:repeat(3,1fr)">
+      <div class="card" style="align-items:center"><span class="muted" style="font-weight:800;font-size:13px">CLIENTS SERVIS</span><b style="font-family:var(--font-title);font-size:32px">${d.served}</b></div>
+      <div class="card" style="align-items:center"><span class="muted" style="font-weight:800;font-size:13px">RECETTE</span><b style="font-family:var(--font-title);font-size:32px">${d.earned}</b></div>
+      <div class="card" style="align-items:center"><span class="muted" style="font-weight:800;font-size:13px">POURBOIRES</span><b style="font-family:var(--font-title);font-size:32px">${d.tips}</b></div>
+    </div>
+    ${d.missed ? `<p style="margin:0;font-weight:700">${d.missed} client(s) sont repartis sans leur commande : pense à remplir la vitrine.</p>` : `<p style="margin:0;font-weight:700;color:var(--ok)">Personne n'est reparti les mains vides. Bravo !</p>`}
+    ${(d.morning || []).map((m) => `<p style="margin:0;font-weight:700;color:var(--ok)">${esc(m)}</p>`).join("")}
+    ${(d.events || []).map((ev) => `<div class="row" style="background:#FDEEF0;border-radius:16px;padding:12px 14px;align-items:flex-start">${villagerSVG(VILLAGERS.find((v) => v.n === ev.name))}<div><b style="font-family:var(--font-title);font-size:18px;color:#A9506A">♥ ${esc(ev.name)} s'est confié·e à toi</b><div style="font-size:14px;line-height:1.4">${esc(ev.text)}</div><b style="font-size:13px;color:var(--ok)">Cadeau : +${ev.gift.coins} pièces${ev.gift.rep ? " · +" + ev.gift.rep + " réputation" : ""}</b></div></div>`).join("")}
+    ${d.newcomers.map((id) => `<div class="row" style="background:#FFF4E0;border-radius:16px;padding:14px">${catSVG(id, 64)}<div><b style="font-family:var(--font-title);font-size:20px">${CATS[id].n} s'installe au café !</b><div class="muted" style="font-weight:700">${esc(CATS[id].story)}</div></div></div>`).join("")}
+    <div class="row" style="justify-content:flex-end"><button class="btn light" data-a="album">Album</button><button class="btn green" data-a="village">Nouvelle journée →</button></div>
+  </div>`;
+}
+
+// ---------- Projets du village ----------
+function projectIcon(id, size = 70) {
+  const P = PROJECTS[id], c = P.c;
+  const art = {
+    lanternes: `<path d="M10 20 Q35 36 60 20" stroke="#4A3326" stroke-width="2" fill="none"/>${[18, 35, 52].map((x, i) => `<rect x="${x - 6}" y="${24 + (i === 1 ? 6 : 0)}" width="12" height="16" rx="4" fill="#F2C46D"/>`).join("")}`,
+    fontaine: `<ellipse cx="35" cy="52" rx="26" ry="8" fill="#B9AA8C"/><rect x="31" y="22" width="8" height="30" fill="#B9AA8C"/><path d="M35 20 q-14 4 -16 20 M35 20 q14 4 16 20" stroke="#86B3C6" stroke-width="3" fill="none"/>${[14, 26, 44, 56].map((x) => `<circle cx="${x}" cy="56" r="4" fill="#E9A9B0"/>`).join("")}`,
+    kiosque: `<path d="M12 30 L35 12 L58 30Z" fill="${c}"/><rect x="16" y="30" width="38" height="4" fill="#A97C5A"/><rect x="18" y="34" width="4" height="20" fill="#FBF5EA"/><rect x="48" y="34" width="4" height="20" fill="#FBF5EA"/><rect x="12" y="54" width="46" height="6" rx="2" fill="#A97C5A"/>`,
+    pont: `<path d="M6 50 Q35 22 64 50 L64 58 Q35 30 6 58Z" fill="${c}"/><path d="M6 40 Q35 12 64 40" stroke="#6B4A33" stroke-width="3" fill="none"/><rect x="0" y="56" width="70" height="8" fill="#86B3C6"/>`,
+    jardin: `<g stroke="#C9A27A" stroke-width="3">${[10, 22, 34, 46, 58].map((x) => `<path d="M${x} 58 v-16"/>`).join("")}<path d="M6 48 h58"/></g><circle cx="22" cy="34" r="10" fill="#7FA478"/><circle cx="48" cy="30" r="12" fill="#6F9468"/><g transform="translate(26 36) scale(.3)"><path d="M12 22 L16 4 L28 15 Q32 14 36 15 L48 4 L52 22 Q57 31 54 42 Q50 58 32 58 Q14 58 10 42 Q7 31 12 22Z" fill="#E59A5B"/></g>`,
+    terrasse: `<path d="M10 28 Q35 6 60 28Z" fill="${c}"/><path d="M10 28 h50" stroke="#C9677A" stroke-width="2"/><rect x="33" y="28" width="4" height="28" fill="#6B4A33"/><ellipse cx="35" cy="56" rx="18" ry="4" fill="#A97C5A"/>`,
+    moulin: `<rect x="26" y="30" width="18" height="30" fill="#F6EEDF"/><path d="M24 32 L35 18 L46 32Z" fill="#A97C5A"/><g transform="translate(35 24)" stroke="#6B4A33" stroke-width="5" stroke-linecap="round"><path d="M0 0 L-18 -14 M0 0 L18 14 M0 0 L14 -18 M0 0 L-14 18"/></g>`,
+    gare: `<rect x="10" y="26" width="50" height="26" rx="3" fill="#F6EEDF"/><path d="M6 28 L35 12 L64 28Z" fill="${c}"/><circle cx="35" cy="22" r="4" fill="#FBF5EA"/><rect x="18" y="34" width="10" height="18" fill="#8A5A3B"/><rect x="40" y="34" width="12" height="9" fill="#BFD8E0"/><path d="M0 58 h70 M0 62 h70" stroke="#6B4A33" stroke-width="2"/>`,
+  }[id];
+  return `<svg width="${size}" height="${size}" viewBox="0 0 70 70" aria-hidden="true"><circle cx="35" cy="35" r="35" fill="#F3E9D6"/>${art}</svg>`;
+}
+function viewProjects() {
+  return `
+  <div style="position:absolute;inset:0;background:#EFE1C6"></div>
+  <div class="hud"><div><span class="pill dark">Projets du village · ${Object.keys(PROJECTS).filter(projDone).length} terminé(s)</span></div><div>${coinPill()}<button class="btn light small" data-a="village">← Village</button></div></div>
+  <p style="position:absolute;left:28px;top:76px;margin:0;font-weight:800;color:var(--ink2)">L'argent du café fait revivre Bruyère. Chaque projet change le village… et ton café.</p>
+  <div class="grid" style="position:absolute;left:24px;right:24px;top:106px;bottom:20px;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;overflow:auto;padding:4px;align-content:start">
+    ${Object.entries(PROJECTS).filter(([id]) => projVisible(id)).map(([id, P]) => { const got = S.projects[id] || 0, done = projDone(id), open = projOpen(id);
+      return `<div class="card" style="gap:8px;min-height:250px;${done ? "background:#F1F7EE" : ""}${!open ? "opacity:.6" : ""}">
+        <div class="row">${projectIcon(id, 64)}<div><b style="font-family:var(--font-title);font-size:17px;line-height:1.15;display:block">${P.n}</b><span class="muted" style="font-size:12px;font-weight:800">${done ? "TERMINÉ" : P.goal + " pièces"}</span></div></div>
+        <p style="margin:0;font-size:13px;line-height:1.35">${esc(P.d)}</p>
+        <p style="margin:0;font-size:13px;font-weight:800;color:var(--ok)">${esc(P.fx)}</p>
+        <div style="margin-top:auto;display:flex;flex-direction:column;gap:6px">
+        ${done ? `<span style="font-weight:800;color:var(--ok)">✓ Le village te remercie !</span>`
+          : !open ? `<span class="muted" style="font-weight:800;font-size:13px">Nécessite : ${PROJECTS[P.req].n}</span>`
+          : `<div class="bar" style="height:10px"><i style="width:${got / P.goal * 100}%;background:var(--terra)"></i></div><span style="font-size:12px;font-weight:700">${got} / ${P.goal}</span>
+             <div class="row" style="gap:6px"><button class="btn small" data-a="donate" data-id="${id}" data-amt="25" style="flex:1" ${S.coins < 1 ? "disabled" : ""}>+25</button><button class="btn small" data-a="donate" data-id="${id}" data-amt="100" style="flex:1" ${S.coins < 1 ? "disabled" : ""}>+100</button></div>`}
+        </div></div>`; }).join("")}
+    ${(() => { const h = Object.keys(PROJECTS).find((id) => !projVisible(id)); return h ? `<div class="card" style="align-items:center;justify-content:center;text-align:center;border:3px dashed var(--line);background:#FBF5EA;box-shadow:none;min-height:240px">
+      <svg width="64" height="64" viewBox="0 0 70 70" aria-hidden="true"><circle cx="35" cy="35" r="35" fill="#F3E9D6"/><text x="35" y="47" text-anchor="middle" font-size="34" font-weight="800" fill="#C9B48E" font-family="sans-serif">?</text></svg>
+      <b style="font-family:var(--font-title);font-size:17px">Prochain projet</b>
+      <span class="muted" style="font-weight:700;font-size:14px">Les villageois en discutent… Annonce dans ${projDay(h) - S.day} jour(s).</span></div>` : ""; })()}
+  </div>`;
+}
+function projectDoneModal(id) {
+  const P = PROJECTS[id];
+  return `<div class="modal-bg"><div class="panel modal" role="dialog" aria-label="Projet terminé" style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px;padding:30px;background:#FFFBF2">
+    ${projectIcon(id, 110)}
+    <span style="font-size:13px;font-weight:800;letter-spacing:.08em;color:var(--ok)">PROJET TERMINÉ</span>
+    <h1 style="font-size:30px">${P.n}</h1>
+    <p style="margin:0;font-size:16px">${esc(P.d)}</p>
+    <p style="margin:0;font-weight:800;color:var(--ok)">${esc(P.fx)}</p>
+    <p class="muted" style="margin:0;font-weight:700">Tout le village est venu applaudir. Regarde la carte !</p>
+    <button class="btn green" data-a="closemodal">Formidable !</button></div></div>`;
+}
+
+// ---------- Carnet des villageois ----------
+function viewFriends() {
+  return `
+  <div style="position:absolute;inset:0;background:#EFE1C6"></div>
+  <div class="hud"><div><span class="pill dark">Carnet des villageois</span></div><div><button class="btn light small" data-a="village">← Village</button></div></div>
+  <p style="position:absolute;left:28px;top:76px;margin:0;font-weight:800;color:var(--ink2)">Sers à chacun son plat préféré : votre amitié grandit trois fois plus vite.</p>
+  <div class="grid" style="position:absolute;left:24px;right:24px;top:106px;bottom:20px;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;overflow:auto;padding:4px;align-content:start">
+    ${VILLAGERS.map((v) => { const h = hearts(v.n), seen = (S.stories || {})[v.n] || 0, favKnown = h >= 1, nextAt = STORY_AT[seen];
+      return `<div class="card" style="gap:8px">
+        <div class="row">${villagerSVG(v)}<div><b style="font-family:var(--font-title);font-size:19px">${esc(v.n)}</b><div class="muted" style="font-size:13px;font-weight:700">${esc(v.role)}</div>
+          <div style="color:var(--terra);font-size:15px;letter-spacing:1px" aria-label="${h} cœurs sur 10">${"♥".repeat(h)}<span style="color:#E3D3B8">${"♥".repeat(10 - h)}</span></div></div></div>
+        <div style="font-size:13px;font-weight:700"><span class="muted">Plat préféré :</span> ${favKnown ? `<span class="row" style="display:inline-flex;gap:4px"><span class="dot" style="background:${RECIPES[v.fav].c};border:0"></span>${esc(RECIPES[v.fav].n)}${S.recipes.includes(v.fav) ? "" : ` <span style="color:var(--bad)">(recette à acheter)</span>`}</span>` : "??? (sers-le une fois)"}</div>
+        ${v.stories.slice(0, seen).map((t) => `<p style="margin:0;font-size:13px;line-height:1.4;background:#FFF8EC;border-radius:10px;padding:8px 10px">« ${esc(t)} »</p>`).join("")}
+        ${nextAt != null ? `<p class="muted" style="margin:0;font-size:12px;font-weight:700">Prochaine confidence à ${nextAt} ♥</p>` : `<p style="margin:0;font-size:12px;font-weight:800;color:var(--ok)">Meilleurs amis !</p>`}
+      </div>`; }).join("")}
+  </div>`;
+}
+
+// ---------- Album ----------
+function viewAlbum() {
+  const ids = Object.keys(CATS);
+  return `
+  <div style="position:absolute;inset:0;background:#EFE1C6"></div>
+  <div class="hud"><div><span class="pill dark">Album des chats · ${S.cats.length} / ${ids.length}</span></div><div><button class="btn light small" data-a="village">← Village</button></div></div>
+  <div class="grid" style="position:absolute;left:24px;right:24px;top:96px;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px;bottom:16px;overflow:auto">
+    ${ids.map((id) => { const c = CATS[id], have = S.cats.includes(id);
+      return `<div class="card" style="align-items:center;text-align:center;justify-content:flex-start;gap:6px;padding:10px">
+        <div style="width:84px;height:84px;flex-shrink:0;border-radius:50%;background:${have ? "#FFF4E0" : "#F3E9D6"};display:flex;align-items:center;justify-content:center">${have ? catSVG(id, 64) : silhouetteSVG(64)}</div>
+        <h2 style="font-size:18px">${have ? c.n : "???"}</h2>
+        ${have ? `<span class="tag">${c.trait.toUpperCase()}</span>
+          <div style="width:100%"><div class="between" style="font-size:13px;font-weight:800"><span>Humeur</span><span>${moodWord(S.mood[id] ?? 60)}</span></div><div class="bar"><i style="width:${S.mood[id] ?? 60}%;background:var(--sage-l)"></i></div></div>
+          <p style="margin:0;font-size:14px"><b>Aime :</b> ${esc(c.likes)}</p>
+          <p class="muted" style="margin:0;font-size:14px;font-style:italic">${esc(c.story)}</p>`
+        : `<p class="muted" style="margin:0;font-weight:700">Comment l'attirer ?</p><p style="margin:0;font-size:15px">${esc(c.hint)}</p>`}
+      </div>`; }).join("")}
+  </div>`;
+}
+
+// ---------- Modale lettre ----------
+function letterModal() {
+  const L = LETTERS[(S.day - 1) % LETTERS.length];
+  return `<div class="modal-bg"><div class="panel modal" role="dialog" aria-label="Lettre" style="display:flex;flex-direction:column;gap:14px;padding:28px;background:#FFFBF2">
+    <span class="muted" style="font-weight:800;font-size:13px">LETTRE DE ${esc(L.from.toUpperCase())}</span>
+    <p style="margin:0;font-size:18px;line-height:1.5;font-family:Georgia,serif">${esc(L.text)}</p>
+    ${L.coins ? `<b style="color:var(--ok)">+${L.coins} pièces</b>` : ""}${L.rep ? `<b style="color:var(--ok)">+${L.rep} réputation</b>` : ""}
+    <div class="row" style="justify-content:flex-end"><button class="btn green" data-a="closemodal">Ranger la lettre</button></div></div></div>`;
+}
+
+// ---------- Modale « Comment jouer » ----------
+function helpModal() {
+  const step = (n, color, title, text) => `
+    <div class="row" style="align-items:flex-start;gap:14px">
+      <span style="width:36px;height:36px;border-radius:50%;background:${color};color:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--font-title);font-weight:700;font-size:18px;flex-shrink:0">${n}</span>
+      <div><b style="font-family:var(--font-title);font-size:18px">${title}</b><p style="margin:2px 0 0;font-size:14px;line-height:1.4">${text}</p></div>
+    </div>`;
+  return `<div class="modal-bg"><div class="panel modal" role="dialog" aria-label="Comment jouer" style="width:760px;max-height:680px;display:flex;flex-direction:column;gap:10px;padding:22px 30px;background:#FFFBF2">
+    <div class="between"><h1 style="font-size:30px">Comment jouer</h1>${catSVG("caramel", 48)}</div>
+    <p class="muted" style="margin:0;font-weight:700">Tu tiens un café à chats à Bruyère. Pas de chrono stressant ni d'échec : prends ton temps.</p>
+    ${step(1, "#D9826B", "Le matin, fais tes courses", "Sur la carte du village, va à l'<b>Épicerie de Madame Rose</b>. Ajoute au panier les ingrédients des recettes que tu veux préparer, puis clique sur <b>Payer</b>. La nourriture pour chats (et les chats à adopter !) se trouve à l'<b>Animalerie Les Moustaches</b>.")}
+    ${step(2, "#4F6B4A", "À midi, cuisine", "Clique sur <b>Rentrer cuisiner</b>. Choisis une recette : les ingrédients manquants sont entourés en rouge. Clique sur <b>Commencer</b>, puis fais les gestes : verser les ingrédients, <b>pétrir</b> (clics), <b>remuer</b> (maintiens le clic et tourne dans le bol), enfourner… Le plat fini va en <b>vitrine</b>.")}
+    ${step(3, "#6E8FB0", "L'après-midi, sers les clients", "Clique sur <b>Ouvrir le café</b>. Les villageois arrivent et commandent : clique sur <b>Servir</b>. La barre verte montre leur patience. Chaque villageois a un <b>plat préféré</b> : le lui servir fait vite grandir votre amitié (♥), et il finit par se confier à toi (avec un cadeau).")}
+    ${step(4, "#C9677A", "Prends soin des chats", "Clique sur un chat pour le <b>caresser</b>, ou sur <b>Nourrir</b> (croquettes ou poisson). Des chats heureux donnent jusqu'à +20 % de pourboires.")}
+    ${step(5, "#E0A04F", "Le soir, fais le bilan", "Après 8 clients, la journée se termine. Parfois, un nouveau chat s'installe ! Regarde dans l'<b>Album des chats</b> comment attirer les autres.")}
+    <div style="background:#F3E9D6;border-radius:14px;padding:12px 16px;font-size:14px;line-height:1.5">
+      <b>Astuces :</b> répare le pont pour acheter de nouvelles recettes à la <b>Librairie</b>. La <b>déco</b> de la brocante augmente les pourboires, ses <b>jouets</b> gardent les chats heureux, et certains objets attirent de nouveaux chats. Chaque <b>saison</b> apporte ses produits à l'épicerie et une recette offerte ; la <b>pluie</b> amène du monde, et le 6e jour de chaque saison, c'est la <b>fête</b> ! De nouveaux objets et recettes arrivent au fil des jours. Le bouton haut-parleur en haut coupe le son. Lis la <b>lettre</b> du jour à la poste. Va dire bonjour à <b>Papi Jules</b>, qui pêche au bord de la rivière. Donne des pièces pour <b>réparer le pont</b> : l'autre rive cache une boulangerie, une librairie (nouvelles recettes) et une poissonnerie.
+    </div>
+    <div class="row" style="justify-content:flex-end"><button class="btn green" data-a="closemodal">C'est parti !</button></div>
+  </div></div>`;
+}
+
+// ---------- Papi Jules ----------
+const JULES_LINES = [
+  "Ça mord pas aujourd'hui… Mais la rivière est jolie, alors je reste.",
+  "Ton chat roux est venu me voir hier. Je crois qu'il en voulait à mon seau.",
+  "Le vieux pont, je l'ai traversé tous les jours pendant cinquante ans. J'aimerais bien le revoir debout.",
+  "Une tarte à la rhubarbe… Ma défunte Jeanne en faisait les dimanches.",
+  "Les canards, ils me connaissent. On est de vieux collègues.",
+];
+function julesModal() {
+  const done = bridgeDone();
+  const line = done
+    ? "Le pont est réparé, grâce à toi ! J'ai rouvert ma poissonnerie sur le quai. Passe me voir pour du saumon frais. Pour la pâtée de tes chats, c'est chez Suzon, à l'animalerie !"
+    : JULES_LINES[(S.day - 1) % JULES_LINES.length];
+  const gift = !done && !S.julesGift;
+  return `<div class="modal-bg"><div class="panel modal" role="dialog" aria-label="Papi Jules" style="display:flex;gap:18px;padding:26px;background:#FFFBF2;width:620px">
+    <svg width="110" height="130" viewBox="0 0 110 130" aria-hidden="true" style="flex-shrink:0"><rect x="14" y="80" width="82" height="50" rx="24" fill="#4C6F94"/><circle cx="55" cy="56" r="34" fill="#F1C9A5"/><path d="M21 52 Q24 18 55 18 Q86 18 89 52Z" fill="#4C6F94"/><path d="M55 48 h44 q5 0 3 7 h-47z" fill="#3B5876"/><path d="M30 66 Q36 96 55 96 Q74 96 80 66 Q68 76 55 76 Q42 76 30 66Z" fill="#EDEAE6"/><circle cx="44" cy="58" r="3.5" fill="#4A3326"/><circle cx="66" cy="58" r="3.5" fill="#4A3326"/><circle cx="36" cy="66" r="5" fill="#E9A9B0" opacity=".7"/><circle cx="74" cy="66" r="5" fill="#E9A9B0" opacity=".7"/></svg>
+    <div style="display:flex;flex-direction:column;gap:10px;flex:1">
+      <span style="font-size:12px;font-weight:800;color:#4C6F94;letter-spacing:.05em">PAPI JULES · LE PÊCHEUR</span>
+      <p style="margin:0;font-size:17px;line-height:1.5">${esc(line)}</p>
+      ${gift ? `<p style="margin:0;font-weight:800;color:var(--ok)">Tiens, prends ce poisson pour tes chats. (+1 poisson frais)</p>` : ""}
+      ${!done ? `<p class="muted" style="margin:0;font-size:13px;font-weight:700">Il pêche ici tous les matins, en attendant que le pont soit réparé.</p>` : ""}
+      <div class="row" style="justify-content:flex-end"><button class="btn green" data-a="closemodal">À bientôt, Papi Jules !</button></div>
+    </div></div></div>`;
+}
+
+// ---------- Actions ----------
+function act(a, el, isKey = false) {
+  const id = el.dataset.id;
+  switch (a) {
+    case "new": S = newGame(); save(); go("village"); ui.modal = helpModal; render(); break;
+    case "help": ui.modal = helpModal; render(); break;
+    case "launcher": location.href = "../"; break;
+    case "continue": S = Object.assign(newGame(), load() || {}); if (S.bridge && !S.projects.pont) S.projects.pont = S.bridge; go("village"); break;
+    case "village": go("village"); break;
+    case "tovillage": go("village"); toast("Le service est en pause pendant ta balade."); break;
+    case "album": go("album"); break;
+    case "friends": go("friends"); break;
+    case "sound": toggleSound(); render(); break;
+    case "kitchen": { const during = ui.screen === "cafe" && cafe; go("kitchen"); if (during) toast("Le service est en pause pendant que tu cuisines."); break; }
+    case "shop": ui.shopTab = el.dataset.tab; go("shop"); break;
+    case "cart+": { const it = shopCatalog(ui.shopTab).find((x) => x.id === id); if (it.kind !== "item" && ui.cart[id]) break;
+      if (it.kind === "bouquet" && (S.bouquetId || Object.keys(ui.cart).length)) { toast("Un seul bouquet par jour !"); break; } ui.cart[id] = (ui.cart[id] || 0) + 1; render(); break; }
+    case "cart-": ui.cart[id] = (ui.cart[id] || 0) - 1; if (ui.cart[id] <= 0) delete ui.cart[id]; render(); break;
+    case "pay": {
+      const total = cartTotal(); if (!total || total > S.coins) break;
+      S.coins -= total;
+      for (const [k, q] of Object.entries(ui.cart)) {
+        const it = shopCatalog(ui.shopTab).find((x) => x.id === k);
+        if (it.kind === "item") S.pantry[k] = qty(k) + q;
+        else if (it.kind === "decor") S.decor.push(k);
+        else if (it.kind === "book") S.recipes.push(k);
+        else if (it.kind === "bouquet") { S.bouquet = BOUQUETS[k].tip; S.bouquetId = k; }
+        else if (it.kind === "cat") { S.cats.push(k); S.mood[k] = 75; setTimeout(() => { toast(CATS[k].n + " rejoint ton café !"); sfx("purr"); }, 300); }
+      }
+      ui.cart = {}; save(); sfx("coin"); render(); toast("Merci ! À bientôt."); break;
+    }
+    case "donate": {
+      const pid = el.dataset.id, P = PROJECTS[pid]; if (!P || projDone(pid) || !projOpen(pid)) break;
+      const amt = Math.min(+el.dataset.amt || 25, S.coins, P.goal - (S.projects[pid] || 0)); if (amt <= 0) { toast("Pas assez de pièces."); break; }
+      S.coins -= amt; S.projects[pid] = (S.projects[pid] || 0) + amt; save();
+      if (projDone(pid)) { sfx("done"); ui.modal = () => projectDoneModal(pid); render(); }
+      else { sfx("coin"); render(); toast("Merci pour le projet « " + P.n + " » !"); }
+      break;
+    }
+    case "projects": go("projects"); break;
+    case "bouquet": if (S.bouquet) { toast("Le bouquet embaume déjà le café."); break; } if (S.coins < 15) { toast("Pas assez de pièces."); break; } S.coins -= 15; S.bouquet = true; save(); render(); toast("Bouquet installé : +10 % de pourboires aujourd'hui"); break;
+    case "letter": if (S.letterRead) { toast("Pas de nouvelle lettre aujourd'hui."); break; } { const L = LETTERS[(S.day - 1) % LETTERS.length]; S.letterRead = true; S.coins += L.coins || 0; S.rep += L.rep || 0; save(); ui.modal = letterModal; render(); } break;
+    case "closemodal": ui.modal = null; render(); break;
+    case "jules": {
+      ui.modal = julesModal;
+      if (!bridgeDone() && !S.julesGift) { render(); S.julesGift = true; S.julesFish = true; S.pantry.poisson = qty("poisson") + 1; save(); break; }
+      render(); break;
+    }
+    case "pick": if (!ui.cook) { ui.kitchenSel = id; render(); } break;
+    case "cook": {
+      if (ui.cook || !canCook(ui.kitchenSel)) break;
+      const r = RECIPES[ui.kitchenSel];
+      for (const [k, v] of Object.entries(r.needs)) S.pantry[k] -= v;
+      ui.cook = { id: ui.kitchenSel, i: 0, prog: 0, taps: 0, drops: unitsOf(r).map(() => false), ovenIn: false, ang: 0 };
+      save(); render(); break;
+    }
+    case "drop": { const c = ui.cook; if (!c) break; c.drops[+el.dataset.i] = true; sfx("pop"); if (c.drops.every(Boolean)) advanceCook(); else render(); break; }
+    case "tapbowl": {
+      const c = ui.cook, k = curKind(); if (!c || !TAPS[k]) break;
+      c.taps++; c.justTapped = true; sfx(k === "knead" ? "knead" : "pop");
+      if (c.taps >= TAPS[k]) { c.justTapped = false; advanceCook(); } else { render(); c.justTapped = false; }
+      break;
+    }
+    case "stirbowl": {
+      const c = ui.cook; if (!c) break;
+      if (isKey) { c.prog = Math.min(1, c.prog + 0.2); c.ang += 72; sfx("swish"); if (c.prog >= 1) advanceCook(); else render(); }
+      else { c.stirring = true; c.lastAng = null; }
+      break;
+    }
+    case "oven": { const c = ui.cook; if (!c) break; if (!c.ovenIn) { c.ovenIn = true; c.prog = 0; sfx("oven"); render(); } else if (c.prog >= 1) advanceCook(); break; }
+    case "opencafe":
+      if (ui.cook) { toast("Termine d'abord ta recette !"); if (ui.screen !== "kitchen") go("kitchen"); break; }
+      if (cafe) { go("cafe"); break; } // reprise du service
+      if (!S.recipes.some((r) => S.showcase[r] > 0)) { toast("La vitrine est vide : cuisine au moins un plat."); break; }
+      go("cafe"); break;
+    case "serve": serve(+el.dataset.i); break;
+    case "pet": pet(id); break;
+    case "feed": feed(id); break;
+  }
+}
+// pointerdown : évite de perdre un clic quand le café se redessine
+$stage.addEventListener("pointerdown", (e) => {
+  const el = e.target.closest("[data-a]"); if (!el || el.disabled) return;
+  e.preventDefault(); audioInit(); if (!["drop", "tapbowl", "stirbowl", "serve", "pet", "pay", "oven"].includes(el.dataset.a)) sfx("click"); act(el.dataset.a, el);
+});
+$stage.addEventListener("keydown", (e) => {
+  if (e.key !== "Enter" && e.key !== " ") return;
+  const el = e.target.closest("[data-a]"); if (!el || el.disabled) return;
+  e.preventDefault(); audioInit(); act(el.dataset.a, el, true);
+});
+window.addEventListener("pointermove", stirMove);
+window.addEventListener("pointerup", () => { if (ui.cook) ui.cook.stirring = false; });
+
+// ---------- Mise à l'échelle ----------
+function fit() {
+  const s = Math.min(window.innerWidth / 1280, window.innerHeight / 720);
+  $stage.style.transform = `scale(${s})`;
+}
+window.addEventListener("resize", fit); fit();
+render();
+</script>
+</body>
+</html>
