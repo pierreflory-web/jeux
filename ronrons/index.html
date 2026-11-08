@@ -906,7 +906,9 @@ function openIsland(id) {
 const season = () => S.island === "givre" ? "Hiver" : S.island === "coq" ? "Été" : SEASONS[Math.floor((S.day - 1) / DAYS_PER_SEASON) % 4]; // sur l'île, c'est toujours l'été
 const dayInSeason = () => ((S.day - 1) % DAYS_PER_SEASON) + 1;
 const projDone = (id) => ((S.projects || {})[id] || 0) >= PROJECTS[id].goal;
-const projVisible = (id) => S.day >= projDay(id) || ((S.projects || {})[id] || 0) > 0;
+// un projet apparaît avec le temps, ou tout de suite quand le précédent est terminé
+const projDoneCount = () => Object.keys(PROJECTS).filter((id) => (S.projects || {})[id] >= PROJECTS[id].goal).length;
+const projVisible = (id) => S.day >= projDay(id) || ((S.projects || {})[id] || 0) > 0 || Object.keys(PROJECTS).indexOf(id) <= projDoneCount();
 const projOpen = (id) => projVisible(id) && (!PROJECTS[id].req || projDone(PROJECTS[id].req));
 const bridgeDone = () => projDone("pont");
 const WEATHER = { soleil: "Ensoleillé", pluie: "Pluie", neige: "Neige" };
@@ -2236,7 +2238,7 @@ function endDay() {
   else if (S.weather === "neige") morning.push("Il neigera demain : parfait pour un chocolat chaud (+1 client).");
   const newIn = onGivre() ? { chocolaterie: "la chocolaterie", auberge: "l'auberge", animneige: "l'animalerie", skishop: "la boutique de ski" } : onIsland() ? { creperie: "la crêperie", glacier: "chez le glacier", animplage: "l'animalerie", surf: "Playa & Co", souvenirs: "la boutique de souvenirs" } : { librairie: "la librairie", brocante: "la brocante", refuge: "l'animalerie" };
   Object.keys(newIn).forEach((tab) => { if (shopCatalogAll(tab).some((x) => UNLOCK[x.id] === S.day)) morning.push("Nouveautés à " + newIn[tab] + " !"); });
-  Object.keys(PROJECTS).forEach((id) => { if (projDay(id) === S.day) morning.push((txt("Nouveau projet sur l'île : « ", "Nouveau projet au village : « ")) + PROJECTS[id].n + " » ! Regarde la carte."); });
+  Object.keys(PROJECTS).forEach((id) => { if (projDay(id) === S.day && Object.keys(PROJECTS).indexOf(id) > projDoneCount()) morning.push((txt("Nouveau projet sur l'île : « ", "Nouveau projet au village : « ")) + PROJECTS[id].n + " » ! Regarde la carte."); });
   // points et pièces du lanceur Mes Jeux
   if (window.MesJeux && summaryData.served > 0 && !TEST) {
     const lignes = [[30, "Journée au café terminée"]];
@@ -2448,6 +2450,7 @@ function projectDoneModal(id, extra = "") {
     <p style="margin:0;font-weight:800;color:var(--ok)">${esc(P.fx)}</p>
     <p class="muted" style="margin:0;font-weight:700">${txt("Toute la plage est venue applaudir. Regarde la carte !", "Tout le village est venu applaudir. Regarde la carte !")}</p>
     ${extra ? `<p style="margin:0;font-weight:800;color:#8A5A3B;background:#F6E4B9;border-radius:12px;padding:8px 12px">${esc(extra)}</p>` : ""}
+    ${(() => { const nx = Object.keys(PROJECTS).find((p) => !projDone(p) && projVisible(p) && !(S.projects[p] > 0)); return nx ? `<p style="margin:0;font-weight:800;color:var(--ok);background:#EEF4E8;border-radius:12px;padding:8px 12px">Nouveau projet : « ${esc(PROJECTS[nx].n)} » !</p>` : ""; })()}
     ${!onIsland() && Object.keys(PROJECTS).every(projDone) ? `<p style="margin:0;font-weight:800;color:#2F5A80;background:#E7F1FB;border-radius:12px;padding:8px 12px">Bruyère est comme neuve ! Un bateau t'attend : une nouvelle aventure commence sur l'île aux Coquillages.</p>` : ""}
     <button class="btn green" data-a="closemodal">Formidable !</button></div></div>`;
 }
