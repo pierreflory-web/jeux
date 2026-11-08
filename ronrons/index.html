@@ -81,11 +81,11 @@ const DAYS_PER_SEASON = 7;
 
 const ITEMS = {
   // Épicerie
-  farine:   { n: "Farine",          p: 6,  c: "#F3E7CF", shop: "epicerie" },
-  beurre:   { n: "Beurre",          p: 7,  c: "#F7DFA0", shop: "epicerie" },
-  oeufs:    { n: "Œufs",            p: 6,  c: "#FFFFFF", shop: "epicerie" },
-  lait:     { n: "Lait frais",      p: 8,  c: "#EAF3F6", shop: "epicerie" },
-  miel:     { n: "Miel",            p: 15, c: "#F2C46D", shop: "epicerie" },
+  farine:   { n: "Farine",          p: 6,  c: "#F3E7CF", shop: "epicerie", also: ["epiplage"] },
+  beurre:   { n: "Beurre",          p: 7,  c: "#F7DFA0", shop: "epicerie", also: ["epiplage"] },
+  oeufs:    { n: "Œufs",            p: 6,  c: "#FFFFFF", shop: "epicerie", also: ["epiplage"] },
+  lait:     { n: "Lait frais",      p: 8,  c: "#EAF3F6", shop: "epicerie", also: ["epiplage"] },
+  miel:     { n: "Miel",            p: 15, c: "#F2C46D", shop: "epicerie", also: ["epiplage"] },
   // produits de saison : vendus seulement pendant leur saison
   rhubarbe: { n: "Rhubarbe",        p: 9,  c: "#E9A9B0", shop: "epicerie", season: "Printemps" },
   fraises:  { n: "Fraises",         p: 10, c: "#E06A6A", shop: "epicerie", season: "Printemps" },
@@ -99,37 +99,55 @@ const ITEMS = {
   oranges:  { n: "Oranges",         p: 9,  c: "#F29A3A", shop: "epicerie", season: "Hiver" },
   gingembre:{ n: "Gingembre",       p: 10, c: "#D9B56A", shop: "epicerie", season: "Hiver" },
   clementines:{ n: "Clémentines",   p: 9,  c: "#F2A65A", shop: "epicerie", season: "Hiver" },
-  citron:   { n: "Citrons",         p: 9,  c: "#F7E37A", shop: "epicerie" },
+  citron:   { n: "Citrons",         p: 9,  c: "#F7E37A", shop: "epicerie", also: ["epiplage"] },
   pomme:    { n: "Pommes",          p: 8,  c: "#C9D46A", shop: "epicerie" },
-  creme:    { n: "Crème fraîche",   p: 9,  c: "#FFFDF4", shop: "epicerie" },
+  creme:    { n: "Crème fraîche",   p: 9,  c: "#FFFDF4", shop: "epicerie", also: ["epiplage"] },
 
   // Autre rive
   cacao:    { n: "Cacao",           p: 12, c: "#8A5A3B", shop: "epicerie" },
   cannelle: { n: "Cannelle",        p: 11, c: "#B8733F", shop: "epicerie" },
-  vanille:  { n: "Vanille",         p: 16, c: "#3E3433", shop: "epicerie" },
+  vanille:  { n: "Vanille",         p: 16, c: "#3E3433", shop: "epicerie", also: ["epiplage"] },
   amandes:  { n: "Amandes",         p: 12, c: "#D9B98A", shop: "epicerie" },
   // Boulangerie (autre rive)
   levure:   { n: "Levure du boulanger", p: 8,  c: "#EFE3C2", shop: "boulangerie" },
   feuillete:{ n: "Pâte feuilletée", p: 14, c: "#F1D9A6", shop: "boulangerie" },
   pepites:  { n: "Pépites de chocolat", p: 13, c: "#5A3E2B", shop: "boulangerie" },
-  sucreglace:{ n: "Sucre glace",    p: 9,  c: "#FFFFFF", shop: "boulangerie" },
+  sucreglace:{ n: "Sucre glace",    p: 9,  c: "#FFFFFF", shop: "boulangerie", also: ["epiplage"] },
   levain:   { n: "Pain au levain",  p: 10, c: "#C9965E", shop: "boulangerie" },
-  saumon:   { n: "Saumon frais",    p: 14, c: "#F2A08A", shop: "poissonnerie" },
+  saumon:   { n: "Saumon frais",    p: 14, c: "#F2A08A", shop: "poissonnerie", also: ["poissport"] },
   truite:   { n: "Truite fumée",    p: 13, c: "#E8A47E", shop: "poissonnerie" },
-  crevetteg:{ n: "Crevettes grises", p: 15, c: "#E9B9A4", shop: "poissonnerie" },
-  thon:     { n: "Thon",            p: 12, c: "#C98A8A", shop: "poissonnerie" },
-  cabillaud:{ n: "Cabillaud",       p: 16, c: "#E6E1D6", shop: "poissonnerie" },
+  crevetteg:{ n: "Crevettes grises", p: 15, c: "#E9B9A4", shop: "poissonnerie", also: ["poissport"] },
+  thon:     { n: "Thon",            p: 12, c: "#C98A8A", shop: "poissonnerie", also: ["poissport"] },
+  cabillaud:{ n: "Cabillaud",       p: 16, c: "#E6E1D6", shop: "poissonnerie", also: ["poissport"] },
+  // Île aux Coquillages : Épicerie de la Plage
+  banane:   { n: "Bananes",         p: 8,  c: "#F2D45C", shop: "epiplage" },
+  coco:     { n: "Noix de coco",    p: 9,  c: "#8A6448", shop: "epiplage" },
+  ananas:   { n: "Ananas",          p: 10, c: "#E8B930", shop: "epiplage" },
+  mangue:   { n: "Mangues",         p: 11, c: "#F29A3A", shop: "epiplage" },
   // Animalerie : tout pour les chats
-  croquettes:{ n: "Croquettes",     p: 12, c: "#C99A6B", shop: "animalerie", cat: true, fx: 40 },
-  sardines: { n: "Sardines pour chats", p: 10, c: "#B9C6CC", shop: "animalerie", cat: true, fx: 50 },
-  friandises:{ n: "Friandises",     p: 16, c: "#E9A9B0", shop: "animalerie", cat: true, fx: 55 },
-  poisson:  { n: "Poisson pour chats", p: 18, c: "#9CC3D2", shop: "animalerie", cat: true, fx: 70 },
-  crevettes:{ n: "Crevettes pour chats", p: 26, c: "#F2A08A", shop: "animalerie", cat: true, fx: 90 },
-  croqchien:{ n: "Croquettes pour chiens", p: 12, c: "#B5774F", shop: "animalerie", cat: true, dog: true, fx: 40 },
-  os:       { n: "Os à mâcher",     p: 20, c: "#F6EEDF", shop: "animalerie", cat: true, dog: true, fx: 70 },
+  croquettes:{ n: "Croquettes",     p: 12, c: "#C99A6B", shop: "animalerie", also: ["animplage"], cat: true, fx: 40 },
+  sardines: { n: "Sardines pour chats", p: 10, c: "#B9C6CC", shop: "animalerie", also: ["animplage"], cat: true, fx: 50 },
+  friandises:{ n: "Friandises",     p: 16, c: "#E9A9B0", shop: "animalerie", also: ["animplage"], cat: true, fx: 55 },
+  poisson:  { n: "Poisson pour chats", p: 18, c: "#9CC3D2", shop: "animalerie", also: ["animplage"], cat: true, fx: 70 },
+  crevettes:{ n: "Crevettes pour chats", p: 26, c: "#F2A08A", shop: "animalerie", also: ["animplage"], cat: true, fx: 90 },
+  croqchien:{ n: "Croquettes pour chiens", p: 12, c: "#B5774F", shop: "animalerie", also: ["animplage"], cat: true, dog: true, fx: 40 },
+  os:       { n: "Os à mâcher",     p: 20, c: "#F6EEDF", shop: "animalerie", also: ["animplage"], cat: true, dog: true, fx: 70 },
 };
 
 const RECIPES = {
+  // --- île aux Coquillages : recettes de départ
+  smoothie: { n: "Smoothie banane",  c: "#F2D45C", isl: "coq", needs: { banane: 1, lait: 1 }, steps: ["Mélanger"], yield: 6, price: 13, book: 0, shop: "none" },
+  glacecoco:{ n: "Glace coco",       c: "#F4EDE2", isl: "coq", needs: { coco: 1, creme: 1 }, steps: ["Mélanger", "Façonner"], yield: 6, price: 14, book: 0, shop: "none" },
+  beignets: { n: "Beignets de plage", c: "#E8B26A", isl: "coq", needs: { farine: 1, oeufs: 1, lait: 1 }, steps: ["Pétrir la pâte", "Cuire à la poêle"], yield: 6, price: 13, book: 0, shop: "none" },
+  // Crêperie du Phare
+  fruits:   { n: "Salade de fruits exotiques", c: "#F2B33A", isl: "coq", needs: { ananas: 1, mangue: 1, banane: 1 }, steps: ["Garnir les coupes", "Mélanger"], yield: 6, price: 18, book: 80, shop: "creperie", d: "Toutes les couleurs de l'été." },
+  punch:    { n: "Punch des îles (sans alcool)", c: "#F2A65A", isl: "coq", needs: { ananas: 1, coco: 1, citron: 1 }, steps: ["Presser les citrons", "Mélanger"], yield: 6, price: 16, book: 70, shop: "creperie", d: "La boisson préférée de Lou." },
+  brochettes:{ n: "Brochettes du port", c: "#C98A8A", isl: "coq", needs: { thon: 1, citron: 1 }, steps: ["Garnir les brochettes", "Griller au four"], yield: 4, price: 20, book: 90, shop: "creperie", d: "La recette du capitaine Albert." },
+  // Glacier
+  glacevanille:{ n: "Glace vanille",  c: "#F7EBC4", isl: "coq", needs: { lait: 1, creme: 1, vanille: 1 }, steps: ["Fouetter la crème", "Façonner"], yield: 6, price: 15, book: 60, shop: "glacier", d: "Un classique fondant." },
+  sorbetananas:{ n: "Sorbet ananas",  c: "#E8B930", isl: "coq", needs: { ananas: 1, miel: 1 }, steps: ["Mélanger", "Façonner"], yield: 6, price: 15, book: 70, shop: "glacier", d: "Frais comme une vague." },
+  glacemangue:{ n: "Glace mangue",    c: "#F29A3A", isl: "coq", needs: { mangue: 1, creme: 1 }, steps: ["Mélanger", "Façonner"], yield: 6, price: 16, book: 80, shop: "glacier", d: "Douce et parfumée." },
+  coupetropicale:{ n: "Coupe tropicale", c: "#F5C6CF", isl: "coq", needs: { mangue: 1, banane: 1, creme: 1 }, steps: ["Garnir les coupes", "Fouetter la crème"], yield: 4, price: 24, book: 100, shop: "glacier", d: "La star de la plage." },
   // --- recettes de saison (la première de chaque saison est offerte par Madame Rose)
   pecheT:  { n: "Tarte aux pêches",    c: "#F5B38A", season: "Été", gift: true, needs: { peches: 2, farine: 1, beurre: 1 }, steps: ["Pétrir la pâte", "Garnir de pêches", "Cuire au four"], yield: 4, price: 24, book: 0, shop: "saison", d: "Le goût de l'été." },
   theglace:{ n: "Thé glacé à la menthe", c: "#8FC79A", season: "Été", needs: { menthe: 1, citron: 1, miel: 1 }, steps: ["Chauffer l'eau", "Laisser infuser"], yield: 6, price: 15, book: 60, shop: "librairie", d: "Pour les après-midis brûlants." },
@@ -145,7 +163,7 @@ const RECIPES = {
   fraise: { n: "Tartelette fraises",  c: "#E06A6A", season: "Printemps", needs: { fraises: 2, farine: 1, beurre: 1 }, steps: ["Fonçer les moules", "Disposer les fraises", "Cuire au four"], yield: 4, price: 24 },
   // Livres de recettes vendus à la Librairie (autre rive)
   citronnade: { n: "Citronnade au miel", c: "#F7E37A", needs: { citron: 2, miel: 1 }, steps: ["Presser les citrons", "Mélanger"], yield: 6, price: 13, book: 40, shop: "librairie", d: "Fraîche et acidulée." },
-  crepes: { n: "Crêpes",              c: "#F3D9A0", needs: { farine: 1, oeufs: 1, lait: 1 }, steps: ["Fouetter la pâte", "Cuire à la poêle"], yield: 6, price: 14, book: 50, shop: "librairie", d: "Le goûter préféré des enfants." },
+  crepes: { n: "Crêpes",              c: "#F3D9A0", needs: { farine: 1, oeufs: 1, lait: 1 }, steps: ["Fouetter la pâte", "Cuire à la poêle"], yield: 6, price: 14, book: 50, shop: "librairie", also: ["creperie"], d: "Le goûter préféré des enfants." },
   cookie: { n: "Cookies au miel",     c: "#F2C46D", needs: { farine: 1, beurre: 1, miel: 1 }, steps: ["Mélanger", "Façonner", "Cuire au four"], yield: 6, price: 13, book: 60, shop: "librairie", d: "Croquants dehors, fondants dedans." },
   chausson: { n: "Chaussons aux pommes", c: "#D9A55B", needs: { pomme: 2, feuillete: 1 }, steps: ["Garnir de pommes", "Façonner", "Cuire au four"], yield: 4, price: 20, book: 70, shop: "librairie", d: "Une recette de grand-mère." },
   brioche: { n: "Brioche au miel",    c: "#E9B872", needs: { farine: 1, beurre: 1, oeufs: 1, miel: 1, levure: 1 }, steps: ["Pétrir la pâte", "Façonner", "Cuire au four"], yield: 4, price: 26, book: 110, shop: "librairie", d: "Moelleuse, elle se vend très bien." },
@@ -155,11 +173,11 @@ const RECIPES = {
   roule:   { n: "Roulés à la cannelle", c: "#C98B55", needs: { farine: 1, cannelle: 1, miel: 1, levure: 1 }, steps: ["Pétrir la pâte", "Façonner", "Cuire au four"], yield: 6, price: 20, book: 95, shop: "librairie", d: "L'odeur attire tout le village." },
   saumonT: { n: "Tartelettes au saumon", c: "#F2A08A", needs: { saumon: 1, creme: 1, feuillete: 1 }, steps: ["Garnir de saumon", "Cuire au four"], yield: 4, price: 23, book: 90, shop: "librairie", d: "La spécialité de Papi Jules." },
   muffin:  { n: "Muffins aux pépites", c: "#7A5238", needs: { farine: 1, oeufs: 1, lait: 1, pepites: 1 }, steps: ["Mélanger", "Cuire au four"], yield: 6, price: 18, book: 80, shop: "librairie", d: "Les touristes en raffolent." },
-  gaufre:  { n: "Gaufres au sucre glace", c: "#E8C27A", needs: { farine: 1, oeufs: 1, lait: 1, sucreglace: 1 }, steps: ["Fouetter la pâte", "Cuire au gaufrier"], yield: 6, price: 17, book: 70, shop: "librairie", d: "Croustillantes, avec un nuage de sucre." },
+  gaufre:  { n: "Gaufres au sucre glace", c: "#E8C27A", needs: { farine: 1, oeufs: 1, lait: 1, sucreglace: 1 }, steps: ["Fouetter la pâte", "Cuire au gaufrier"], yield: 6, price: 17, book: 70, shop: "librairie", also: ["creperie"], d: "Croustillantes, avec un nuage de sucre." },
   tartine: { n: "Tartines miel-amandes", c: "#C9965E", needs: { levain: 1, miel: 1, amandes: 1 }, steps: ["Garnir les tartines", "Griller au four"], yield: 6, price: 15, book: 50, shop: "librairie", d: "Le petit-déjeuner de Léon." },
-  soupe:   { n: "Soupe du pêcheur",   c: "#E8C9A0", needs: { cabillaud: 1, creme: 1, lait: 1 }, steps: ["Chauffer le bouillon", "Mélanger"], yield: 6, price: 21, book: 90, shop: "librairie", d: "La recette de Jeanne, la femme de Papi Jules." },
+  soupe:   { n: "Soupe du pêcheur",   c: "#E8C9A0", needs: { cabillaud: 1, creme: 1, lait: 1 }, steps: ["Chauffer le bouillon", "Mélanger"], yield: 6, price: 21, book: 90, shop: "librairie", also: ["creperie"], d: "La recette de Jeanne, la femme de Papi Jules." },
   truiteT: { n: "Tartines à la truite", c: "#E8A47E", needs: { levain: 1, truite: 1, creme: 1 }, steps: ["Garnir les tartines", "Griller au four"], yield: 6, price: 20, book: 70, shop: "librairie", d: "Fumée, fondante, sur pain grillé." },
-  salade:  { n: "Salade crevettes-citron", c: "#F3D2B8", needs: { crevetteg: 1, citron: 1, creme: 1 }, steps: ["Presser les citrons", "Mélanger"], yield: 4, price: 22, book: 80, shop: "librairie", d: "Fraîche comme un matin sur le quai." },
+  salade:  { n: "Salade crevettes-citron", c: "#F3D2B8", needs: { crevetteg: 1, citron: 1, creme: 1 }, steps: ["Presser les citrons", "Mélanger"], yield: 4, price: 22, book: 80, shop: "librairie", also: ["creperie"], d: "Fraîche comme un matin sur le quai." },
   sandwich:{ n: "Sandwichs au thon",  c: "#D8B08C", needs: { levain: 1, thon: 1, oeufs: 1 }, steps: ["Garnir les tartines", "Façonner"], yield: 6, price: 18, book: 60, shop: "librairie", d: "Le déjeuner préféré des touristes." },
   financier: { n: "Financiers aux amandes", c: "#E2B979", needs: { amandes: 1, beurre: 1, oeufs: 1 }, steps: ["Mélanger", "Cuire au four"], yield: 6, price: 19, book: 90, shop: "librairie", d: "Petits, dorés, parfaits avec un thé." },
   choco:  { n: "Chocolat chaud",      c: "#8A5A3B", needs: { lait: 1, cacao: 1 }, steps: ["Chauffer le lait", "Fouetter le cacao"], yield: 4, price: 15, book: 80, shop: "librairie", d: "Pour les jours gris." },
@@ -182,6 +200,9 @@ const UNLOCK = {
   moka: 6, caline: 6,
   plume: 9, noisette: 9, filou: 9,
   nuage: 4, choco: 7, patapouf: 10, balle: 1,
+  // île aux Coquillages
+  perle: 4, corail: 6, coquille: 2, galet: 3, mousse: 8, bigorneau: 9, brochettes: 4, sorbetananas: 3, glacemangue: 6, coupetropicale: 9,
+  transats: 3, hamac: 5, maquette: 4, lampephare: 8,
 };
 const unlocked = (id) => S.day >= (UNLOCK[id] || 1);
 const DECOR = {
@@ -199,7 +220,15 @@ const DECOR = {
   tapis:      { n: "Grand tapis tressé",  p: 60,  c: "#C9677A", d: "+5 % de pourboires", tip: 0.05 },
   fauteuil:   { n: "Fauteuil en velours", p: 80,  c: "#8C5E9E", d: "Une chatte très élégante en rêve…" },
   gramophone: { n: "Gramophone",          p: 120, c: "#C99A3E", d: "+10 % de pourboires et une jolie mélodie", tip: 0.10 },
-  balle:      { n: "Balle en caoutchouc", p: 25, c: "#C9677A", d: "Jouet : les chiens restent joyeux plus longtemps.", toy: 0.1, shop: "animalerie" },
+  planche:    { n: "Planche de surf",       p: 45, c: "#E06A6A", d: "+5 % de pourboires", tip: 0.05, shop: "surf" },
+  transats:   { n: "Transats rayés",        p: 55, c: "#9CC3D2", d: "+5 % de pourboires", tip: 0.05, shop: "surf" },
+  hamac:      { n: "Hamac",                 p: 60, c: "#F2C46D", d: "Jouet : les animaux restent heureux plus longtemps.", toy: 0.1, shop: "surf" },
+  boueedeco:  { n: "Bouée de sauvetage",    p: 30, c: "#E06A6A", d: "+5 % de pourboires", tip: 0.05, shop: "surf" },
+  guirlandecoq:{ n: "Guirlande de coquillages", p: 35, c: "#F5C6CF", d: "+5 % de pourboires", tip: 0.05, shop: "souvenirs" },
+  bocal:      { n: "Bocal de coquillages",  p: 25, c: "#DDEEF2", d: "+5 % de pourboires", tip: 0.05, shop: "souvenirs" },
+  maquette:   { n: "Maquette de voilier",   p: 70, c: "#C9677A", d: "+5 % de pourboires", tip: 0.05, shop: "souvenirs" },
+  lampephare: { n: "Lampe en forme de phare", p: 90, c: "#F7DFA0", d: "+10 % de pourboires", tip: 0.10, shop: "souvenirs" },
+  balle:      { n: "Balle en caoutchouc", p: 25, c: "#C9677A", d: "Jouet : les chiens restent joyeux plus longtemps.", toy: 0.1, shop: "animalerie", also: ["animplage"] },
   aquarium:   { n: "Aquarium",            p: 150, c: "#86B3C6", d: "Jouet géant ! Et un chat curieux pourrait venir…", toy: 0.30 },
 };
 
@@ -216,6 +245,17 @@ const CATS = {
   caline:   { price: 140, refuge: true, n: "Câline",   fur: "#F6EEDF", eye: "#6F9468", trait: "Douce",     likes: "Les genoux, les chansons", story: "Une chatte tricolore qui choisit toujours les clients un peu tristes.", hint: "Elle attend à l'Animalerie Les Moustaches." },
   filou:    { price: 170, refuge: true, n: "Filou",    fur: "#F1E4CF", eye: "#6E8FB0", trait: "Bavard",    likes: "Parler (beaucoup), les cartons", story: "Un siamois qui commente chaque commande d'un long miaulement.", hint: "Il attend à l'Animalerie Les Moustaches." },
   pistache: { n: "Pistache", fur: "#B9A27A", eye: "#4F6B4A", trait: "Explorateur", likes: "Les quais, l'odeur du poisson", story: "Il a traversé le pont réparé le premier jour, la queue bien haute.", hint: "Il vit de l'autre côté de la rivière…" },
+  // --- île aux Coquillages (Animalerie de la Plage)
+  matelot:  { isl: "coq", price: 90,  n: "Matelot",  fur: "#F1ECE4", eye: "#4A3326", trait: "Marin",     likes: "Les bateaux, les cordages", story: "Il a débarqué d'un voilier un beau matin et a décidé que la plage était sa maison.", hint: "Il attend à l'Animalerie de la Plage." },
+  sable:    { isl: "coq", price: 80,  n: "Sable",    fur: "#E3C9A0", eye: "#4F6B4A", trait: "Rêveur",    likes: "Les siestes au soleil", story: "On le confond souvent avec la plage quand il dort.", hint: "Il attend à l'Animalerie de la Plage." },
+  perle:    { isl: "coq", price: 140, n: "Perle",    fur: "#FBF7F0", eye: "#6EA8D8", trait: "Élégante",  likes: "Les coquillages brillants", story: "Une chatte blanche aux yeux bleus comme le lagon.", hint: "Elle attend à l'Animalerie de la Plage." },
+  bouee:    { isl: "coq", kind: "dog", price: 180, n: "Bouée", race: "Terre-neuve", fur: "#2F2826", ear: "#1F1A19", snout: "#4A3E3B", patch: "#2F2826", patchX: 24, line: "#2F2826", trait: "Sauveteur", likes: "Nager, veiller sur tout le monde", story: "Il a déjà repêché trois chapeaux de touristes. Et un parasol.", hint: "Il attend à l'Animalerie de la Plage." },
+  corail:   { isl: "coq", kind: "dog", price: 150, n: "Corail", race: "Épagneul",   fur: "#C9643A", ear: "#A44E2C", snout: "#FFFFFF", patch: "#FFFFFF", patchX: 40, line: "#A44E2C", trait: "Joueur",    likes: "Courir dans les vagues", story: "Il creuse des trous partout sur la plage. On ne sait pas ce qu'il cherche.", hint: "Il attend à l'Animalerie de la Plage." },
+  coquille: { isl: "coq", price: 110, n: "Coquille", fur: "#FBF7F0", eye: "#6E9A4E", trait: "Curieuse",  likes: "Les coquillages, les poches des clients", story: "Une chatte tricolore qui rapporte un coquillage à chaque nouveau client.", hint: "Elle attend à l'Animalerie de la Plage." },
+  mousse:   { isl: "coq", price: 120, n: "Mousse",   fur: "#B9BCC4", eye: "#E2A93B", trait: "Duveteux",  likes: "L'écume, les plaids tout doux", story: "Une vraie boule d'écume grise. Les enfants veulent tous la câliner.", hint: "Il attend à l'Animalerie de la Plage." },
+  galet:    { isl: "coq", kind: "dog", price: 160, n: "Galet", race: "Schnauzer", fur: "#8E9199", ear: "#6F7279", snout: "#E3E5EA", patch: "#8E9199", patchX: 24, line: "#6F7279", pointy: true, mask: "#E3E5EA", trait: "Sage", likes: "Garder le ponton, les siestes à l'ombre", story: "Avec sa grande barbe, il a l'air d'un vieux capitaine. Il connaît chaque bateau du port.", hint: "Il attend à l'Animalerie de la Plage." },
+  bigorneau:{ isl: "coq", kind: "dog", price: 130, n: "Bigorneau", race: "Teckel", fur: "#9A5A32", ear: "#6E3F22", snout: "#B9774A", patch: "#9A5A32", patchX: 24, line: "#9A5A32", trait: "Minuscule", likes: "Creuser dans le sable, son foulard de marin", story: "Tout petit, avec un foulard de marin. Il se croit aussi grand que Bouée.", hint: "Il attend à l'Animalerie de la Plage." },
+  doublon:  { isl: "coq", secret: true, n: "Doublon", fur: "#E59A5B", eye: "#4A3326", trait: "Pirate", likes: "Les pièces d'or, dormir sur le coffre", story: "Il veillait sur le trésor de l'îlot depuis des années. Maintenant, il veille sur ton café.", hint: "Cette place est encore vide…" },
   // --- chiens : uniquement à l'Animalerie (ils ne viennent jamais tout seuls)
   doulio:   { kind: "dog", price: 150, n: "Doulio",   race: "Golden retriever", fur: "#FBF7F0", ear: "#E3C9A0", snout: "#FFFFFF", patch: "#E3C9A0", patchX: 40, line: "#D8C7A8", trait: "Joueur",      likes: "Les balles, les enfants, les câlins", story: "Blanc et beige, il court partout en remuant la queue et rapporte tout ce qu'on lui lance.", hint: "Il attend au rayon chiens de l'Animalerie." },
   pepette:  { kind: "dog", price: 120, n: "Pépette",  race: "Teckel",           fur: "#8A4F2E", ear: "#6B3A20", snout: "#B5774F", patch: "#8A4F2E", patchX: 24, line: "#8A4F2E", trait: "Curieuse",    likes: "Renifler sous les tables", story: "Elle connaît l'odeur de chaque client et devine leur commande avant eux.", hint: "Elle attend au rayon chiens de l'Animalerie." },
@@ -225,7 +265,7 @@ const CATS = {
   patapouf: { kind: "dog", price: 220, n: "Patapouf", race: "Saint-bernard",    fur: "#F6EEDF", ear: "#B5653A", snout: "#FFFFFF", patch: "#B5653A", patchX: 40, line: "#D8C7A8", trait: "Tranquille",  likes: "Les siestes près du poêle", story: "Énorme et très doux, il ne se lève que pour les biscuits.", hint: "Il attend au rayon chiens de l'Animalerie." },
 };
 
-const VILLAGERS = [
+let VILLAGERS = [
   { n: "Léon", role: "le facteur", c: "#F2C46D", fav: "tarte", stories: [
     "Léon t'avoue qu'il connaît chaque chat du village par son prénom. « C'est le métier ! »",
     "Il te montre une vieille carte postale du café, du temps où il s'appelait déjà « Ronron Café ».",
@@ -258,7 +298,7 @@ const VILLAGERS = [
 const STORY_AT = [2, 5, 8]; // cœurs nécessaires pour chaque confidence
 
 
-const LETTERS = [
+let LETTERS = [
   { from: "Léon", text: "Le café sent si bon le matin que je fais un détour exprès. Tiens, quelques pièces pour la caisse du pont !", coins: 20 },
   { from: "Margot", text: "Merci pour le thé de l'autre jour. Je t'ai laissé un bouquet sur le pas de la porte.", rep: 1 },
   { from: "Papi Jules", text: "Ton chat roux m'a volé une sardine. Je ne lui en veux pas. Enfin, un peu.", coins: 0 },
@@ -266,7 +306,7 @@ const LETTERS = [
   { from: "Basile", text: "Si un jour le pont est réparé, je t'aiderai à installer les planches.", coins: 0 },
 ];
 
-const PROJECTS = { // un nouveau projet apparaît tous les 3 jours, dans cet ordre
+let PROJECTS = { // un nouveau projet apparaît tous les 3 jours, dans cet ordre
   pont:      { n: "Le vieux pont",        goal: 300, c: "#A97C5A", d: "Réparer le pont pour rejoindre l'autre rive.", fx: "Ouvre la boulangerie, la librairie (recettes) et la poissonnerie" },
   lanternes: { n: "Lanternes du village", goal: 120, c: "#F2C46D", d: "Des lanternes sur la place pour les soirées d'été.", fx: "+1 réputation chaque jour" },
   fontaine:  { n: "Fontaine fleurie",     goal: 150, c: "#86B3C6", d: "Remettre l'eau dans la vieille fontaine et l'entourer de fleurs.", fx: "Les clients sont 25 % plus patients" },
@@ -283,13 +323,213 @@ const TOURISTS = [
   { n: "Sofia", c: "#E6C17A" }, { n: "Liam", c: "#C9B4C9" }, { n: "Ana", c: "#F2C46D" },
 ];
 const BRIDGE_GOAL = 300;
+
+// ================= LES ÎLES =================
+// Bruyère est le premier village. Quand ses 8 projets sont finis, on part sur l'île aux Coquillages
+// avec un seul animal (le compagnon). Chaque lieu a sa propre sauvegarde ; on peut revenir à Bruyère en bateau.
+const BRUYERE = { villagers: VILLAGERS, letters: LETTERS, projects: PROJECTS };
+const COQ = {
+  villagers: [
+    { n: "Marina", role: "la marchande de glaces", c: "#F5C6CF", fav: "glacecoco", stories: [
+      "Marina goûte chaque glace trois fois « pour être sûre ». Elle dit que c'est un métier.",
+      "Elle te confie la recette secrète de son cornet : une pincée de sel. Chut !",
+      "Marina a baptisé un nouveau parfum en ton honneur : « Ronron coco »." ] },
+    { n: "Théo", role: "le maître-nageur", c: "#9CC3D2", fav: "smoothie", stories: [
+      "Théo surveille la plage depuis sa chaise haute, mais il surveille surtout tes chats.",
+      "Il t'apprend à reconnaître les vagues qui rapportent des coquillages.",
+      "Théo a peint « Ronron Café » sur sa bouée. Tout le monde en parle." ] },
+    { n: "Yvonne", role: "la gardienne du phare", c: "#C9B4C9", fav: "soupe", stories: [
+      "Yvonne monte les 132 marches du phare chaque soir. « Ça garde la forme ! »",
+      "Elle te montre le journal de bord du phare, rempli de dessins de bateaux.",
+      "Yvonne te laisse allumer la lanterne du phare pour la première fois." ] },
+    { n: "Lou", role: "la surfeuse", c: "#F2B6A0", fav: "punch", stories: [
+      "Lou passe ses matinées sur l'eau et ses après-midis au café, les cheveux encore salés.",
+      "Elle a appris à Corail à surfer. Enfin, à tomber de la planche avec style.",
+      "Lou organise une compétition de surf et veut ton café comme buvette officielle." ] },
+    { n: "Capitaine Albert", role: "le vieux marin", c: "#B9C6CC", fav: "brochettes", stories: [
+      "Le capitaine Albert a fait trois fois le tour du monde. Il raconte toujours le même voyage.",
+      "Il te montre sa boussole, qui indique toujours… le café.",
+      "Albert t'offre la maquette de son premier bateau pour décorer le comptoir." ] },
+    { n: "Nina", role: "la petite curieuse", c: "#F7E37A", fav: "crepes", stories: [
+      "Nina, 8 ans, collectionne les coquillages et connaît le nom de chaque chat de l'île.",
+      "Elle a dessiné une carte au trésor de la plage. La croix est sur ton café.",
+      "Nina veut être cheffe plus tard. Elle t'aide à décorer les crêpes le dimanche." ] },
+    { n: "Paco", role: "le pêcheur", c: "#A9C4A0", fav: "salade", stories: [
+      "Paco part en mer avant le lever du soleil et revient en chantant.",
+      "Il a la même casquette que Papi Jules. Ils s'écrivent des lettres depuis 40 ans !",
+      "Paco te réserve chaque matin les plus belles crevettes de sa pêche." ] },
+  ],
+  letters: [
+    { from: "Marina", text: "Il fait si chaud que mes glaces fondent avant d'arriver en cornet ! Passe me voir, j'ai une idée de parfum pour toi.", coins: 10 },
+    { from: "Papi Jules", text: "Le village te salue ! Tes chats de Bruyère vont bien, je leur donne une sardine de temps en temps. Chut.", coins: 20 },
+    { from: "Nina", text: "J'ai trouvé un coquillage en forme de chat ! Je te le montre demain.", rep: 1 },
+    { from: "Yvonne", text: "Hier soir, j'ai vu ton café éclairé depuis le phare. On aurait dit une petite étoile.", coins: 0 },
+    { from: "Capitaine Albert", text: "Si le ponton est agrandi, le bateau-navette pourra accoster. Pense à mes vieux os !", coins: 15 },
+  ],
+  // mêmes clés que Bruyère (même effet), mais d'autres projets
+  projects: {
+    pont:      { n: "Le grand ponton",       goal: 300, c: "#A97C5A", d: "Allonger le ponton jusqu'au large pour que les bateaux accostent.", fx: "+1 client par jour (des plaisanciers s'arrêtent au café)" },
+    lanternes: { n: "Lampions de la plage",  goal: 120, c: "#F2C46D", d: "Des lampions colorés le long de la plage pour les soirées.", fx: "+1 réputation chaque jour" },
+    fontaine:  { n: "Rallumer le phare",     goal: 150, c: "#D9826B", d: "Réparer la grande lanterne du phare d'Yvonne.", fx: "Les clients sont 25 % plus patients" },
+    jardin:    { n: "Cabanes à chats",       goal: 350, c: "#8FAF8A", d: "De petites cabanes en bois sur la plage, à l'ombre des palmiers.", fx: "Les animaux restent heureux plus longtemps" },
+    kiosque:   { n: "Le carrousel",          goal: 250, c: "#E9A9B0", d: "Un petit manège de chevaux de bois au milieu de la plage.", fx: "+5 % de pourboires" },
+    terrasse:  { n: "Terrasse sur le sable", goal: 400, c: "#9CC3D2", d: "Des tables et des parasols devant le café, les pieds dans le sable.", fx: "+2 clients par jour et +5 % de pourboires" },
+    moulin:    { n: "La cocoteraie",         goal: 600, c: "#6F9468", d: "Planter des cocotiers et des bananiers derrière le café.", fx: "2 noix de coco et 1 régime de bananes offerts chaque matin", req: "pont" },
+    gare:      { n: "Le bateau-navette",     goal: 900, c: "#6E8FB0", d: "Une navette relie l'île au continent plusieurs fois par jour.", fx: "Des touristes arrivent : +3 clients par jour, ils paient 50 % de plus", req: "pont" },
+  },
+};
+// Dessin de la carte de l'île (repris de la maquette)
+const ISLE_SVG = `<defs>
+<pattern id="sable" width="40" height="40" patternUnits="userSpaceOnUse"><rect width="40" height="40" fill="#F6E4B9"></rect><circle cx="8" cy="10" r="1.4" fill="#E6CF9C"></circle><circle cx="28" cy="22" r="1.2" fill="#E6CF9C"></circle><circle cx="18" cy="34" r="1" fill="#FBF0D2"></circle><circle cx="34" cy="6" r="1" fill="#FBF0D2"></circle></pattern>
+<pattern id="dune" width="72" height="72" patternUnits="userSpaceOnUse"><rect width="72" height="72" fill="#A8D08B"></rect><ellipse cx="18" cy="20" rx="16" ry="9" fill="#B5DA98"></ellipse><ellipse cx="54" cy="52" rx="18" ry="10" fill="#B5DA98"></ellipse><path d="M10 40 q2 -8 4 0 q2 -10 4 0 q2 -7 4 0 M46 18 q2 -8 4 0 q2 -10 4 0 q2 -7 4 0 M30 66 q2 -7 4 0 q2 -9 4 0" stroke="#86B86C" stroke-width="2" fill="none" stroke-linecap="round"></path><circle cx="34" cy="30" r="2.2" fill="#FFFFFF"></circle><circle cx="34" cy="30" r="0.9" fill="#F2C46D"></circle><circle cx="62" cy="10" r="2" fill="#F5C6CF"></circle><circle cx="8" cy="62" r="2" fill="#F7E37A"></circle><circle cx="58" cy="34" r="1.6" fill="#FFFFFF"></circle></pattern>
+<pattern id="planches" width="14" height="14" patternUnits="userSpaceOnUse"><rect width="14" height="14" fill="#D3AC7E"></rect><path d="M0 0 V14" stroke="#B58A5C" stroke-width="2"></path></pattern>
+</defs>
+<rect width="960" height="720" fill="#5FA8C4"></rect>
+<g stroke="#9ACFE0" stroke-width="3" stroke-linecap="round" fill="none">
+<path d="M880 30 q10 -6 20 0 q10 6 20 0"><animate attributeName="opacity" values=".2;1;.2" dur="3s" repeatCount="indefinite"></animate></path>
+<path d="M20 30 q10 -6 20 0 q10 6 20 0"><animate attributeName="opacity" values="1;.2;1" dur="4s" repeatCount="indefinite"></animate></path>
+</g>
+<path d="M40 90 Q260 0 530 20 Q830 30 935 190 Q985 360 935 540 Q880 680 640 690 Q500 700 400 690 Q270 705 170 690 Q15 660 0 480 Q-20 240 40 90Z" fill="#8FD3D8"></path>
+<path d="M40 90 Q260 0 530 20 Q830 30 935 190 Q985 360 935 540 Q880 680 640 690 Q500 700 400 690 Q270 705 170 690 Q15 660 0 480 Q-20 240 40 90Z" fill="none" stroke="#B5E6E6" stroke-width="10" opacity=".7"></path>
+<path d="M70 110 Q260 30 520 50 Q800 60 900 200 Q950 360 900 520 Q850 620 640 640 Q520 650 400 636 Q280 650 190 636 Q50 610 30 480 Q10 260 70 110Z" fill="url(#sable)"></path>
+<path d="M70 110 Q260 30 520 50 Q800 60 900 200 Q950 360 900 520 Q850 620 640 640 Q520 650 400 636 Q280 650 190 636 Q50 610 30 480 Q10 260 70 110Z" fill="none" stroke="#FFFFFF" stroke-width="7" opacity=".55" stroke-linejoin="round"><animate attributeName="opacity" values=".35;.7;.35" dur="5s" repeatCount="indefinite"></animate></path>
+
+<!-- phare sur ses rochers, au nord-est -->
+<g transform="translate(784 34) scale(1.16)">
+<path d="M-14 150 Q0 106 44 100 Q92 98 104 150Z" fill="#8E8A86"></path><path d="M8 150 Q20 122 48 120 Q76 120 84 150Z" fill="#A7A29C"></path>
+<path d="M44 12 L120 -16 L120 40Z" fill="#FFF3C4" opacity=".55"><animate attributeName="opacity" values=".15;.6;.15" dur="3s" repeatCount="indefinite"></animate></path>
+<path d="M24 120 L32 20 H56 L64 120Z" fill="#FBF5EA"></path>
+<path d="M26 96 H62 L60 76 H28Z M29 60 H59 L58 42 H30Z" fill="#D9826B"></path>
+<rect x="28" y="4" width="32" height="18" rx="3" fill="#F7DFA0" stroke="#6B4A33" stroke-width="2"></rect>
+<path d="M24 4 L44 -14 L64 4Z" fill="#D9826B"></path>
+<rect x="38" y="96" width="12" height="24" rx="6" fill="#6B4A33"></rect>
+</g>
+
+<!-- rangée du haut : surf, café, épicerie -->
+<g transform="translate(96 150) scale(.6)"><ellipse cx="80" cy="134" rx="92" ry="11" fill="rgba(0,0,0,.09)"></ellipse><rect x="6" y="46" width="148" height="86" rx="6" fill="#FFF9E8"></rect><path d="M-6 52 L80 6 L166 52Z" fill="#F29A3A"></path><path d="M0 62 h160 v16 h-160z" fill="#8FD3D8"></path><path d="M0 62 h20 v16 h-20z M40 62 h20 v16 h-20z M80 62 h20 v16 h-20z M120 62 h20 v16 h-20z" fill="#FFF9E8"></path><path d="M0 78 q10 10 20 0 q10 10 20 0 q10 10 20 0 q10 10 20 0 q10 10 20 0 q10 10 20 0 q10 10 20 0 q10 10 20 0" fill="#8FD3D8"></path><rect x="64" y="92" width="32" height="40" rx="4" fill="#8A5A3B"></rect><rect x="16" y="94" width="36" height="26" rx="5" fill="#F2C46D"></rect><rect x="108" y="94" width="36" height="26" rx="5" fill="#F2C46D"></rect><circle cx="80" cy="32" r="13" fill="#FBF5EA"></circle><path d="M74 22 q6 10 12 0 q-6 -4 -12 0z" fill="#8FD3D8"></path></g>
+<g transform="translate(80 178)"><rect x="0" y="0" width="10" height="46" rx="5" fill="#E06A6A" transform="rotate(-10 5 23)"></rect><rect x="12" y="-4" width="10" height="50" rx="5" fill="#F2C46D" transform="rotate(-4 17 21)"></rect></g>
+<g transform="translate(300 84) scale(.92)"><ellipse cx="80" cy="134" rx="100" ry="12" fill="rgba(0,0,0,.09)"></ellipse><rect x="6" y="48" width="148" height="84" rx="6" fill="#FBF5EA"></rect><path d="M-8 56 L80 4 L168 56Z" fill="#4C6F94"></path><path d="M-8 56 L80 4 L168 56" stroke="#3B5876" stroke-width="4" fill="none"></path><path d="M0 62 h160 v14 h-160z" fill="#9CC3D2"></path><path d="M0 62 h20 v14 h-20z M40 62 h20 v14 h-20z M80 62 h20 v14 h-20z M120 62 h20 v14 h-20z" fill="#FBF5EA"></path><path d="M0 76 q10 10 20 0 q10 10 20 0 q10 10 20 0 q10 10 20 0 q10 10 20 0 q10 10 20 0 q10 10 20 0 q10 10 20 0" fill="#9CC3D2"></path><rect x="18" y="92" width="38" height="28" rx="6" fill="#F2C46D"></rect><rect x="104" y="92" width="38" height="28" rx="6" fill="#F2C46D"></rect><rect x="64" y="90" width="32" height="42" rx="16" fill="#8A5A3B"></rect><circle cx="80" cy="34" r="12" fill="#FBF5EA"></circle><g transform="translate(70 26) scale(.32)"><path d="M12 22 L16 4 L28 15 Q32 14 36 15 L48 4 L52 22 Q57 31 54 42 Q50 58 32 58 Q14 58 10 42 Q7 31 12 22Z" fill="#E59A5B"></path></g>
+<g transform="translate(176 96)"><path d="M0 18 Q18 0 36 18Z" fill="#E06A6A"></path><path d="M0 18 h36" stroke="#FBF5EA" stroke-width="2"></path><rect x="17" y="18" width="2" height="22" fill="#6B4A33"></rect><ellipse cx="18" cy="40" rx="14" ry="4" fill="#A97C5A"></ellipse></g></g>
+<g transform="translate(600 150) scale(.72)"><ellipse cx="80" cy="134" rx="92" ry="11" fill="rgba(0,0,0,.09)"></ellipse><rect x="6" y="46" width="148" height="86" rx="6" fill="#FFF6E2"></rect><path d="M-6 52 L80 6 L166 52Z" fill="#E0A04F"></path><path d="M0 62 h160 v16 h-160z" fill="#E06A6A"></path><path d="M0 62 h20 v16 h-20z M40 62 h20 v16 h-20z M80 62 h20 v16 h-20z M120 62 h20 v16 h-20z" fill="#FFF6E2"></path><path d="M0 78 q10 10 20 0 q10 10 20 0 q10 10 20 0 q10 10 20 0 q10 10 20 0 q10 10 20 0 q10 10 20 0 q10 10 20 0" fill="#E06A6A"></path><rect x="64" y="92" width="32" height="40" rx="4" fill="#8A5A3B"></rect><rect x="16" y="94" width="36" height="26" rx="5" fill="#F2C46D"></rect><rect x="108" y="94" width="36" height="26" rx="5" fill="#F2C46D"></rect><circle cx="80" cy="32" r="13" fill="#FBF5EA"></circle><circle cx="74" cy="32" r="5" fill="#F5B38A"></circle><circle cx="86" cy="32" r="5" fill="#8FC79A"></circle></g>
+
+<!-- rangée du milieu : animalerie, souvenirs, crêperie, glacier -->
+<g transform="translate(150 330) scale(.68)"><ellipse cx="80" cy="134" rx="92" ry="11" fill="rgba(0,0,0,.09)"></ellipse><rect x="6" y="46" width="148" height="86" rx="6" fill="#EEF5EC"></rect><path d="M-6 52 L80 6 L166 52Z" fill="#5E8C6A"></path><path d="M0 62 h160 v16 h-160z" fill="#A9C4A0"></path><path d="M0 62 h20 v16 h-20z M40 62 h20 v16 h-20z M80 62 h20 v16 h-20z M120 62 h20 v16 h-20z" fill="#EEF5EC"></path><path d="M0 78 q10 10 20 0 q10 10 20 0 q10 10 20 0 q10 10 20 0 q10 10 20 0 q10 10 20 0 q10 10 20 0 q10 10 20 0" fill="#A9C4A0"></path><rect x="64" y="92" width="32" height="40" rx="4" fill="#8A5A3B"></rect><rect x="16" y="94" width="36" height="26" rx="5" fill="#F2C46D"></rect><rect x="108" y="94" width="36" height="26" rx="5" fill="#F2C46D"></rect><circle cx="80" cy="32" r="13" fill="#FBF5EA"></circle><g transform="translate(70 22) scale(.32)"><ellipse cx="14" cy="28" rx="7" ry="15" fill="#5E8C6A" transform="rotate(18 14 28)"></ellipse><ellipse cx="50" cy="28" rx="7" ry="15" fill="#5E8C6A" transform="rotate(-18 50 28)"></ellipse><path d="M14 26 Q14 8 32 8 Q50 8 50 26 Q52 46 32 54 Q12 46 14 26Z" fill="#5E8C6A"></path></g></g>
+<g transform="translate(392 292) scale(.58)"><ellipse cx="80" cy="134" rx="92" ry="11" fill="rgba(0,0,0,.09)"></ellipse><rect x="6" y="46" width="148" height="86" rx="6" fill="#FBF0FA"></rect><path d="M-6 52 L80 6 L166 52Z" fill="#8C5E9E"></path><path d="M0 62 h160 v16 h-160z" fill="#E9A9B0"></path><path d="M0 62 h20 v16 h-20z M40 62 h20 v16 h-20z M80 62 h20 v16 h-20z M120 62 h20 v16 h-20z" fill="#FBF0FA"></path><path d="M0 78 q10 10 20 0 q10 10 20 0 q10 10 20 0 q10 10 20 0 q10 10 20 0 q10 10 20 0 q10 10 20 0 q10 10 20 0" fill="#E9A9B0"></path><rect x="64" y="92" width="32" height="40" rx="4" fill="#8A5A3B"></rect><rect x="16" y="94" width="36" height="26" rx="5" fill="#F2C46D"></rect><rect x="108" y="94" width="36" height="26" rx="5" fill="#F2C46D"></rect><circle cx="80" cy="32" r="13" fill="#FBF5EA"></circle><path d="M80 22 q-12 4 -10 16 q12 6 20 -4 q2 -10 -10 -12z" fill="#F5C6CF"></path></g>
+<g transform="translate(560 352) scale(.7)"><ellipse cx="80" cy="134" rx="92" ry="11" fill="rgba(0,0,0,.09)"></ellipse><rect x="6" y="46" width="148" height="86" rx="6" fill="#FFF4EC"></rect><path d="M-6 52 L80 6 L166 52Z" fill="#C9677A"></path><path d="M0 62 h160 v16 h-160z" fill="#F5C6CF"></path><path d="M0 62 h20 v16 h-20z M40 62 h20 v16 h-20z M80 62 h20 v16 h-20z M120 62 h20 v16 h-20z" fill="#FFF4EC"></path><path d="M0 78 q10 10 20 0 q10 10 20 0 q10 10 20 0 q10 10 20 0 q10 10 20 0 q10 10 20 0 q10 10 20 0 q10 10 20 0" fill="#F5C6CF"></path><rect x="64" y="92" width="32" height="40" rx="4" fill="#8A5A3B"></rect><rect x="16" y="94" width="36" height="26" rx="5" fill="#F2C46D"></rect><rect x="108" y="94" width="36" height="26" rx="5" fill="#F2C46D"></rect><circle cx="80" cy="32" r="13" fill="#FBF5EA"></circle><circle cx="80" cy="32" r="8" fill="#E8C27A"></circle><path d="M74 30 q6 -4 12 0" stroke="#C98436" stroke-width="2" fill="none"></path></g>
+<g transform="translate(754 312) scale(.8)"><ellipse cx="44" cy="70" rx="50" ry="6" fill="rgba(0,0,0,.09)"></ellipse><rect x="8" y="30" width="72" height="36" rx="6" fill="#FBF5EA" stroke="#E9A9B0" stroke-width="3"></rect><circle cx="20" cy="68" r="7" fill="#6B4A33"></circle><circle cx="68" cy="68" r="7" fill="#6B4A33"></circle><path d="M0 22 Q44 -10 88 22Z" fill="#E9A9B0"></path><path d="M0 22 Q11 30 22 22 Q33 30 44 22 Q55 30 66 22 Q77 30 88 22" fill="#FBF5EA"></path><rect x="42" y="22" width="4" height="10" fill="#6B4A33"></rect><g transform="translate(28 40)"><path d="M6 10 L12 24 L18 10Z" fill="#E0A04F"></path><circle cx="12" cy="8" r="7" fill="#F5C6CF"></circle></g><g transform="translate(46 40)"><path d="M6 10 L12 24 L18 10Z" fill="#E0A04F"></path><circle cx="12" cy="8" r="7" fill="#8FC79A"></circle></g></g>
+
+<!-- bord de plage : cabines, poissonnerie, ponton -->
+<g transform="translate(126 560) scale(.78)">
+<g><rect x="0" y="0" width="30" height="36" fill="#FBF5EA"></rect><path d="M6 0 v36 M14 0 v36 M22 0 v36" stroke="#9CC3D2" stroke-width="4"></path><path d="M-4 2 L15 -12 L34 2Z" fill="#9CC3D2"></path><rect x="10" y="18" width="10" height="18" fill="#6B4A33"></rect></g>
+<g transform="translate(42 0)"><rect x="0" y="0" width="30" height="36" fill="#FBF5EA"></rect><path d="M6 0 v36 M14 0 v36 M22 0 v36" stroke="#E9A9B0" stroke-width="4"></path><path d="M-4 2 L15 -12 L34 2Z" fill="#E9A9B0"></path><rect x="10" y="18" width="10" height="18" fill="#6B4A33"></rect></g>
+<g transform="translate(84 0)"><rect x="0" y="0" width="30" height="36" fill="#FBF5EA"></rect><path d="M6 0 v36 M14 0 v36 M22 0 v36" stroke="#F2C46D" stroke-width="4"></path><path d="M-4 2 L15 -12 L34 2Z" fill="#F2C46D"></path><rect x="10" y="18" width="10" height="18" fill="#6B4A33"></rect></g>
+</g>
+<g transform="translate(668 494) scale(.64)"><ellipse cx="80" cy="134" rx="92" ry="11" fill="rgba(0,0,0,.09)"></ellipse><rect x="6" y="46" width="148" height="86" rx="6" fill="#F2F7FA"></rect><path d="M-6 52 L80 6 L166 52Z" fill="#4C6F94"></path><path d="M0 62 h160 v16 h-160z" fill="#9CC3D2"></path><path d="M0 62 h20 v16 h-20z M40 62 h20 v16 h-20z M80 62 h20 v16 h-20z M120 62 h20 v16 h-20z" fill="#F2F7FA"></path><path d="M0 78 q10 10 20 0 q10 10 20 0 q10 10 20 0 q10 10 20 0 q10 10 20 0 q10 10 20 0 q10 10 20 0 q10 10 20 0" fill="#9CC3D2"></path><rect x="64" y="92" width="32" height="40" rx="4" fill="#8A5A3B"></rect><rect x="16" y="94" width="36" height="26" rx="5" fill="#F2C46D"></rect><rect x="108" y="94" width="36" height="26" rx="5" fill="#F2C46D"></rect><circle cx="80" cy="32" r="13" fill="#FBF5EA"></circle><path d="M68 32 q12 -10 24 0 q-12 10 -24 0z M92 32 l8 -7 v14z" fill="#9CC3D2"></path></g>
+<g transform="translate(450 586)">
+<rect x="0" y="0" width="22" height="130" fill="url(#planches)" stroke="#B58A5C" stroke-width="2"></rect>
+<rect x="-14" y="96" width="50" height="26" fill="url(#planches)" stroke="#B58A5C" stroke-width="2"></rect>
+<g fill="#8A5A3B"><rect x="-4" y="30" width="5" height="14"></rect><rect x="21" y="60" width="5" height="14"></rect><rect x="-17" y="118" width="5" height="12"></rect><rect x="34" y="118" width="5" height="12"></rect></g>
+</g>
+<g><animateTransform attributeName="transform" type="translate" values="0 0;0 4;0 0" dur="3s" repeatCount="indefinite"></animateTransform>
+<g transform="translate(494 662) scale(.8)"><path d="M0 26 L96 26 L84 46 L12 46Z" fill="#C9677A"></path><rect x="8" y="26" width="80" height="5" fill="#FBF5EA"></rect><rect x="44" y="-34" width="5" height="60" fill="#6B4A33"></rect><path d="M49 -32 L86 20 L49 20Z" fill="#FBF5EA"></path><path d="M44 -24 L14 18 L44 18Z" fill="#F2C46D"></path></g></g>
+
+<!-- parasols, palmiers -->
+<g transform="translate(305 528) scale(.88)"><rect x="4" y="44" width="40" height="18" rx="3" fill="#9CC3D2"></rect><path d="M4 50 h40 M4 56 h40" stroke="#FBF5EA" stroke-width="2"></path><path d="M0 22 Q24 -2 48 22Z" fill="#E06A6A"></path><path d="M12 22 Q24 4 36 22" fill="#FBF5EA"></path><rect x="23" y="22" width="3" height="32" fill="#6B4A33"></rect></g><g transform="translate(385 568) scale(.88)"><rect x="4" y="44" width="40" height="18" rx="3" fill="#E9A9B0"></rect><path d="M4 50 h40 M4 56 h40" stroke="#FBF5EA" stroke-width="2"></path><path d="M0 22 Q24 -2 48 22Z" fill="#F2C46D"></path><path d="M12 22 Q24 4 36 22" fill="#FBF5EA"></path><rect x="23" y="22" width="3" height="32" fill="#6B4A33"></rect></g><g transform="translate(565 568) scale(.88)"><rect x="4" y="44" width="40" height="18" rx="3" fill="#F2C46D"></rect><path d="M4 50 h40 M4 56 h40" stroke="#FBF5EA" stroke-width="2"></path><path d="M0 22 Q24 -2 48 22Z" fill="#4C6F94"></path><path d="M12 22 Q24 4 36 22" fill="#FBF5EA"></path><rect x="23" y="22" width="3" height="32" fill="#6B4A33"></rect></g><g transform="translate(501 500) scale(.88)"><rect x="4" y="44" width="40" height="18" rx="3" fill="#FBF5EA"></rect><path d="M4 50 h40 M4 56 h40" stroke="#FBF5EA" stroke-width="2"></path><path d="M0 22 Q24 -2 48 22Z" fill="#8FC79A"></path><path d="M12 22 Q24 4 36 22" fill="#FBF5EA"></path><rect x="23" y="22" width="3" height="32" fill="#6B4A33"></rect></g>
+<g transform="translate(314 552) scale(.32)"><path d="M12 22 L16 4 L28 15 Q32 14 36 15 L48 4 L52 22 Q57 31 54 42 Q50 58 32 58 Q14 58 10 42 Q7 31 12 22Z" fill="#9A9490"></path><path d="M20 36 q4 -3 8 0 M36 36 q4 -3 8 0" stroke="#4A3326" stroke-width="3" fill="none" stroke-linecap="round"></path></g>
+<g transform="translate(52 300) scale(1)"><path d="M14 90 Q20 40 8 0" stroke="#A97C5A" stroke-width="7" fill="none"></path><g stroke="#B58A5C" stroke-width="2"><path d="M12 80 h6 M14 60 h6 M14 40 h5 M10 20 h5"></path></g><path d="M8 0 q-30 -6 -40 12 M8 0 q-12 -26 -34 -24 M8 0 q18 -24 40 -16 M8 0 q30 2 36 24 M8 0 q4 -30 -4 -36" stroke="#5E9C62" stroke-width="8" fill="none" stroke-linecap="round"></path><g fill="#8A5A3B"><circle cx="4" cy="6" r="4"></circle><circle cx="13" cy="7" r="4"></circle></g></g><g transform="translate(890 400) scale(.8)"><path d="M14 90 Q20 40 8 0" stroke="#A97C5A" stroke-width="7" fill="none"></path><g stroke="#B58A5C" stroke-width="2"><path d="M12 80 h6 M14 60 h6 M14 40 h5 M10 20 h5"></path></g><path d="M8 0 q-30 -6 -40 12 M8 0 q-12 -26 -34 -24 M8 0 q18 -24 40 -16 M8 0 q30 2 36 24 M8 0 q4 -30 -4 -36" stroke="#5E9C62" stroke-width="8" fill="none" stroke-linecap="round"></path><g fill="#8A5A3B"><circle cx="4" cy="6" r="4"></circle><circle cx="13" cy="7" r="4"></circle></g></g><g transform="translate(262 300) scale(.75)"><path d="M14 90 Q20 40 8 0" stroke="#A97C5A" stroke-width="7" fill="none"></path><g stroke="#B58A5C" stroke-width="2"><path d="M12 80 h6 M14 60 h6 M14 40 h5 M10 20 h5"></path></g><path d="M8 0 q-30 -6 -40 12 M8 0 q-12 -26 -34 -24 M8 0 q18 -24 40 -16 M8 0 q30 2 36 24 M8 0 q4 -30 -4 -36" stroke="#6FAA6E" stroke-width="8" fill="none" stroke-linecap="round"></path><g fill="#8A5A3B"><circle cx="4" cy="6" r="4"></circle><circle cx="13" cy="7" r="4"></circle></g></g><g transform="translate(520 214) scale(.72)"><path d="M14 90 Q20 40 8 0" stroke="#A97C5A" stroke-width="7" fill="none"></path><g stroke="#B58A5C" stroke-width="2"><path d="M12 80 h6 M14 60 h6 M14 40 h5 M10 20 h5"></path></g><path d="M8 0 q-30 -6 -40 12 M8 0 q-12 -26 -34 -24 M8 0 q18 -24 40 -16 M8 0 q30 2 36 24 M8 0 q4 -30 -4 -36" stroke="#5E9C62" stroke-width="8" fill="none" stroke-linecap="round"></path><g fill="#8A5A3B"><circle cx="4" cy="6" r="4"></circle><circle cx="13" cy="7" r="4"></circle></g></g><g transform="translate(60 520) scale(0.85)"><path d="M14 90 Q20 40 8 0" stroke="#A97C5A" stroke-width="7" fill="none"></path><g stroke="#B58A5C" stroke-width="2"><path d="M12 80 h6 M14 60 h6 M14 40 h5 M10 20 h5"></path></g><path d="M8 0 q-30 -6 -40 12 M8 0 q-12 -26 -34 -24 M8 0 q18 -24 40 -16 M8 0 q30 2 36 24 M8 0 q4 -30 -4 -36" stroke="#6FAA6E" stroke-width="8" fill="none" stroke-linecap="round"></path><g fill="#8A5A3B"><circle cx="4" cy="6" r="4"></circle><circle cx="13" cy="7" r="4"></circle></g></g>
+
+<!-- coquillages, étoiles de mer, crabe -->
+<g fill="#F5C6CF"><path d="M250 612 q8 -14 16 0z"></path><path d="M780 590 q7 -12 14 0z"></path><path d="M60 200 q8 -14 16 0z"></path></g>
+<g fill="#F29A3A"><path d="M600 606 l3 7 l8 0 l-6 5 l2 8 l-7 -4 l-7 4 l2 -8 l-6 -5 l8 0z"></path><path d="M110 596 l3 7 l8 0 l-6 5 l2 8 l-7 -4 l-7 4 l2 -8 l-6 -5 l8 0z"></path></g>
+<g><animateTransform attributeName="transform" type="translate" values="0 0;24 0;24 0;0 0" dur="9s" repeatCount="indefinite"></animateTransform><g transform="translate(720 598) scale(.65)"><ellipse cx="10" cy="8" rx="9" ry="6" fill="#E06A6A"></ellipse><path d="M2 4 l-5 -5 M18 4 l5 -5 M3 11 l-5 3 M17 11 l5 3" stroke="#E06A6A" stroke-width="2"></path><circle cx="7" cy="4" r="1.5" fill="#2F2522"></circle><circle cx="13" cy="4" r="1.5" fill="#2F2522"></circle></g></g>
+
+
+
+<!-- banc de sable vers l'îlot (en bas à droite) -->
+<path d="M820 610 Q850 650 880 680" stroke="#F3E2BE" stroke-width="26" fill="none" stroke-linecap="round" opacity=".85"></path>
+<path d="M820 610 Q850 650 880 680" stroke="#FBF0D2" stroke-width="10" fill="none" stroke-linecap="round" opacity=".7"></path>
+<ellipse cx="900" cy="696" rx="66" ry="24" fill="#9FDCDD"></ellipse><ellipse cx="900" cy="694" rx="50" ry="16" fill="#F6E4B9"></ellipse>
+<g transform="translate(894 610) scale(.7)"><path d="M14 90 Q20 40 8 0" stroke="#A97C5A" stroke-width="7" fill="none"></path><path d="M8 0 q-30 -6 -40 12 M8 0 q-12 -26 -34 -24 M8 0 q18 -24 40 -16 M8 0 q30 2 36 24" stroke="#5E9C62" stroke-width="8" fill="none" stroke-linecap="round"></path></g>
+<!-- grotte sous le phare -->
+<g transform="translate(784 34) scale(1.16)"><path d="M26 150 Q44 120 62 150Z" fill="#3E3433"></path><path d="M32 150 Q44 132 56 150Z" fill="#2A2422"></path><circle cx="44" cy="140" r="2" fill="#F7DFA0"><animate attributeName="opacity" values="0;1;0" dur="2.4s" repeatCount="indefinite"></animate></circle><path d="M22 154 q8 -4 16 0 q8 4 16 0 q8 -4 16 0" stroke="#FFFFFF" stroke-width="2" fill="none" opacity=".8"></path></g>
+<!-- filet de beach-volley -->
+<g transform="translate(344 450) scale(.8)"><ellipse cx="70" cy="62" rx="80" ry="8" fill="rgba(0,0,0,.06)"></ellipse><rect x="0" y="0" width="5" height="60" fill="#8A5A3B"></rect><rect x="135" y="0" width="5" height="60" fill="#8A5A3B"></rect><rect x="3" y="4" width="134" height="18" fill="none" stroke="#FBF5EA" stroke-width="2"></rect><path d="M3 10 h134 M3 16 h134 M17 4 v18 M31 4 v18 M45 4 v18 M59 4 v18 M73 4 v18 M87 4 v18 M101 4 v18 M115 4 v18 M129 4 v18" stroke="#FBF5EA" stroke-width="1"></path><rect x="3" y="2" width="134" height="4" fill="#FBF5EA"></rect>
+<g><animateTransform attributeName="transform" type="translate" values="20 -10;70 -40;120 -10;70 -40;20 -10" dur="3s" repeatCount="indefinite"></animateTransform><circle r="8" fill="#F2C46D"></circle><path d="M-8 0 q8 -4 16 0 M0 -8 q-4 8 0 16" stroke="#E06A6A" stroke-width="1.5" fill="none"></path></g></g>
+<!-- hamac entre deux palmiers -->
+<g transform="translate(788 432) scale(.72)"><path d="M14 90 Q20 40 8 0" stroke="#A97C5A" stroke-width="7" fill="none"></path><path d="M8 0 q-30 -6 -40 12 M8 0 q-12 -26 -34 -24 M8 0 q18 -24 40 -16 M8 0 q30 2 36 24" stroke="#6FAA6E" stroke-width="8" fill="none" stroke-linecap="round"></path></g>
+<path d="M800 470 Q850 506 902 470" stroke="#F2C46D" stroke-width="10" fill="none" stroke-linecap="round"></path>
+<path d="M800 470 Q850 500 902 470" stroke="#E9A04F" stroke-width="2" fill="none"></path>
+<g transform="translate(836 466) scale(.38)"><path d="M12 22 L16 4 L28 15 Q32 14 36 15 L48 4 L52 22 Q57 31 54 42 Q50 58 32 58 Q14 58 10 42 Q7 31 12 22Z" fill="#E59A5B"></path><path d="M20 36 q4 -3 8 0 M36 36 q4 -3 8 0" stroke="#4A3326" stroke-width="3" fill="none" stroke-linecap="round"></path></g>
+<!-- bouteilles à la mer -->
+<g><animateTransform attributeName="transform" type="translate" values="0 0;0 5;0 0" dur="2.6s" repeatCount="indefinite"></animateTransform><g transform="translate(26 236) rotate(-25) scale(.5)"><rect x="0" y="0" width="12" height="26" rx="5" fill="#8FC79A" opacity=".9"></rect><rect x="3" y="-6" width="6" height="8" rx="2" fill="#8FC79A"></rect><rect x="3" y="-9" width="6" height="4" fill="#C9A27A"></rect><rect x="3" y="6" width="6" height="12" rx="2" fill="#FBF5EA"></rect></g></g>
+<g><animateTransform attributeName="transform" type="translate" values="0 0;0 4;0 0" dur="3.1s" repeatCount="indefinite"></animateTransform><g transform="translate(320 30) rotate(70) scale(.5)"><rect x="0" y="0" width="12" height="26" rx="5" fill="#9CC3D2" opacity=".9"></rect><rect x="3" y="-6" width="6" height="8" rx="2" fill="#9CC3D2"></rect><rect x="3" y="-9" width="6" height="4" fill="#C9A27A"></rect><rect x="3" y="6" width="6" height="12" rx="2" fill="#FBF5EA"></rect></g></g>
+
+<!-- château de sable -->
+<g transform="translate(242 606) scale(.5)">
+<ellipse cx="34" cy="40" rx="40" ry="8" fill="#E6CF9C"></ellipse>
+<rect x="6" y="18" width="56" height="22" fill="#E8CD94"></rect>
+<path d="M6 18 v-5 h6 v5 h6 v-5 h6 v5 h8 v-5 h6 v5 h6 v-5 h6 v5 h6 v-5 h4 v5" fill="#E8CD94"></path>
+<rect x="0" y="6" width="16" height="34" fill="#DDBF82"></rect><path d="M0 6 v-5 h4 v5 h4 v-5 h4 v5 h4 v-5" fill="#DDBF82"></path>
+<rect x="52" y="6" width="16" height="34" fill="#DDBF82"></rect><path d="M52 6 v-5 h4 v5 h4 v-5 h4 v5 h4 v-5" fill="#DDBF82"></path>
+<rect x="26" y="-6" width="16" height="24" fill="#DDBF82"></rect><path d="M26 -6 v-5 h4 v5 h4 v-5 h4 v5 h4 v-5" fill="#DDBF82"></path>
+<path d="M28 40 v-10 q6 -8 12 0 v10z" fill="#C9A86A"></path>
+<rect x="33" y="-26" width="2" height="16" fill="#6B4A33"></rect><path d="M35 -26 l12 4 l-12 4z" fill="#E06A6A"><animate attributeName="d" values="M35 -26 l12 4 l-12 4z;M35 -26 l10 6 l-10 2z;M35 -26 l12 4 l-12 4z" dur="1.6s" repeatCount="indefinite"></animate></path>
+<circle cx="8" cy="26" r="2" fill="#F5C6CF"></circle><circle cx="60" cy="28" r="2" fill="#FBF5EA"></circle>
+<g transform="translate(76 22)"><path d="M0 4 h14 l-2 14 h-10z" fill="#4C6F94"></path><path d="M2 4 q5 -8 10 0" stroke="#4C6F94" stroke-width="2" fill="none"></path></g>
+<g transform="translate(-14 26) rotate(-30)"><rect x="0" y="0" width="3" height="14" fill="#F2C46D"></rect><path d="M-3 14 h9 l-1 6 h-7z" fill="#E06A6A"></path></g>
+</g>
+
+<!-- détails du haut de l'île -->
+<g><path d="M180 26 Q460 6 760 30" stroke="#FBF5EA" stroke-width="1.5" fill="none" stroke-dasharray="2 6" opacity=".8"></path>
+<circle cx="230" cy="22" r="5" fill="#E06A6A"></circle><circle cx="330" cy="16" r="5" fill="#FBF5EA"></circle><circle cx="430" cy="13" r="5" fill="#E06A6A"></circle><circle cx="610" cy="17" r="5" fill="#FBF5EA"></circle><circle cx="700" cy="24" r="5" fill="#E06A6A"></circle></g>
+<g transform="translate(476 56) scale(.72)">
+<rect x="0" y="30" width="4" height="40" fill="#FBF5EA" transform="rotate(8 2 50)"></rect><rect x="30" y="30" width="4" height="40" fill="#FBF5EA" transform="rotate(-8 32 50)"></rect>
+<rect x="2" y="44" width="30" height="4" fill="#FBF5EA"></rect>
+<rect x="0" y="22" width="34" height="10" rx="2" fill="#E06A6A"></rect><rect x="0" y="10" width="34" height="14" rx="2" fill="#FBF5EA" stroke="#E06A6A" stroke-width="2"></rect>
+<rect x="15" y="-14" width="2" height="26" fill="#6B4A33"></rect><path d="M17 -14 l14 5 l-14 5z" fill="#F2C46D"></path>
+<path d="M17 -14 l14 5 l-14 5z" fill="none"></path>
+</g>
+<g transform="translate(646 58) scale(.75)"><path d="M0 8 Q30 -2 60 8 Q30 16 0 8z" fill="#F2C46D"></path><path d="M10 18 Q40 8 70 18 Q40 26 10 18z" fill="#E06A6A"></path><rect x="28" y="2" width="3" height="20" fill="#6B4A33" transform="rotate(30 30 12)"></rect></g>
+<g transform="translate(200 86) scale(.88)"><rect x="0" y="0" width="38" height="16" rx="3" fill="#E9A9B0"></rect><path d="M0 5 h38 M0 11 h38" stroke="#FBF5EA" stroke-width="2"></path><g transform="translate(12 2)"><circle cx="0" cy="5" r="4" fill="#2F2522"></circle><circle cx="11" cy="5" r="4" fill="#2F2522"></circle><path d="M4 5 h3" stroke="#2F2522" stroke-width="1.5"></path></g></g>
+<g fill="#E6CF9C"><ellipse cx="560" cy="80" rx="3" ry="5" transform="rotate(20 560 80)"></ellipse><ellipse cx="572" cy="90" rx="3" ry="5" transform="rotate(20 572 90)"></ellipse><ellipse cx="582" cy="102" rx="3" ry="5" transform="rotate(20 582 102)"></ellipse><ellipse cx="594" cy="112" rx="3" ry="5" transform="rotate(20 594 112)"></ellipse></g>
+<g fill="#F5C6CF"><path d="M300 92 q7 -12 14 0z"></path><path d="M760 110 q6 -10 12 0z"></path></g>
+<g fill="#F29A3A"><path d="M168 124 l3 7 l8 0 l-6 5 l2 8 l-7 -4 l-7 4 l2 -8 l-6 -5 l8 0z"></path></g>
+<g transform="translate(280 92) scale(.7)"><rect x="0" y="0" width="5" height="30" fill="#A97C5A"></rect><g transform="translate(-6 -12)"><ellipse cx="9" cy="8" rx="9" ry="6" fill="#FBF5EA"></ellipse><circle cx="16" cy="3" r="4" fill="#FBF5EA"></circle><path d="M19 3 l5 1 l-5 2z" fill="#F2C46D"></path><path d="M2 8 q-4 2 -6 0" stroke="#9A9490" stroke-width="2" fill="none"></path></g></g>
+<g><animateTransform attributeName="transform" type="translate" values="0 0;-18 0;-18 0;0 0" dur="11s" repeatCount="indefinite"></animateTransform><g transform="translate(740 96) scale(.65)"><ellipse cx="8" cy="6" rx="7" ry="5" fill="#E06A6A"></ellipse><path d="M1 3 l-4 -4 M15 3 l4 -4" stroke="#E06A6A" stroke-width="2"></path><circle cx="6" cy="3" r="1.2" fill="#2F2522"></circle><circle cx="10" cy="3" r="1.2" fill="#2F2522"></circle></g></g>
+<!-- poissons, tortue, dauphin -->
+<g transform="translate(170 692)"><g><animateTransform attributeName="transform" type="translate" values="0 0;70 0;70 0;0 0;0 0" keyTimes="0;.42;.5;.92;1" dur="10s" begin="0s" repeatCount="indefinite"></animateTransform><g><animateTransform attributeName="transform" type="scale" values="-.8 .8;.8 .8" keyTimes="0;.46" calcMode="discrete" dur="10s" begin="0s" repeatCount="indefinite"></animateTransform><g transform="translate(-14 0)"><path d="M0 0 q10 -8 20 0 q-10 8 -20 0z" fill="#F29A3A"></path><path d="M20 0 l8 -6 v12z" fill="#F29A3A"></path><circle cx="5" cy="-1" r="1.4" fill="#2F2522"></circle></g></g></g></g><g transform="translate(290 708)"><g><animateTransform attributeName="transform" type="translate" values="0 0;60 0;60 0;0 0;0 0" keyTimes="0;.42;.5;.92;1" dur="12s" begin="2s" repeatCount="indefinite"></animateTransform><g><animateTransform attributeName="transform" type="scale" values="-.8 .8;.8 .8" keyTimes="0;.46" calcMode="discrete" dur="12s" begin="2s" repeatCount="indefinite"></animateTransform><g transform="translate(-14 0)"><path d="M0 0 q10 -8 20 0 q-10 8 -20 0z" fill="#F2C46D"></path><path d="M20 0 l8 -6 v12z" fill="#F2C46D"></path><circle cx="5" cy="-1" r="1.4" fill="#2F2522"></circle></g></g></g></g><g transform="translate(540 700)"><g><animateTransform attributeName="transform" type="translate" values="0 0;70 0;70 0;0 0;0 0" keyTimes="0;.42;.5;.92;1" dur="11s" begin="1s" repeatCount="indefinite"></animateTransform><g><animateTransform attributeName="transform" type="scale" values="-.8 .8;.8 .8" keyTimes="0;.46" calcMode="discrete" dur="11s" begin="1s" repeatCount="indefinite"></animateTransform><g transform="translate(-14 0)"><path d="M0 0 q10 -8 20 0 q-10 8 -20 0z" fill="#E06A6A"></path><path d="M20 0 l8 -6 v12z" fill="#E06A6A"></path><circle cx="5" cy="-1" r="1.4" fill="#2F2522"></circle></g></g></g></g><g transform="translate(740 704)"><g><animateTransform attributeName="transform" type="translate" values="0 0;40 0;40 0;0 0;0 0" keyTimes="0;.42;.5;.92;1" dur="9s" begin="2s" repeatCount="indefinite"></animateTransform><g><animateTransform attributeName="transform" type="scale" values="-.8 .8;.8 .8" keyTimes="0;.46" calcMode="discrete" dur="9s" begin="2s" repeatCount="indefinite"></animateTransform><g transform="translate(-14 0)"><path d="M0 0 q10 -8 20 0 q-10 8 -20 0z" fill="#9FD8C4"></path><path d="M20 0 l8 -6 v12z" fill="#9FD8C4"></path><circle cx="5" cy="-1" r="1.4" fill="#2F2522"></circle></g></g></g></g><g transform="translate(640 24)"><g><animateTransform attributeName="transform" type="translate" values="0 0;70 0;70 0;0 0;0 0" keyTimes="0;.42;.5;.92;1" dur="10s" begin="3s" repeatCount="indefinite"></animateTransform><g><animateTransform attributeName="transform" type="scale" values="-.8 .8;.8 .8" keyTimes="0;.46" calcMode="discrete" dur="10s" begin="3s" repeatCount="indefinite"></animateTransform><g transform="translate(-14 0)"><path d="M0 0 q10 -8 20 0 q-10 8 -20 0z" fill="#F2C46D"></path><path d="M20 0 l8 -6 v12z" fill="#F2C46D"></path><circle cx="5" cy="-1" r="1.4" fill="#2F2522"></circle></g></g></g></g><g transform="translate(380 692)"><g><animateTransform attributeName="transform" type="translate" values="0 0;50 0;50 0;0 0;0 0" keyTimes="0;.42;.5;.92;1" dur="14s" begin="4s" repeatCount="indefinite"></animateTransform><g><animateTransform attributeName="transform" type="scale" values="-.8 .8;.8 .8" keyTimes="0;.46" calcMode="discrete" dur="14s" begin="4s" repeatCount="indefinite"></animateTransform><g transform="translate(-14 0)"><path d="M0 0 q10 -8 20 0 q-10 8 -20 0z" fill="#B48ACB"></path><path d="M20 0 l8 -6 v12z" fill="#B48ACB"></path><circle cx="5" cy="-1" r="1.4" fill="#2F2522"></circle></g></g></g></g>
+<g transform="translate(700 690)"><g><animateTransform attributeName="transform" type="translate" values="0 0;0 0;14 -34;28 0;28 0" keyTimes="0;.6;.75;.9;1" dur="5s" repeatCount="indefinite"></animateTransform><path d="M0 0 q10 -8 20 0 q-10 8 -20 0z M20 0 l8 -6 v12z" fill="#F29A3A"></path></g>
+<circle cx="28" cy="6" r="6" fill="none" stroke="#FFFFFF" stroke-width="2" opacity="0"><animate attributeName="opacity" values="0;0;.9;0" keyTimes="0;.88;.92;1" dur="5s" repeatCount="indefinite"></animate></circle></g>
+<g><animateTransform attributeName="transform" type="translate" values="0 0;40 6;0 0" dur="20s" repeatCount="indefinite"></animateTransform>
+<g transform="translate(50 674) scale(.75)"><ellipse cx="14" cy="8" rx="13" ry="9" fill="#6F9468"></ellipse><path d="M6 4 h16 M8 10 h12" stroke="#4F6B4A" stroke-width="2"></path><circle cx="30" cy="6" r="5" fill="#8FB57E"></circle><circle cx="32" cy="5" r="1" fill="#2F2522"></circle><ellipse cx="4" cy="2" rx="4" ry="2" fill="#8FB57E"></ellipse><ellipse cx="4" cy="14" rx="4" ry="2" fill="#8FB57E"></ellipse><ellipse cx="24" cy="15" rx="4" ry="2" fill="#8FB57E"></ellipse></g></g>
+<g transform="translate(520 6)"><g><animateTransform attributeName="transform" type="translate" values="0 20;0 20;20 -10;40 20;40 20" keyTimes="0;.55;.7;.85;1" dur="8s" repeatCount="indefinite"></animateTransform><path d="M0 10 q20 -22 46 -4 q-6 2 -10 6 q-18 -8 -36 -2z" fill="#7E95A8"></path><path d="M20 -4 l6 -8 l4 8z" fill="#7E95A8"></path><circle cx="38" cy="2" r="1.5" fill="#2F2522"></circle></g></g>
+<!-- mouettes -->
+<g stroke="#FBF5EA" stroke-width="3" fill="none" stroke-linecap="round"><animateTransform attributeName="transform" type="translate" values="-60 0;900 -20" dur="24s" repeatCount="indefinite"></animateTransform><path d="M0 40 q7 -7 14 0 q7 -7 14 0"></path><path d="M34 58 q6 -6 12 0 q6 -6 12 0"></path></g>`;
+const ISLANDS = { bruyere: BRUYERE, coq: COQ };
+function applyIsland(id) {
+  const d = ISLANDS[id] || BRUYERE;
+  VILLAGERS = d.villagers; LETTERS = d.letters; PROJECTS = d.projects;
+}
+const onIsland = () => S && S.island === "coq";
 // une sauvegarde par joueur du lanceur (sinon une seule, « local »)
 const JOUEUR = (() => { try { return (window.MesJeux && MesJeux.session()) || JSON.parse(localStorage.getItem("mesjeux_session")); } catch (e) { return null; } })();
-const SAVE_KEY = "ronrons-bruyere-save-v1-" + (JOUEUR && JOUEUR.id ? JOUEUR.id : "local");
+// Mode test (adresse terminée par ?test) : partie séparée, Bruyère déjà terminée, aucun point envoyé au lanceur
+const TEST = /[?&]test\b/.test(location.search);
+const SAVE_KEY = "ronrons-bruyere-save-v1-" + (JOUEUR && JOUEUR.id ? JOUEUR.id : "local") + (TEST ? "-test" : "");
+const META_KEY = SAVE_KEY + "-meta";
+const islandKey = (id) => id === "coq" ? SAVE_KEY + "-coq" : SAVE_KEY;
+function loadMeta() { try { return Object.assign({ cur: "bruyere", trophy: false, coq: false }, JSON.parse(localStorage.getItem(META_KEY) || "{}")); } catch (e) { return { cur: "bruyere", trophy: false, coq: false }; } }
+function saveMeta(m) { try { localStorage.setItem(META_KEY, JSON.stringify(m)); } catch (e) {} }
 
 // ---------- État ----------
-function newGame() {
+function newGame(island = "bruyere", companion = null) {
+  if (island === "coq") {
+    const g = newGame("bruyere");
+    return Object.assign(g, { island: "coq", coins: 50, pantry: {}, recipes: ["smoothie", "glacecoco", "beignets"],
+      cats: companion ? [companion] : [], mood: companion ? { [companion]: 80 } : {}, companion });
+  }
   return {
+    island: "bruyere",
     day: 1, phase: "matin", coins: 300, rep: 0, servedTotal: 0,
     pantry: { farine: 1, oeufs: 2 },
     showcase: {},
@@ -306,15 +546,33 @@ function newGame() {
     stories: {},     // nombre de confidences débloquées
   };
 }
+function testGame() {
+  // Bruyère terminée, de quoi partir tout de suite sur l'île
+  const g = newGame();
+  Object.keys(BRUYERE.projects).forEach((id) => { g.projects[id] = BRUYERE.projects[id].goal; });
+  return Object.assign(g, { day: 30, coins: 2000, rep: 60, cats: ["caramel", "brume", "doulio", "givre"], mood: { caramel: 80, brume: 80, doulio: 80, givre: 80 },
+    recipes: ["tarte", "the", "fraise", "crepes", "cookie", "soupe"], pantry: { farine: 4, oeufs: 4, lait: 4, croquettes: 3, croqchien: 3 } });
+}
 let S = null;               // état sauvegardé
 let ui = { screen: "title", shopTab: "epicerie", cart: {}, kitchenSel: "tarte", cook: null, modal: null };
 let cafe = null;            // état temporaire du service
 
-function save() { try { localStorage.setItem(SAVE_KEY, JSON.stringify(S)); } catch (e) {} }
-function load() { try { const r = localStorage.getItem(SAVE_KEY); return r ? JSON.parse(r) : null; } catch (e) { return null; } }
-function clearSave() { try { localStorage.removeItem(SAVE_KEY); } catch (e) {} }
+function save() { if (!S) return; try { localStorage.setItem(islandKey(S.island || "bruyere"), JSON.stringify(S)); } catch (e) {} }
+function load(id = loadMeta().cur) { try { const r = localStorage.getItem(islandKey(id)); return r ? JSON.parse(r) : null; } catch (e) { return null; } }
+function clearSave() { try { localStorage.removeItem(SAVE_KEY); localStorage.removeItem(islandKey("coq")); localStorage.removeItem(META_KEY); } catch (e) {} }
+function openIsland(id) {
+  // charge (ou crée) la partie du lieu demandé et en fait le lieu courant
+  if (S) save();
+  const saved = load(id);
+  S = Object.assign(newGame(id), saved || {});
+  S.island = id;
+  if (S.bridge && !S.projects.pont) S.projects.pont = S.bridge;
+  applyIsland(id);
+  const m = loadMeta(); m.cur = id; saveMeta(m);
+  cafe = null; ui.cook = null; ui.kitchenSel = S.recipes[0];
+}
 
-const season = () => SEASONS[Math.floor((S.day - 1) / DAYS_PER_SEASON) % 4];
+const season = () => S.island === "coq" ? "Été" : SEASONS[Math.floor((S.day - 1) / DAYS_PER_SEASON) % 4]; // sur l'île, c'est toujours l'été
 const dayInSeason = () => ((S.day - 1) % DAYS_PER_SEASON) + 1;
 const projDone = (id) => ((S.projects || {})[id] || 0) >= PROJECTS[id].goal;
 const projVisible = (id) => S.day >= projDay(id) || ((S.projects || {})[id] || 0) > 0;
@@ -326,7 +584,7 @@ const FESTIVALS = { "Printemps": "Fête des fleurs", "Été": "Marché nocturne"
 const festival = () => dayInSeason() === 6 ? FESTIVALS[season()] : null;
 const weather = () => S.weather || "soleil";
 function rollWeather() { const o = WEATHER_ODDS[season()]; let r = Math.random(); for (const [k, p] of Object.entries(o)) { if ((r -= p) <= 0) return k; } return "soleil"; }
-const clientsPerDay = () => 8 + (projDone("terrasse") ? 2 : 0) + (projDone("gare") ? 3 : 0) + (weather() === "pluie" ? 2 : 0) + (weather() === "neige" ? 1 : 0) + (festival() ? 3 : 0);
+const clientsPerDay = () => 8 + (onIsland() && projDone("pont") ? 1 : 0) + (projDone("terrasse") ? 2 : 0) + (projDone("gare") ? 3 : 0) + (weather() === "pluie" ? 2 : 0) + (weather() === "neige" ? 1 : 0) + (festival() ? 3 : 0);
 const qty = (k) => S.pantry[k] || 0;
 const canCook = (id) => Object.entries(RECIPES[id].needs).every(([k, v]) => qty(k) >= v);
 const decorBonus = () => (festival() ? 0.2 : 0) + S.decor.reduce((t, d) => t + (DECOR[d]?.tip || 0), 0) + (projDone("kiosque") ? 0.05 : 0) + (projDone("terrasse") ? 0.05 : 0) + (typeof S.bouquet === "number" ? S.bouquet : S.bouquet ? 0.1 : 0);
@@ -376,8 +634,8 @@ function catSVG(id, size = 64, sleeping = false) {
   const c = CATS[id];
   const eyes = sleeping
     ? `<path d="M20 36 q4 -3 8 0 M36 36 q4 -3 8 0" stroke="#4A3326" stroke-width="2.5" fill="none" stroke-linecap="round"/>`
-    : `<circle cx="24" cy="34" r="3.2" fill="${c.eye}"/><circle cx="40" cy="34" r="3.2" fill="${c.eye}"/>`;
-  const stroke = c.fur === "#F6EEDF" || c.fur === "#F1E4CF" ? ` stroke="#C99A6B" stroke-width="2"` : "";
+    : id === "doublon" ? `<circle cx="24" cy="34" r="3.2" fill="${c.eye}"/>` : `<circle cx="24" cy="34" r="3.2" fill="${c.eye}"/><circle cx="40" cy="34" r="3.2" fill="${c.eye}"/>`;
+  const stroke = ["#F6EEDF", "#F1E4CF", "#FBF7F0", "#F1ECE4"].includes(c.fur) ? ` stroke="#C99A6B" stroke-width="2"` : "";
   const patch = {
     biscotte: `<path d="M14 20 L18 6 L28 15Z" fill="#E59A5B"/>`,
     pistache: `<path d="M22 18 h20 M20 24 h24" stroke="#8A7350" stroke-width="3" stroke-linecap="round"/>`,
@@ -385,7 +643,12 @@ function catSVG(id, size = 64, sleeping = false) {
     reglisse: `<path d="M24 38 Q32 30 40 38 Q44 50 32 56 Q20 50 24 38Z" fill="#F6F2EA"/>`,
     pompon:   `<path d="M24 40 Q32 34 40 40 Q42 52 32 56 Q22 52 24 40Z" fill="#FBF5EA"/><path d="M8 30 q-6 2 -4 8 M56 30 q6 2 4 8" stroke="#F2B37A" stroke-width="4" stroke-linecap="round"/>`,
     caline:   `<path d="M14 22 L18 6 L28 15 Q24 26 14 30Z" fill="#E59A5B"/><path d="M50 22 L46 6 L38 15 Q42 28 54 30Z" fill="#3E3433"/>`,
+    matelot:  `<path d="M14 40 h36 M12 46 h40 M16 52 h32" stroke="#4C6F94" stroke-width="3" stroke-linecap="round"/>`,
     filou:    `<path d="M12 22 L16 4 L26 14Z M52 22 L48 4 L38 14Z" fill="#5A4234"/><ellipse cx="32" cy="42" rx="11" ry="9" fill="#7A5A44"/>`,
+    coquille: `<path d="M14 22 L18 6 L28 15 Q24 26 14 30Z" fill="#E59A5B"/><path d="M50 22 L46 6 L38 15 Q42 28 54 34Z" fill="#3A302C"/>`,
+    mousse:   `<path d="M8 40 l-5 2 M8 46 l-5 4 M56 40 l5 2 M56 46 l5 4" stroke="#B9BCC4" stroke-width="3" stroke-linecap="round"/><ellipse cx="32" cy="46" rx="14" ry="10" fill="#E3E5EA"/>`,
+    perle:    `<path d="M16 50 Q32 58 48 50" stroke="#E9A9B0" stroke-width="2" fill="none"/><circle cx="32" cy="55" r="3" fill="#FBF5EA" stroke="#E9A9B0" stroke-width="1.5"/>`,
+    doublon:  `<path d="M22 20 h20 M12 40 h6 M46 40 h6" stroke="#C47A3E" stroke-width="3" stroke-linecap="round"/><path d="M14 18 Q32 6 50 18 L50 22 Q32 12 14 22Z" fill="#E06A6A"/><path d="M50 20 l8 6 l-2 4 l-6 -6z" fill="#E06A6A"/><ellipse cx="40" cy="34" rx="6" ry="5" fill="#2F2522"/><path d="M34 32 L20 22 M46 32 L54 26" stroke="#2F2522" stroke-width="1.5"/>`,
   }[id] || "";
   return `<svg class="catsvg" width="${size}" height="${size}" viewBox="0 0 64 64" aria-hidden="true">
     <path d="M12 22 L16 4 L28 15 Q32 14 36 15 L48 4 L52 22 Q57 31 54 42 Q50 58 32 58 Q14 58 10 42 Q7 31 12 22Z" fill="${c.fur}"${stroke}/>
@@ -540,14 +803,14 @@ document.addEventListener("visibilitychange", () => { if (document.hidden && S) 
 function render() {
   autoSave();
   if (ui.screen !== "cafe") stopCafe();
-  const views = { projects: viewProjects, friends: viewFriends, title: viewTitle, village: viewVillage, shop: viewShop, kitchen: viewKitchen, cafe: viewCafe, album: viewAlbum, summary: viewSummary };
+  const views = { depart: viewDepart, projects: viewProjects, friends: viewFriends, title: viewTitle, village: () => onIsland() ? viewIsland() : viewVillage(), shop: viewShop, kitchen: viewKitchen, cafe: viewCafe, album: viewAlbum, summary: viewSummary };
   $stage.innerHTML = views[ui.screen]() + soundButton() + (ui.modal ? ui.modal() : "");
   if (ui.screen === "cafe" && cafe) animateCats();
   syncCookTimer();
 }
 
 function viewTitle() {
-  const has = !!load();
+  const has = !!load(), isle = loadMeta().cur === "coq";
   return `
   <div style="position:absolute;inset:0;background:#CFE3E6"></div>
   <svg width="1280" height="720" viewBox="0 0 1280 720" aria-hidden="true" style="position:absolute;inset:0">
@@ -568,7 +831,7 @@ function viewTitle() {
   <div style="position:absolute;left:1100px;top:548px">${catSVG("brume", 52, true)}</div>
   <div style="position:absolute;left:96px;top:96px;display:flex;flex-direction:column;gap:28px;width:560px">
     <div style="display:flex;flex-direction:column;gap:6px">
-      <p style="margin:0;font-family:var(--font-title);font-weight:600;font-size:20px;letter-spacing:.08em;text-transform:uppercase;color:var(--sage)">Un café à chats au village de Bruyère</p>
+      <p style="margin:0;font-family:var(--font-title);font-weight:600;font-size:20px;letter-spacing:.08em;text-transform:uppercase;color:var(--sage)">${isle ? "Un café à chats sur l'île aux Coquillages" : "Un café à chats au village de Bruyère"}</p>
       <h1 style="font-weight:700;font-size:96px;line-height:.95">Ronron<br>Café</h1>
     </div>
     <nav aria-label="Menu principal" style="display:flex;flex-direction:column;gap:12px;width:340px">
@@ -578,7 +841,8 @@ function viewTitle() {
       <button class="btn light" data-a="launcher" style="text-align:left;font-size:22px">← Retour au lanceur</button>
     </nav>
   </div>
-  <p style="position:absolute;right:32px;bottom:20px;margin:0;font-size:13px;font-weight:700;color:#2F4A2C">${JOUEUR && JOUEUR.pseudo ? "Café de " + esc(JOUEUR.pseudo) + " · " : ""}version 1.0</p>`;
+  <p style="position:absolute;right:32px;bottom:20px;margin:0;font-size:13px;font-weight:700;color:#2F4A2C">${JOUEUR && JOUEUR.pseudo ? "Café de " + esc(JOUEUR.pseudo) + " · " : ""}version 1.1</p>
+  ${TEST ? `<div style="position:absolute;left:96px;top:40px;padding:6px 14px;border-radius:999px;background:#E06A6A;color:#fff;font-weight:800;font-size:14px">MODE TEST · partie séparée, aucun point envoyé au lanceur</div>` : ""}`;
 }
 
 function hudTop(time, extraRight = "") {
@@ -684,6 +948,50 @@ function viewVillage() {
     <button class="hot" data-a="shop" data-tab="poissonnerie" style="left:744px;top:650px"><b>Poissonnerie du Quai</b><small>Saumon, truite, crevettes…</small></button>`
   : `<div class="panel" style="position:absolute;left:712px;top:280px;width:210px;padding:12px 14px"><b style="font-family:var(--font-title)">L'autre rive</b><div style="font-size:13px;font-weight:700">Répare le pont pour découvrir 3 nouveaux commerces.</div></div>`}
   <div class="hud" style="right:340px">${`<div>${datePill(cafe ? "Service en pause" : "Matin")}<span class="pill">Réputation ${repLevel()}</span></div><div></div>`}</div>
+  ${mapAside()}`;
+}
+// ---------- Carte de l'île aux Coquillages ----------
+function viewIsland() {
+  const bottle = !S.letterRead, chest = (S.mapPieces || 0) >= 4 && !S.treasure;
+  const lamp = (x, y, c) => `<circle cx="${x}" cy="${y}" r="7" fill="${c}"><animate attributeName="opacity" values="1;.6;1" dur="${2 + (x % 3) * .4}s" repeatCount="indefinite"/></circle>`;
+  const palm = (x, y, sc = 1) => `<g transform="translate(${x} ${y}) scale(${sc})"><path d="M14 90 Q20 40 8 0" stroke="#A97C5A" stroke-width="7" fill="none"/><path d="M8 0 q-30 -6 -40 12 M8 0 q-12 -26 -34 -24 M8 0 q18 -24 40 -16 M8 0 q30 2 36 24" stroke="#5E9C62" stroke-width="8" fill="none" stroke-linecap="round"/><circle cx="12" cy="6" r="5" fill="#8A6448"/></g>`;
+  return `
+  <div style="position:absolute;inset:0;background:#5FA8C4"></div>
+  <svg width="960" height="720" viewBox="0 0 960 720" aria-hidden="true" style="position:absolute;left:0;top:0">
+    ${ISLE_SVG}
+    <!-- projets réalisés -->
+    ${projDone("lanternes") ? `<path d="M96 300 Q200 330 300 296" stroke="#4A3326" stroke-width="1.5" fill="none"/>${[[118,308],[150,316],[184,320],[218,318],[252,310],[284,300]].map(([x,y],i)=>lamp(x,y,["#E06A6A","#F2C46D","#9CC3D2","#E9A9B0"][i%4])).join("")}` : ""}
+    ${projDone("fontaine") ? `<circle cx="836" cy="48" r="26" fill="#FFE9A8" opacity=".6"><animate attributeName="opacity" values=".7;.25;.7" dur="2.4s" repeatCount="indefinite"/></circle>` : ""}
+    ${projDone("jardin") ? [[230,520],[268,528]].map(([x,y])=>`<g transform="translate(${x} ${y})"><path d="M0 30 V12 L14 0 L28 12 V30Z" fill="#C9A27A"/><rect x="9" y="16" width="10" height="14" rx="5" fill="#6B4A33"/><path d="M-3 13 L14 -2 L31 13" stroke="#A97C5A" stroke-width="4" fill="none" stroke-linecap="round"/></g>`).join("") + `<g transform="translate(244 540) scale(.32)"><path d="M12 22 L16 4 L28 15 Q32 14 36 15 L48 4 L52 22 Q57 31 54 42 Q50 58 32 58 Q14 58 10 42 Q7 31 12 22Z" fill="#E3C9A0"/></g>` : ""}
+    ${projDone("kiosque") ? `<g transform="translate(872 520) scale(.9)"><ellipse cx="30" cy="44" rx="34" ry="7" fill="rgba(0,0,0,.08)"/><rect x="2" y="36" width="56" height="8" rx="3" fill="#A97C5A"/><rect x="28" y="6" width="4" height="30" fill="#C99A3E"/><path d="M-4 10 L30 -8 L64 10Z" fill="#E9A9B0"/><path d="M-4 10 h68" stroke="#C9677A" stroke-width="3"/><g><animateTransform attributeName="transform" type="translate" values="0 0;0 -4;0 0" dur="1.4s" repeatCount="indefinite"/><ellipse cx="12" cy="26" rx="8" ry="5" fill="#FBF5EA"/><ellipse cx="48" cy="26" rx="8" ry="5" fill="#FBF5EA"/></g></g>` : ""}
+    ${projDone("terrasse") ? [[212,140,"#E9A9B0"],[226,232,"#9CC3D2"]].map(([x,y,c])=>`<g transform="translate(${x} ${y}) scale(.75)"><path d="M0 22 Q28 0 56 22Z" fill="${c}"/><rect x="26" y="22" width="4" height="30" fill="#6B4A33"/><ellipse cx="28" cy="52" rx="20" ry="5" fill="#A97C5A"/></g>`).join("") : ""}
+    ${projDone("moulin") ? palm(240, 44, .62) + palm(470, 36, .55) + `<g fill="#F2D45C"><ellipse cx="248" cy="52" rx="4" ry="8"/><ellipse cx="256" cy="50" rx="4" ry="8"/></g>` : ""}
+    ${projDone("gare") ? `<g><animateTransform attributeName="transform" type="translate" values="0 0;-30 0;0 0" dur="16s" repeatCount="indefinite"/><g transform="translate(560 668)"><path d="M0 18 H90 L80 36 H10Z" fill="#6E8FB0"/><rect x="22" y="2" width="44" height="16" rx="3" fill="#FBF5EA"/><rect x="28" y="6" width="9" height="7" fill="#9CC3D2"/><rect x="42" y="6" width="9" height="7" fill="#9CC3D2"/><rect x="56" y="-8" width="6" height="10" fill="#E06A6A"/></g></g>` : ""}
+    ${projDone("pont") ? `<g><rect x="470" y="700" width="70" height="14" fill="#C9A27A"/><rect x="474" y="712" width="5" height="8" fill="#6B4A33"/><rect x="530" y="712" width="5" height="8" fill="#6B4A33"/><path d="M536 700 v-26" stroke="#6B4A33" stroke-width="3"/><path d="M536 674 l18 6 l-18 6z" fill="#E06A6A"/></g>` : ""}
+    ${chest ? `<g transform="translate(884 660)"><path d="M-12 -12 L12 12 M12 -12 L-12 12" stroke="#E06A6A" stroke-width="6" stroke-linecap="round"/><circle r="22" fill="#FFE9A8" opacity=".5"><animate attributeName="r" values="18;28;18" dur="1.6s" repeatCount="indefinite"/><animate attributeName="opacity" values=".6;.1;.6" dur="1.6s" repeatCount="indefinite"/></circle></g>` : ""}
+    ${S.treasure ? `<g transform="translate(870 664)"><rect x="0" y="8" width="30" height="18" rx="3" fill="#A97C5A"/><path d="M0 9 Q15 -8 30 9Z" fill="#8A5A3B"/><rect x="12" y="10" width="6" height="8" fill="#F2C46D"/></g>` : ""}
+  </svg>
+  ${bottle ? `<button data-a="letter" aria-label="Une bouteille à la mer s'est échouée sur la plage : ouvre le message" title="Bouteille à la mer" style="position:absolute;left:318px;top:600px;width:60px;height:56px;border:0;background:none;padding:0">
+    <svg width="60" height="56" viewBox="0 0 60 56" aria-hidden="true"><circle cx="30" cy="30" r="22" fill="#FFF3C4" opacity=".55"><animate attributeName="r" values="16;24;16" dur="1.8s" repeatCount="indefinite"/></circle><g transform="translate(30 30) rotate(70)"><animateTransform attributeName="transform" type="rotate" values="66;74;66" dur="2s" additive="sum" repeatCount="indefinite"/><rect x="-7" y="-14" width="14" height="30" rx="6" fill="#8FC79A"/><rect x="-3" y="-21" width="6" height="9" rx="2" fill="#8FC79A"/><rect x="-3" y="-25" width="6" height="5" fill="#C9A27A"/><rect x="-4" y="-6" width="8" height="14" rx="2" fill="#FBF5EA"/></g></svg>
+  </button><div class="hot" style="left:290px;top:648px;padding:4px 10px;pointer-events:none"><b style="font-size:13px">Bouteille à la mer !</b></div>` : ""}
+  ${weatherFX(960, 720, 90)}
+  ${festival() ? `<svg width="960" height="60" viewBox="0 0 960 60" aria-hidden="true" style="position:absolute;left:0;top:64px;pointer-events:none"><path d="M0 10 Q240 40 480 10 T960 10" stroke="#8A5A3B" stroke-width="2" fill="none"/>${Array.from({length:24},(_,i)=>`<path d="M${20+i*40} ${14+Math.sin(i/3.8*Math.PI)*-10+12} l10 18 l10 -18z" fill="${["#E9A9B0","#F2C46D","#8FAF8A","#9CC3D2"][i%4]}"/>`).join("")}</svg>` : ""}
+  <button class="hot" data-a="${cafe ? "opencafe" : "kitchen"}" style="left:316px;top:198px"><b>Ton café</b><small>${cafe ? "Service en pause" : "Rentrer cuisiner"}</small></button>
+  <button class="hot main" data-a="shop" data-tab="epiplage" style="left:562px;top:242px"><b>Épicerie de la Plage</b><small>Ingrédients</small></button>
+  <button class="hot" data-a="shop" data-tab="surf" style="left:66px;top:226px"><b>Boutique de surf</b><small>Déco</small></button>
+  <button class="hot" data-a="shop" data-tab="animplage" style="left:96px;top:418px"><b>Animalerie de la Plage</b><small style="color:#2F7A84">Nourriture et animaux</small></button>
+  <button class="hot" data-a="shop" data-tab="souvenirs" style="left:386px;top:372px"><b>Souvenirs</b><small>Déco</small></button>
+  <button class="hot" data-a="shop" data-tab="creperie" style="left:550px;top:442px"><b>Crêperie du Phare</b><small>Recettes</small></button>
+  <button class="hot" data-a="shop" data-tab="glacier" style="left:740px;top:366px"><b>Glacier</b><small>Recettes de glaces</small></button>
+  <button class="hot" data-a="shop" data-tab="poissport" style="left:646px;top:578px"><b>Poissonnerie du Port</b><small>Thon, crevettes…</small></button>
+  <button class="hot" data-a="grotte" style="left:842px;top:212px;padding:5px 11px"><b style="font-size:14px">La grotte</b></button>
+  <button class="hot" data-a="tobruyere" style="left:390px;top:668px;padding:5px 11px;background:#E7F1FB"><b style="font-size:14px">Bateau pour Bruyère</b></button>
+  ${chest ? `<button class="hot main" data-a="treasure" style="left:800px;top:606px;padding:6px 12px"><b style="font-size:15px">Creuser ici !</b><small>La croix de la carte</small></button>` : ""}
+  <div class="hud" style="right:340px"><div><span class="pill">Île aux Coquillages</span>${datePill(cafe ? "Service en pause" : "Matin")}</div><div></div></div>
+  ${mapAside()}`;
+}
+function mapAside() {
+  return `
   <aside class="panel" style="position:absolute;right:24px;top:18px;bottom:24px;width:290px;display:flex;flex-direction:column;gap:12px">
     <div class="between"><h2 style="font-size:21px">Garde-manger</h2>${coinPill()}</div>
     <div class="grid" style="grid-template-columns:1fr 1fr;gap:6px;font-size:13px;font-weight:700;max-height:150px;overflow:auto">
@@ -691,17 +999,19 @@ function viewVillage() {
     </div>
     ${(() => { const ids = Object.keys(PROJECTS), doneN = ids.filter(projDone).length, nx = ids.find((id) => !projDone(id) && projOpen(id));
       return `<div style="background:#fff;border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:8px">
-      <div class="between"><span style="font-size:12px;font-weight:800;letter-spacing:.06em;color:var(--ok)">PROJETS DU VILLAGE</span><span style="font-size:12px;font-weight:800">${doneN} / ${ids.length}</span></div>
+      <div class="between"><span style="font-size:12px;font-weight:800;letter-spacing:.06em;color:var(--ok)">${onIsland() ? "PROJETS DE L'ÎLE" : "PROJETS DU VILLAGE"}</span><span style="font-size:12px;font-weight:800">${doneN} / ${ids.length}</span></div>
       ${nx ? `<b style="font-family:var(--font-title);font-size:17px">${PROJECTS[nx].n}</b>
       <div class="bar" style="height:10px"><i style="width:${Math.min(100, (S.projects[nx] || 0) / PROJECTS[nx].goal * 100)}%;background:var(--terra)"></i></div>
       <span style="font-size:12px;font-weight:700">${S.projects[nx] || 0} / ${PROJECTS[nx].goal} pièces · ${esc(PROJECTS[nx].fx)}</span>
       <div class="row" style="gap:6px"><button class="btn small" data-a="donate" data-id="${nx}" data-amt="25" style="flex:1" ${S.coins < 25 ? "disabled" : ""}>Donner 25</button><button class="btn light small" data-a="projects" style="flex:1">Tous les projets</button></div>`
-      : doneN === ids.length ? `<b style="font-family:var(--font-title);font-size:17px;color:var(--ok)">Tous les projets sont terminés !</b><button class="btn light small" data-a="projects">Voir les projets</button>`
-      : `<b style="font-family:var(--font-title);font-size:16px">Le village prépare un nouveau projet…</b><span class="muted" style="font-size:12px;font-weight:700">${(() => { const h = ids.find((id) => !projVisible(id)); return h ? "Il sera annoncé dans " + (projDay(h) - S.day) + " jour(s)." : ""; })()}</span><button class="btn light small" data-a="projects">Voir les projets</button>`}
+      : doneN === ids.length ? (onIsland() ? `<b style="font-family:var(--font-title);font-size:17px;color:var(--ok)">Tous les projets de l'île sont terminés !</b><button class="btn light small" data-a="projects">Voir les projets</button>`
+        : `<b style="font-family:var(--font-title);font-size:17px;color:var(--ok)">Tous les projets sont terminés !</b>${loadMeta().coq ? `<button class="btn small" data-a="toisland" style="background:#5FA9B4;box-shadow:0 4px 0 #3F8F9A">Bateau pour l'île →</button>` : `<button class="btn small" data-a="depart" style="background:#5FA9B4;box-shadow:0 4px 0 #3F8F9A">Partir sur l'île aux Coquillages →</button>`}<button class="btn light small" data-a="projects">Voir les projets</button>`)
+      : `<b style="font-family:var(--font-title);font-size:16px">${onIsland() ? "L'île prépare un nouveau projet…" : "Le village prépare un nouveau projet…"}</b><span class="muted" style="font-size:12px;font-weight:700">${(() => { const h = ids.find((id) => !projVisible(id)); return h ? "Il sera annoncé dans " + (projDay(h) - S.day) + " jour(s)." : ""; })()}</span><button class="btn light small" data-a="projects">Voir les projets</button>`}
     </div>`; })()}
-    <div style="font-size:14px" class="muted">Chats au café : <b style="color:var(--ink)">${S.cats.map((c) => CATS[c].n).join(", ")}</b></div>
+    <div style="font-size:14px" class="muted">Animaux au café : <b style="color:var(--ink)">${S.cats.map((c) => CATS[c].n).join(", ")}</b></div>
+    ${onIsland() && (S.mapPieces || 0) > 0 && !S.treasure ? `<div class="row" style="gap:8px;background:#F6E4B9;border-radius:12px;padding:8px 10px;font-size:13px;font-weight:800"><svg width="26" height="20" viewBox="0 0 26 20" aria-hidden="true"><rect x="1" y="1" width="24" height="18" fill="#EBD9A8" stroke="#A88A52" stroke-width="1.5"/><path d="M15 6 l5 5 M20 6 l-5 5" stroke="#E06A6A" stroke-width="2"/></svg>Bouts de carte : ${S.mapPieces} / 4</div>` : ""}
     <div style="margin-top:auto;display:flex;flex-direction:column;gap:8px">
-      <div class="row" style="gap:6px"><button class="btn light small" data-a="album" style="flex:1;padding:8px 4px">Chats</button><button class="btn light small" data-a="friends" style="flex:1;padding:8px 4px">Villageois</button><button class="btn light small" data-a="help" style="flex:1;padding:8px 4px">Aide</button></div>
+      <div class="row" style="gap:6px"><button class="btn light small" data-a="album" style="flex:1;padding:8px 4px">Animaux</button><button class="btn light small" data-a="friends" style="flex:1;padding:8px 4px">${onIsland() ? "Voisins" : "Villageois"}</button><button class="btn light small" data-a="help" style="flex:1;padding:8px 4px">Aide</button></div>
       ${cafe ? `<button class="btn green" data-a="opencafe">Retour au café →</button>` : `<button class="btn green" data-a="kitchen">Rentrer cuisiner →</button>`}
     </div>
   </aside>`;
@@ -723,6 +1033,14 @@ const SHOPS = {
   fleuriste:    { n: "Fleuriste de Margot", who: "Margot", c: "#C9677A", hair: "rose", hello: "Un bouquet sur chaque table, et tout le monde sourit. Il dure toute la journée !" },
   ecole:        { n: "École de cuisine de Colette", who: "Colette", c: "#8C5E9E", hair: "carre", hello: "Bienvenue, petite cheffe ! Chaque recette que tu apprends ici fera sourire un villageois." },
   librairie:    { n: "Librairie Le Chat Lettré", who: "Mademoiselle Odile", c: "#2F6B67", hair: "long", hello: "Toutes les recettes du pays sont ici ! Chaque livre fera sourire un villageois. Lequel te tente ?" },
+  // --- île aux Coquillages
+  epiplage:     { n: "Épicerie de la Plage", who: "Rosalie", c: "#D9826B", hair: "chignon", hello: "Bienvenue sur l'île ! Ma cousine, Madame Rose, m'a parlé de toi. Bananes, noix de coco, ananas, mangues… et tout le nécessaire pour cuisiner." },
+  animplage:    { n: "Animalerie de la Plage", who: "Coralie", c: "#3F8F9A", hair: "tresses", hello: "Nourriture et animaux ! Des chats de marin, des chiens qui adorent l'eau… et tout ce qu'il faut pour les régaler." },
+  glacier:      { n: "Glacier de Marina", who: "Marina", c: "#C9677A", hair: "rose", hello: "Mes recettes de glaces sont à toi ! Avec ça, toute la plage fera la queue devant ton café." },
+  creperie:     { n: "Crêperie du Phare", who: "Gaëlle", c: "#B5653A", hair: "carre", hello: "Crêpes, gaufres, punch des îles… Toutes les recettes de la crêperie, pour ton café !" },
+  poissport:    { n: "Poissonnerie du Port", who: "Paco", c: "#4C6F94", hair: "casquette", hello: "Thon, cabillaud, crevettes, saumon : tout vient de ma pêche de ce matin ! Papi Jules m'a écrit : je dois bien m'occuper de toi." },
+  surf:         { n: "Boutique de surf", who: "Lou", c: "#E06A6A", hair: "long", hello: "Planches, transats, hamac… de quoi donner un air de vacances à ton café !" },
+  souvenirs:    { n: "Souvenirs de l'île", who: "Capitaine Albert", c: "#8C5E9E", hair: "court", hello: "Coquillages, maquettes de bateau… Chaque objet a une histoire. Demande-moi, je te les raconte toutes !" },
   poissonnerie: { n: "Poissonnerie du Quai", who: "Papi Jules", c: "#4C6F94", hair: "casquette", hello: "Depuis que le pont est réparé, je ne pêche plus au bord de l'eau : je vends ma pêche ici : saumon, truite fumée, crevettes, thon, cabillaud… Les recettes sont à la librairie. Et si tu fais la soupe de ma Jeanne, je viendrai la goûter !" },
 };
 // Coiffures des commerçants (dessinées derrière / devant le visage / par-dessus)
@@ -761,17 +1079,24 @@ function nextUnlockIn(tab) {
   const days = shopCatalogAll(tab).filter((x) => !x.owned && !unlocked(x.id)).map((x) => UNLOCK[x.id] - S.day);
   return days.length ? { days: Math.min(...days), n: days.length } : null;
 }
+const inShop = (x, tab) => x.shop === tab || (x.also || []).includes(tab);
+const animShop = () => onIsland() ? "animplage" : "refuge";
+const animShopName = () => SHOPS[animShop()].n;
 function shopCatalogAll(tab) {
-  if (tab === "refuge") return [
-    ...Object.entries(ITEMS).filter(([, it]) => it.shop === "animalerie").map(([id, it]) => ({ id, kind: "item", n: it.n, p: it.p, c: it.c, sub: (it.dog ? "Pour les chiens" : "Pour les chats") + " · +" + it.fx + " de bonne humeur · stock : " + qty(id) })),
-    ...Object.entries(DECOR).filter(([, d]) => d.shop === "animalerie").map(([id, d]) => ({ id, kind: "decor", n: d.n, p: d.p, c: d.c, sub: d.d, owned: S.decor.includes(id) })),
-    ...Object.entries(CATS).filter(([, c]) => c.price && !c.kind).map(([id, c]) => ({ id, kind: "cat", n: "Adopter " + c.n, p: c.price, c: c.fur, sub: "Chat · " + c.trait + " · " + c.likes, owned: S.cats.includes(id) })),
-    ...Object.entries(CATS).filter(([, c]) => c.kind === "dog").map(([id, c]) => ({ id, kind: "cat", n: "Adopter " + c.n, p: c.price, c: c.fur, sub: "Chien · " + c.race + " · " + c.trait, owned: S.cats.includes(id) })),
-  ];
+  if (tab === "refuge" || tab === "animplage") {
+    const it = tab === "refuge" ? "animalerie" : "animplage";
+    const here = (c) => tab === "refuge" ? !c.isl : c.isl === "coq";
+    return [
+    ...Object.entries(ITEMS).filter(([, x]) => inShop(x, it)).map(([id, x]) => ({ id, kind: "item", n: x.n, p: x.p, c: x.c, sub: (x.dog ? "Pour les chiens" : "Pour les chats") + " · +" + x.fx + " de bonne humeur · stock : " + qty(id) })),
+    ...Object.entries(DECOR).filter(([, d]) => inShop(d, it)).map(([id, d]) => ({ id, kind: "decor", n: d.n, p: d.p, c: d.c, sub: d.d, owned: S.decor.includes(id) })),
+    ...Object.entries(CATS).filter(([, c]) => c.price && !c.kind && here(c)).map(([id, c]) => ({ id, kind: "cat", n: "Adopter " + c.n, p: c.price, c: c.fur, sub: "Chat · " + c.trait + " · " + c.likes, owned: S.cats.includes(id) })),
+    ...Object.entries(CATS).filter(([, c]) => c.price && c.kind === "dog" && here(c)).map(([id, c]) => ({ id, kind: "cat", n: "Adopter " + c.n, p: c.price, c: c.fur, sub: "Chien · " + c.race + " · " + c.trait, owned: S.cats.includes(id) })),
+  ]; }
   if (tab === "fleuriste") return Object.entries(BOUQUETS).map(([id, b]) => ({ id, kind: "bouquet", n: "Bouquet de " + b.n.toLowerCase(), p: b.p, c: b.c, sub: b.d, owned: S.bouquetId === id }));
   if (tab === "brocante") return Object.entries(DECOR).filter(([, d]) => !d.shop).map(([id, d]) => ({ id, kind: "decor", n: d.n, p: d.p, c: d.c, sub: d.d, owned: S.decor.includes(id) }));
-  if (tab === "librairie" || tab === "ecole") return Object.entries(RECIPES).filter(([id, r]) => r.shop === tab && (!r.season || r.season === season() || S.recipes.includes(id))).map(([id, r]) => ({ id, kind: "book", n: r.n, p: r.book, c: r.c, sub: (r.d ? r.d + " " : "") + r.price + " pièces la part · " + Object.keys(r.needs).map((k) => ITEMS[k].n.toLowerCase()).join(", "), owned: S.recipes.includes(id) }));
-  return Object.entries(ITEMS).filter(([, it]) => it.shop === tab && (!it.season || it.season === season())).map(([id, it]) => ({ id, kind: "item", n: it.n, p: it.p, c: it.c, seasonal: !!it.season, sub: it.cat ? "Pour les chats" : "En stock : " + qty(id) }));
+  if (tab === "surf" || tab === "souvenirs") return Object.entries(DECOR).filter(([, d]) => d.shop === tab).map(([id, d]) => ({ id, kind: "decor", n: d.n, p: d.p, c: d.c, sub: d.d, owned: S.decor.includes(id) }));
+  if (tab === "librairie" || tab === "ecole" || tab === "creperie" || tab === "glacier") return Object.entries(RECIPES).filter(([id, r]) => inShop(r, tab) && (!r.season || r.season === season() || S.recipes.includes(id))).map(([id, r]) => ({ id, kind: "book", n: r.n, p: r.book, c: r.c, sub: (r.d ? r.d + " " : "") + r.price + " pièces la part · " + Object.keys(r.needs).map((k) => ITEMS[k].n.toLowerCase()).join(", "), owned: S.recipes.includes(id) }));
+  return Object.entries(ITEMS).filter(([, it]) => inShop(it, tab) && (!it.season || it.season === season())).map(([id, it]) => ({ id, kind: "item", n: it.n, p: it.p, c: it.c, seasonal: !!it.season, sub: it.cat ? "Pour les chats" : "En stock : " + qty(id) }));
 }
 function cartTotal() {
   return Object.entries(ui.cart).reduce((s, [id, q]) => s + q * (shopCatalog(ui.shopTab).find((x) => x.id === id)?.p || 0), 0);
@@ -799,8 +1124,9 @@ function viewShop() {
     <div class="panel" style="padding:16px 18px"><b style="font-family:var(--font-title);font-size:18px;color:${sh.c}">${sh.who}</b><p style="margin:4px 0 0;font-size:15px;line-height:1.45">${esc(sh.hello)}</p></div>
   </div>
   <div style="position:absolute;left:356px;top:96px;width:560px;display:flex;flex-direction:column;gap:14px">
-    <div class="between"><h1 style="font-weight:700;font-size:28px">${sh.n}</h1><button class="btn light small" data-a="village">← Village</button></div>
+    <div class="between"><h1 style="font-weight:700;font-size:28px">${sh.n}</h1><button class="btn light small" data-a="village">${onIsland() ? "← Plage" : "← Village"}</button></div>
     <div class="grid" style="grid-template-columns:repeat(3,minmax(0,1fr));max-height:568px;overflow:auto;padding:4px 4px 10px">
+      ${ui.shopTab === "animplage" && !S.cats.includes("doublon") ? `<div class="card" style="order:98;align-items:center;justify-content:center;text-align:center;background:#EFE4D2;box-shadow:inset 0 0 0 2px var(--line)">${silhouetteSVG(50)}<b style="font-family:var(--font-title);font-size:16px;color:#8A7660">???</b><span class="muted" style="font-size:13px;font-weight:700">Cette place est encore vide…</span></div>` : ""}
       ${(() => { const nx = nextUnlockIn(ui.shopTab); return nx ? `<div class="card" style="order:99;align-items:center;justify-content:center;text-align:center;border:3px dashed var(--line);background:#FBF5EA;box-shadow:none"><b style="font-family:var(--font-title);font-size:16px">${nx.n} nouveauté(s)</b><span class="muted" style="font-size:13px;font-weight:700">Arrivage dans ${nx.days} jour(s)</span></div>` : ""; })()}
       ${list.map((it) => {
         const q = ui.cart[it.id] || 0;
@@ -915,7 +1241,7 @@ function viewKitchen() {
         <span style="width:34px;height:34px;border-radius:50%;background:${x.c};border:3px solid #fff;box-shadow:0 0 0 2px ${ok ? "var(--sage-l)" : "var(--line)"};flex-shrink:0"></span>
         <span><b style="font-family:var(--font-title);font-size:16px;display:block">${x.n}</b><span class="muted" style="font-size:12px;font-weight:700">${ok ? "Ingrédients OK" : "Il manque des ingrédients"} · ${x.yield} parts · ${x.price} p.</span></span></button>`; }).join("")}
     </div>
-    <div class="muted" style="padding:10px 12px;border-radius:14px;border:2px dashed var(--line);font-size:13px;font-weight:700">Nouvelles recettes à la <b>Librairie Le Chat Lettré</b>, de l'autre côté du pont.</div>
+    <div class="muted" style="padding:10px 12px;border-radius:14px;border:2px dashed var(--line);font-size:13px;font-weight:700">${onIsland() ? "Nouvelles recettes à la <b>Crêperie du Phare</b> et au <b>Glacier de Marina</b>." : "Nouvelles recettes à la <b>Librairie Le Chat Lettré</b>, de l'autre côté du pont."}</div>
   </section>
   <section aria-label="Plan de travail" style="position:absolute;left:348px;top:92px;width:560px;height:604px;border-radius:22px;overflow:hidden;background:#F3E4C9;box-shadow:0 6px 0 var(--line)">
     <svg width="560" height="604" viewBox="0 0 560 604" aria-hidden="true" style="position:absolute;inset:0">
@@ -958,7 +1284,7 @@ function viewKitchen() {
         <div class="row" style="gap:6px">${steps.map((_, i) => `<span style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;${i < si ? "background:var(--sage);color:#fff" : i === si ? "background:var(--terra);color:#fff" : "background:#EADBB8;color:var(--ink2)"}">${i + 1}</span>`).join("")}</div></div>
       <p class="muted" style="margin:0;font-weight:700">${esc(hint)}</p>
       ${cooking ? `<div class="bar" style="height:10px"><i id="cookbar" style="width:${kind === "add" ? (c.drops.filter(Boolean).length / units.length * 100) : (kind === "knead" || kind === "tap") ? (c.taps / TAPS[kind] * 100) : c.prog * 100}%;background:var(--terra);transition:width .1s"></i></div>` : ""}
-      ${button || (!cooking && missing.length && !cafe) ? `<div class="row">${button}${!cooking && missing.length && !cafe ? `<button class="btn light small" data-a="shop" data-tab="epicerie">Acheter chez Madame Rose</button>` : ""}</div>` : ""}
+      ${button || (!cooking && missing.length && !cafe) ? `<div class="row">${button}${!cooking && missing.length && !cafe ? `<button class="btn light small" data-a="shop" data-tab="${onIsland() ? "epiplage" : "epicerie"}">${onIsland() ? "Acheter à l'Épicerie de la Plage" : "Acheter chez Madame Rose"}</button>` : ""}</div>` : ""}
     </div>
   </section>
   <aside style="position:absolute;right:24px;top:92px;width:324px;height:604px;display:flex;flex-direction:column;gap:12px">
@@ -991,6 +1317,7 @@ const CAT_SPOTS = [
   { x: 780, y: 490, floor: true }, { x: 244, y: 222 }, { x: 1170, y: 392 }, { x: 1000, y: 490, floor: true }, { x: 70, y: 444, floor: true },
   { x: 272, y: 486, req: "panier", floor: true }, { x: 176, y: 440, req: "fauteuil", floor: true }, { x: 1000, y: 112, req: "aquarium" },
   { x: 440, y: 520, floor: true }, { x: 1206, y: 520, floor: true }, { x: 160, y: 520, floor: true },
+  { x: 682, y: 270, req: "hamac" },
 ];
 const nowS = () => performance.now() / 1000;
 function catSpots(id) { return CAT_SPOTS.map((p, i) => ({ ...p, i })).filter((p) => (!p.req || S.decor.includes(p.req)) && (!id || !isDog(id) || p.floor)); }
@@ -1058,6 +1385,46 @@ function animateCats() {
   });
 }
 
+// ---------- Les chiens rapportent des trouvailles ----------
+// De temps en temps, un chien bien nourri revient avec une pièce (ou, sur l'île, un coquillage rare ou un bout de carte).
+// Au plus 2 trouvailles par chien et par jour ; un chien qui a faim ne rapporte rien.
+const DOG_FINDS_PER_DAY = 2;
+function dogFindsTick(dt) {
+  if (!S.dogFinds || S.dogFinds.day !== S.day) S.dogFinds = { day: S.day, n: {} };
+  cafe.gift = cafe.gift || {};
+  S.cats.filter(isDog).forEach((id) => {
+    const m = S.mood[id] ?? 60;
+    if (cafe.gift[id] || m < 35 || (S.dogFinds.n[id] || 0) >= DOG_FINDS_PER_DAY) return;
+    if (Math.random() >= (m > 75 ? 1 / 45 : 1 / 90) * dt) return;
+    S.dogFinds.n[id] = (S.dogFinds.n[id] || 0) + 1;
+    let g = { type: "coins", n: 1 + Math.floor(Math.random() * 5) };
+    if (onIsland()) { const r = Math.random(); if ((S.mapPieces || 0) < 4 && !S.treasure && r < 0.25) g = { type: "map" }; else if (r < 0.45) g = { type: "shell", n: 15 }; }
+    cafe.gift[id] = g;
+  });
+}
+function addMapPiece() {
+  S.mapPieces = Math.min(4, (S.mapPieces || 0) + 1);
+  return S.mapPieces >= 4 ? "La carte est complète ! Une croix est dessinée sur l'îlot, au bout du banc de sable…" : "Un mystérieux bout de carte… (" + S.mapPieces + " / 4)";
+}
+function collectGift(id, quiet = false) {
+  const g = cafe && cafe.gift && cafe.gift[id]; if (!g) return;
+  delete cafe.gift[id];
+  S.dogCoins = S.dogCoins || {};
+  let msg;
+  if (g.type === "map") msg = CATS[id].n + " t'a rapporté quelque chose. " + addMapPiece();
+  else {
+    S.coins += g.n; S.dogCoins[id] = (S.dogCoins[id] || 0) + g.n; cafe.dogCoins = (cafe.dogCoins || 0) + g.n;
+    msg = g.type === "shell" ? CATS[id].n + " t'a rapporté un coquillage rare ! Le capitaine Albert te l'achète " + g.n + " pièces." : "Wouf ! " + CATS[id].n + " t'a rapporté " + g.n + " pièce" + (g.n > 1 ? "s" : "") + " !";
+  }
+  if (quiet) return;
+  sfx("bark"); setTimeout(() => sfx("coin"), 180); toast(msg); render();
+}
+function giftBubble(g) {
+  const icon = g.type === "map" ? `<rect x="-9" y="-7" width="18" height="13" fill="#EBD9A8" stroke="#A88A52" stroke-width="1.5"/><path d="M3 -3 l4 4 M7 -3 l-4 4" stroke="#E06A6A" stroke-width="2"/>`
+    : g.type === "shell" ? `<path d="M0 7 q-10 -14 0 -16 q10 2 0 16z" fill="#F5C6CF" stroke="#E9A9B0" stroke-width="1.5"/>`
+    : `<circle r="8" fill="#F2C46D" stroke="#C99A3E" stroke-width="2"/><path d="M0 -4 v8" stroke="#C99A3E" stroke-width="2" stroke-linecap="round"/>`;
+  return `<svg width="40" height="36" viewBox="-20 -18 40 36" aria-hidden="true" style="position:absolute;left:9px;top:-34px;animation:bob 1s ease-in-out infinite"><path d="M-16 -15 h32 a3 3 0 0 1 3 3 v18 a3 3 0 0 1 -3 3 h-12 l-4 6 l-4 -6 h-12 a3 3 0 0 1 -3 -3 v-18 a3 3 0 0 1 3 -3z" fill="#fff" stroke="#F2C46D" stroke-width="2.5"/><g transform="translate(0 -3)">${icon}</g></svg>`;
+}
 function stopCafe() { if (cafe && cafe.timer) { clearInterval(cafe.timer); cafe.timer = null; } }
 function pickOrder() {
   const avail = S.recipes.filter((id) => (S.showcase[id] || 0) > 0);
@@ -1070,7 +1437,7 @@ function tickCafe() {
   cafe.time += dt;
   // humeur des chats
   S.cats.forEach((c) => { S.mood[c] = Math.max(0, (S.mood[c] ?? 60) - dt * CAT_HUNGER * toyFactor()); });
-  ensureCatPositions(); moveCats(dt);
+  ensureCatPositions(); moveCats(dt); dogFindsTick(dt);
   // patience
   cafe.seats.forEach((cl, i) => {
     if (!cl) return;
@@ -1135,6 +1502,7 @@ function serve(i) {
   render();
 }
 function pet(id) {
+  if (cafe && cafe.gift && cafe.gift[id]) { collectGift(id); return; }
   const now = performance.now();
   if (cafe && cafe.petCd[id] && now - cafe.petCd[id] < 2500) { toast(CATS[id].n + (isDog(id) ? " court après sa queue, réessaie dans un instant." : " fait sa toilette, réessaie dans un instant.")); return; }
   if (cafe) cafe.petCd[id] = now;
@@ -1160,13 +1528,13 @@ function feedAll() {
     S.pantry[food]--; S.mood[id] = Math.min(100, (S.mood[id] ?? 60) + FOOD[food]); fed++;
   }
   sfx("pop");
-  toast(fed ? fed + (fed > 1 ? " animaux se régalent" : " animal se régale") + (fed < hungry.length ? " (il manque de la nourriture pour les autres !)" : " !") : "Plus de nourriture : passe à l'Animalerie Les Moustaches.");
+  toast(fed ? fed + (fed > 1 ? " animaux se régalent" : " animal se régale") + (fed < hungry.length ? " (il manque de la nourriture pour les autres !)" : " !") : "Plus de nourriture : passe à l'" + animShopName() + ".");
   render();
 }
 function feed(id) {
   const FOOD = petFood(id);
   const food = Object.keys(FOOD).find((k) => qty(k) > 0);
-  if (!food) { toast("Plus rien pour " + (isDog(id) ? "les chiens" : "les chats") + " : passe à l'Animalerie Les Moustaches."); return; }
+  if (!food) { toast("Plus rien pour " + (isDog(id) ? "les chiens" : "les chats") + " : passe à l'" + animShopName() + "."); return; }
   S.pantry[food]--; S.mood[id] = Math.min(100, (S.mood[id] ?? 60) + FOOD[food]); sfx("pop");
   toast(CATS[id].n + " se régale (" + ITEMS[food].n.toLowerCase() + ")"); render();
 }
@@ -1257,9 +1625,10 @@ function viewCafe() {
       <rect x="4" y="6" width="212" height="200" rx="8" fill="#CFE3E6"/>
       <circle cx="170" cy="50" r="20" fill="#F7DFA0"/>
       <ellipse cx="50" cy="40" rx="30" ry="9" fill="#EAF3F4"/>
-      <ellipse cx="60" cy="190" rx="90" ry="44" fill="${tint}"/><ellipse cx="180" cy="196" rx="80" ry="36" fill="#8FAF8A"/>
+      ${onIsland() ? `<rect x="4" y="120" width="212" height="86" fill="#7FC6D3"/><path d="M4 130 q26 -6 53 0 t53 0 t53 0 t53 0" stroke="#FFFFFF" stroke-width="3" fill="none" opacity=".7"/><path d="M4 206 V176 Q110 160 216 176 V206Z" fill="#F3DCA8"/><g transform="translate(150 96)"><path d="M0 26 H30 L26 34 H4Z" fill="#C9677A"/><rect x="14" y="0" width="3" height="26" fill="#6B4A33"/><path d="M17 2 L30 24 H17Z" fill="#FBF5EA"/></g><g transform="translate(26 120) scale(.5)"><path d="M14 90 Q20 40 8 0" stroke="#A97C5A" stroke-width="7" fill="none"/><path d="M8 0 q-30 -6 -40 12 M8 0 q-12 -26 -34 -24 M8 0 q18 -24 40 -16 M8 0 q30 2 36 24" stroke="#5E9C62" stroke-width="8" fill="none" stroke-linecap="round"/></g>`
+      : `<ellipse cx="60" cy="190" rx="90" ry="44" fill="${tint}"/><ellipse cx="180" cy="196" rx="80" ry="36" fill="#8FAF8A"/>
       <g transform="translate(140 130)"><rect x="0" y="14" width="40" height="30" fill="#F6EEDF"/><path d="M-4 16 L20 0 L44 16Z" fill="#D9826B"/></g>
-      <circle cx="30" cy="150" r="16" fill="#6F9468"/><circle cx="46" cy="140" r="12" fill="#7FA478"/>
+      <circle cx="30" cy="150" r="16" fill="#6F9468"/><circle cx="46" cy="140" r="12" fill="#7FA478"/>`}
       <rect x="106" y="6" width="8" height="200" fill="#8A5A3B"/><rect x="4" y="100" width="212" height="8" fill="#8A5A3B"/>
       <path d="M-14 -10 Q30 40 6 120 Q-6 170 -14 216Z" fill="#E9A9B0"/><path d="M234 -10 Q190 40 214 120 Q226 170 234 216Z" fill="#E9A9B0"/>
       <g fill="#D78F98"><circle cx="-2" cy="120" r="6"/><circle cx="222" cy="120" r="6"/></g>
@@ -1316,6 +1685,15 @@ function viewCafe() {
     ${deco("fauteuil") ? `<g transform="translate(150 444)"><rect x="6" y="54" width="8" height="22" fill="#6B4A33"/><rect x="96" y="54" width="8" height="22" fill="#6B4A33"/><rect x="10" y="0" width="90" height="56" rx="22" fill="#8C5E9E"/><rect x="0" y="26" width="26" height="42" rx="12" fill="#7A4F8C"/><rect x="84" y="26" width="26" height="42" rx="12" fill="#7A4F8C"/><rect x="18" y="38" width="74" height="26" rx="10" fill="#A27AB2"/></g>` : ""}
     ${deco("griffoir") ? `<g transform="translate(1226 470)"><rect x="0" y="0" width="22" height="96" rx="6" fill="#C9A27A"/><g stroke="#B08A60" stroke-width="2">${Array.from({length:9},(_,i)=>`<path d="M0 ${8+i*10} h22"/>`).join("")}</g><rect x="-10" y="92" width="42" height="10" rx="4" fill="#8A5A3B"/></g>` : ""}
     ${deco("balle") ? `<g transform="translate(700 470)"><circle r="11" fill="#C9677A"/><path d="M-9 -4 q9 6 18 0 M-9 4 q9 -6 18 0" stroke="#F6EEDF" stroke-width="2" fill="none"/></g>` : ""}
+    <!-- déco de l'île -->
+    ${deco("guirlandecoq") ? `<path d="M0 26 Q160 70 320 26 T640 26 T960 26 T1280 26" stroke="#C9A27A" stroke-width="2" fill="none"/>${Array.from({ length: 16 }, (_, i) => `<path transform="translate(${40 + i * 80} ${34 + (i % 2) * 8})" d="M0 14 q-10 -14 0 -16 q10 2 0 16z" fill="${["#F5C6CF", "#FBF5EA", "#F2C46D"][i % 3]}" stroke="#E9A9B0" stroke-width="1.5"/>`).join("")}` : ""}
+    ${deco("hamac") ? `<path d="M610 300 Q710 352 810 300" stroke="#C9A27A" stroke-width="3" fill="none"/><path d="M620 302 Q710 360 800 302 Q710 336 620 302Z" fill="#F2C46D"/><path d="M640 316 Q710 346 780 316" stroke="#E06A6A" stroke-width="3" fill="none"/>` : ""}
+    ${deco("boueedeco") ? `<g transform="translate(980 240)"><circle r="24" fill="none" stroke="#E06A6A" stroke-width="12"/><path d="M-24 0 h-6 M24 0 h6 M0 -24 v-6 M0 24 v6" stroke="#FFFFFF" stroke-width="12"/><circle r="24" fill="none" stroke="#FBF5EA" stroke-width="2" stroke-dasharray="10 28"/></g>` : ""}
+    ${deco("bocal") ? `<g transform="translate(470 228)"><rect x="0" y="6" width="34" height="44" rx="10" fill="#DDEEF2" opacity=".85" stroke="#9CC3D2" stroke-width="2"/><rect x="4" y="0" width="26" height="8" rx="3" fill="#C9A27A"/><path d="M8 44 q-6 -10 2 -12 q8 2 -2 12z M22 46 q-6 -10 2 -12 q8 2 -2 12z" fill="#F5C6CF"/><path d="M12 30 l3 6 l6 0 l-5 4 l2 6 l-6 -4 l-6 4 l2 -6 l-5 -4 l6 0z" fill="#F29A3A"/></g>` : ""}
+    ${deco("maquette") ? `<g transform="translate(1116 96)"><path d="M0 40 H70 L60 54 H10Z" fill="#C9677A"/><rect x="34" y="0" width="4" height="40" fill="#6B4A33"/><path d="M38 2 L64 36 H38Z" fill="#FBF5EA"/><path d="M34 8 L14 36 H34Z" fill="#F6EEDF"/><rect x="26" y="54" width="20" height="8" fill="#8A5A3B"/></g>` : ""}
+    ${deco("lampephare") ? `<g transform="translate(1106 330)"><path d="M10 140 L16 30 H34 L40 140Z" fill="#FBF5EA"/><path d="M13 60 h24 M12 100 h26" stroke="#E06A6A" stroke-width="10"/><rect x="12" y="10" width="26" height="22" rx="4" fill="#F7DFA0"/><path d="M8 10 L25 -4 L42 10Z" fill="#E06A6A"/><ellipse cx="25" cy="22" rx="70" ry="60" fill="#FFE9A8" opacity=".2"/><ellipse cx="25" cy="142" rx="22" ry="5" fill="#8A5A3B"/></g>` : ""}
+    ${deco("planche") ? `<g transform="translate(1216 360) rotate(6)"><ellipse cx="16" cy="70" rx="16" ry="72" fill="#E06A6A"/><path d="M16 0 V142" stroke="#FBF5EA" stroke-width="4"/><ellipse cx="16" cy="70" rx="16" ry="72" fill="none" stroke="#B76A55" stroke-width="2"/></g>` : ""}
+    ${deco("transats") ? `<g transform="translate(250 470)"><path d="M0 70 L30 0 M60 70 L46 30" stroke="#A97C5A" stroke-width="5" stroke-linecap="round"/><path d="M8 52 L34 2 L50 8 L66 60Z" fill="#9CC3D2"/><path d="M14 40 L56 46 M22 24 L52 30" stroke="#FBF5EA" stroke-width="5"/></g>` : ""}
     ${deco("pelote") ? `<g transform="translate(1180 560)"><circle r="14" fill="#E9A9B0"/><path d="M-10 -8 q10 8 20 0 M-12 2 q12 8 24 0 M-6 10 q8 -20 0 -24" stroke="#C9677A" stroke-width="2" fill="none"/><path d="M12 6 q20 10 30 -4" stroke="#E9A9B0" stroke-width="2" fill="none"/></g>` : ""}
     ${seatsX.map((x, i) => cafeTable(x + 50, 545, cloths[i], deco("bougies"))).join("")}
   </svg>
@@ -1346,8 +1724,8 @@ function viewCafe() {
     </div>`).join("")}
   ${(() => { ensureCatPositions(); const t = nowS(); return Object.entries(cafe.cp).map(([id, c]) => { const m = S.mood[id] ?? 60, p = catPos(c, t), flip = p.moving && c.tx < c.x;
     if (p.moving) { p.x = Math.round(p.x); p.y = Math.round(p.y); }
-    return `<button data-a="pet" data-id="${id}" data-cat="${id}" aria-label="Caresser ${CATS[id].n}" title="${CATS[id].n} · ${moodWord(m)}" style="position:absolute;left:${p.x}px;top:${p.y}px;border:0;background:none;padding:0;z-index:2">
-      <span style="display:block;${flip ? "transform:scaleX(-1);" : ""}"><span style="display:block;${p.moving ? "animation:bob .45s ease-in-out infinite;" : ""}">${catSVG(id, 58, m < 30 && !p.moving)}</span></span>${m > 75 ? `<span style="position:absolute;right:-6px;top:-6px;font-size:13px;font-weight:800;color:var(--terra)">♥</span>` : ""}</button>`; }).join(""); })()}
+    return `<button data-a="pet" data-id="${id}" data-cat="${id}" aria-label="${cafe.gift && cafe.gift[id] ? CATS[id].n + " t'a rapporté quelque chose : touche-le" : "Caresser " + CATS[id].n}" title="${CATS[id].n} · ${moodWord(m)}" style="position:absolute;left:${p.x}px;top:${p.y}px;border:0;background:none;padding:0;z-index:2">
+      <span style="display:block;${flip ? "transform:scaleX(-1);" : ""}"><span style="display:block;${p.moving ? "animation:bob .45s ease-in-out infinite;" : ""}">${catSVG(id, 58, m < 30 && !p.moving)}</span></span>${m > 75 ? `<span style="position:absolute;right:-6px;top:-6px;font-size:13px;font-weight:800;color:var(--terra)">♥</span>` : ""}${cafe.gift && cafe.gift[id] ? giftBubble(cafe.gift[id]) : ""}</button>`; }).join(""); })()}
   <div style="position:absolute;left:24px;right:24px;bottom:16px;display:flex;gap:14px;align-items:stretch;z-index:4">
     <div class="panel" style="flex:1;padding:10px 14px;display:flex;gap:10px;align-items:center">
       <b style="font-family:var(--font-title);font-size:17px;margin-right:4px">Vitrine</b>
@@ -1365,13 +1743,14 @@ function viewCafe() {
 function villagerSVG(v) {
   // petit personnage avec cheveux, tasse et joues roses
   if (!v) return "";
-  const hair = { "Léon": "#6B4A33", "Margot": "#C9677A", "Papi Jules": "#EDEAE6", "Madame Rose": "#C9C4C0", "Lucie": "#8A5A3B", "Basile": "#4A3326", "Inès": "#2F2522" }[v.n] || "#6B4A33";
+  const hair = { "Léon": "#6B4A33", "Margot": "#C9677A", "Papi Jules": "#EDEAE6", "Madame Rose": "#C9C4C0", "Lucie": "#8A5A3B", "Basile": "#4A3326", "Inès": "#2F2522",
+    "Marina": "#E9A9B0", "Théo": "#E0B94F", "Yvonne": "#C9C4C0", "Lou": "#E8C27A", "Capitaine Albert": "#EDEAE6", "Nina": "#8A5A3B", "Paco": "#3E3433" }[v.n] || "#6B4A33";
   return `<svg width="76" height="96" viewBox="0 0 76 96" aria-hidden="true">
     <rect x="10" y="58" width="56" height="38" rx="18" fill="${v.c}"/><path d="M28 58 l10 12 l10 -12" fill="#FBF5EA"/>
     <circle cx="38" cy="34" r="25" fill="#F1C9A5"/>
     <path d="M13 32 Q14 8 38 8 Q62 8 63 32 Q56 18 38 18 Q22 18 13 32Z" fill="${hair}"/>
-    ${v.n === "Margot" || v.n === "Inès" ? `<path d="M13 30 Q8 50 16 58 L20 34Z M63 30 Q68 50 60 58 L56 34Z" fill="${hair}"/>` : ""}
-    ${v.n === "Papi Jules" ? `<path d="M22 42 Q26 60 38 60 Q50 60 54 42 Q46 50 38 50 Q30 50 22 42Z" fill="#EDEAE6"/>` : ""}
+    ${["Margot", "Inès", "Lou", "Marina"].includes(v.n) ? `<path d="M13 30 Q8 50 16 58 L20 34Z M63 30 Q68 50 60 58 L56 34Z" fill="${hair}"/>` : ""}
+    ${v.n === "Papi Jules" || v.n === "Capitaine Albert" ? `<path d="M22 42 Q26 60 38 60 Q50 60 54 42 Q46 50 38 50 Q30 50 22 42Z" fill="#EDEAE6"/>` : ""}
     ${v.tourist ? `<ellipse cx="38" cy="14" rx="30" ry="6" fill="#F3E2BE"/><path d="M22 14 Q24 -2 38 -2 Q52 -2 54 14Z" fill="#F3E2BE"/><rect x="22" y="9" width="32" height="5" fill="#D9826B"/><rect x="26" y="66" width="24" height="16" rx="4" fill="#4A3326"/><circle cx="38" cy="74" r="5" fill="#9CC3D2"/>` : ""}
     <circle cx="29" cy="34" r="3" fill="#4A3326"/><circle cx="47" cy="34" r="3" fill="#4A3326"/>
     <circle cx="24" cy="42" r="4" fill="#E9A9B0" opacity=".7"/><circle cx="52" cy="42" r="4" fill="#E9A9B0" opacity=".7"/>
@@ -1383,6 +1762,7 @@ function villagerSVG(v) {
 let summaryData = null;
 function endDay() {
   stopCafe();
+  Object.keys(cafe.gift || {}).forEach((id) => collectGift(id, true));
   const newcomers = [];
   const cond = {
     brume: () => S.decor.includes("coussin"),
@@ -1392,16 +1772,19 @@ function endDay() {
     moka: () => S.servedTotal >= 20,
     pistache: () => bridgeDone(),
   };
-  for (const id of Object.keys(cond)) if (!S.cats.includes(id) && cond[id]()) { S.cats.push(id); S.mood[id] = 60; newcomers.push(id); break; } // un nouveau chat par jour max
+  if (!onIsland()) for (const id of Object.keys(cond)) if (!S.cats.includes(id) && cond[id]()) { S.cats.push(id); S.mood[id] = 60; newcomers.push(id); break; } // un nouveau chat par jour max
   summaryData = { events: cafe.events, served: cafe.served, missed: cafe.missed, earned: cafe.earned, tips: cafe.tips, newcomers, mood: Math.round(avgMood()) };
   // les plats non vendus restent (un peu moins frais, c'est cozy)
   const morning = [];
-  if (projDone("lanternes")) { S.rep += 1; morning.push("Les lanternes ont attiré du monde sur la place : +1 réputation."); }
-  if (projDone("moulin")) { S.pantry.farine = qty("farine") + 2; S.pantry.miel = qty("miel") + 1; morning.push("Le meunier t'a livré 2 farines et 1 pot de miel."); }
+  if (projDone("lanternes")) { S.rep += 1; morning.push(onIsland() ? "Les lampions ont attiré du monde sur la plage : +1 réputation." : "Les lanternes ont attiré du monde sur la place : +1 réputation."); }
+  if (projDone("moulin") && onIsland()) { S.pantry.coco = qty("coco") + 2; S.pantry.banane = qty("banane") + 1; morning.push("La cocoteraie t'a donné 2 noix de coco et des bananes."); }
+  else if (projDone("moulin")) { S.pantry.farine = qty("farine") + 2; S.pantry.miel = qty("miel") + 1; morning.push("Le meunier t'a livré 2 farines et 1 pot de miel."); }
+  const found = cafe.dogCoins || 0;
+  if (found) morning.push("Tes chiens t'ont rapporté " + found + " pièce" + (found > 1 ? "s" : "") + " aujourd'hui. Wouf !");
   summaryData.morning = morning;
   S.day++; S.phase = "matin"; S.letterRead = false; S.bouquet = false; S.bouquetId = null;
   S.weather = rollWeather();
-  if (dayInSeason() === 1) {
+  if (dayInSeason() === 1 && !onIsland()) {
     morning.push("Une nouvelle saison commence : " + season() + " ! L'épicerie a de nouveaux produits de saison.");
     const gift = Object.entries(RECIPES).find(([id, r]) => r.gift && r.season === season() && !S.recipes.includes(id));
     if (gift) { S.recipes.push(gift[0]); morning.push("Madame Rose t'offre la recette de saison : « " + gift[1].n + " » !"); }
@@ -1409,11 +1792,11 @@ function endDay() {
   if (festival()) morning.push("Demain, c'est la " + festival() + " : plus de clients et +20 % de pourboires !");
   else if (S.weather === "pluie") morning.push("Il pleuvra demain : les villageois viendront se mettre à l'abri au café (+2 clients).");
   else if (S.weather === "neige") morning.push("Il neigera demain : parfait pour un chocolat chaud (+1 client).");
-  const newIn = { librairie: "la librairie", brocante: "la brocante", refuge: "l'animalerie" };
+  const newIn = onIsland() ? { creperie: "la crêperie", glacier: "chez le glacier", animplage: "l'animalerie", surf: "la boutique de surf", souvenirs: "la boutique de souvenirs" } : { librairie: "la librairie", brocante: "la brocante", refuge: "l'animalerie" };
   Object.keys(newIn).forEach((tab) => { if (shopCatalogAll(tab).some((x) => UNLOCK[x.id] === S.day)) morning.push("Nouveautés à " + newIn[tab] + " !"); });
-  Object.keys(PROJECTS).forEach((id) => { if (projDay(id) === S.day) morning.push("Nouveau projet au village : « " + PROJECTS[id].n + " » ! Regarde la carte."); });
+  Object.keys(PROJECTS).forEach((id) => { if (projDay(id) === S.day) morning.push((onIsland() ? "Nouveau projet sur l'île : « " : "Nouveau projet au village : « ") + PROJECTS[id].n + " » ! Regarde la carte."); });
   // points et pièces du lanceur Mes Jeux
-  if (window.MesJeux && summaryData.served > 0) {
+  if (window.MesJeux && summaryData.served > 0 && !TEST) {
     const lignes = [[30, "Journée au café terminée"]];
     lignes.push([summaryData.served * 2, summaryData.served + " client" + (summaryData.served > 1 ? "s servis" : " servi")]);
     if (!summaryData.missed) lignes.push([10, "Personne n'est reparti les mains vides"]);
@@ -1445,6 +1828,61 @@ function viewSummary() {
   </div>`;
 }
 
+// ---------- Le grand départ vers l'île ----------
+function viewDepart() {
+  const pick = ui.departPick && S.cats.includes(ui.departPick) ? ui.departPick : null;
+  return `
+  <svg width="1280" height="720" viewBox="0 0 1280 720" aria-hidden="true" style="position:absolute;inset:0">
+    <rect width="1280" height="420" fill="#F7D9B5"/><circle cx="1000" cy="300" r="90" fill="#F2B37A"/>
+    <rect y="380" width="1280" height="340" fill="#7FB2C6"/>
+    <g stroke="#A4CBDA" stroke-width="4" stroke-linecap="round"><path d="M80 460 h60 M260 520 h80 M900 470 h70 M1040 560 h60 M620 640 h90"/></g>
+    <path d="M0 380 Q200 300 420 330 Q520 345 560 380Z" fill="#A9C4A0"/>
+    <g transform="translate(120 250)"><rect x="0" y="60" width="90" height="60" rx="5" fill="#F6EEDF"/><path d="M-8 64 L45 30 L98 64Z" fill="#D9826B"/><rect x="12" y="76" width="22" height="18" rx="3" fill="#F2C46D"/></g>
+    <g transform="translate(260 270)"><rect x="0" y="40" width="70" height="50" rx="5" fill="#FBF5EA"/><path d="M-6 44 L35 16 L76 44Z" fill="#4F6B4A"/></g>
+    <rect x="360" y="368" width="200" height="14" fill="#A97C5A"/>
+    <g transform="translate(560 330)"><animateTransform attributeName="transform" type="translate" values="560 330;560 336;560 330" dur="3s" repeatCount="indefinite"/>
+      <path d="M0 60 L260 60 L230 100 L30 100Z" fill="#C9677A"/><rect x="30" y="60" width="200" height="8" fill="#FBF5EA"/>
+      <rect x="120" y="-80" width="8" height="140" fill="#6B4A33"/><path d="M128 -76 L210 40 L128 40Z" fill="#FBF5EA"/><path d="M120 -60 L60 30 L120 30Z" fill="#F6EEDF"/><path d="M128 -80 l26 8 l-26 8z" fill="#F2C46D"/></g>
+    <g stroke="#4A3326" stroke-width="2.5" fill="none" stroke-linecap="round"><path d="M820 160 q8 -8 16 0 q8 -8 16 0"/><path d="M870 190 q6 -6 12 0 q6 -6 12 0"/></g>
+  </svg>
+  ${pick ? `<div style="position:absolute;left:606px;top:342px">${catSVG(pick, 50)}</div>` : ""}
+  <div class="panel" style="position:absolute;left:40px;top:36px;width:600px;display:flex;flex-direction:column;gap:12px;padding:22px 26px">
+    <p style="margin:0;font-family:var(--font-title);font-weight:600;font-size:16px;letter-spacing:.08em;text-transform:uppercase;color:var(--sage)">Les 8 projets de Bruyère sont terminés</p>
+    <h1 style="font-size:44px;line-height:1">Le village te dit merci !</h1>
+    <p style="margin:0;font-size:17px;line-height:1.5">Papi Jules a préparé son bateau, et il reste une place à bord pour un de tes animaux. L'île aux Coquillages t'attend : du sable fin, un vieux café de plage à rouvrir et de nouveaux voisins à rencontrer.</p>
+    <p style="margin:0;font-size:15px;line-height:1.5;font-weight:700;color:var(--ink2)">Tu pars sans rien d'autre : 50 pièces, trois recettes de plage… et ton compagnon. Tu pourras revenir à Bruyère en bateau quand tu veux.</p>
+  </div>
+  <div class="panel" style="position:absolute;right:40px;top:36px;width:440px;max-height:600px;display:flex;flex-direction:column;gap:12px;padding:22px">
+    <h2 style="font-size:22px">Choisis ton compagnon de voyage</h2>
+    <p class="muted" style="margin:0;font-size:14px;font-weight:700">Un seul animal monte sur le bateau avec toi. Les autres restent bien au chaud à Bruyère.</p>
+    <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;overflow:auto;padding:4px">
+      ${S.cats.map((id) => `<button data-a="departpick" data-id="${id}" aria-pressed="${pick === id}" style="display:flex;flex-direction:column;align-items:center;gap:2px;padding:10px 6px;border-radius:16px;border:3px solid ${pick === id ? "var(--terra)" : "transparent"};background:${pick === id ? "#fff" : "#F3E9D6"}">${catSVG(id, 52)}<b style="font-family:var(--font-title);font-size:15px">${CATS[id].n}</b><span class="muted" style="font-size:11px;font-weight:800">${isDog(id) ? "Chien" : "Chat"}</span></button>`).join("")}
+    </div>
+    <button class="btn green" data-a="embark" ${pick ? "" : "disabled"}>${pick ? "Embarquer avec " + CATS[pick].n + " →" : "Choisis un animal"}</button>
+    <button class="btn light small" data-a="village">Pas encore, je reste un peu à Bruyère</button>
+  </div>`;
+}
+function islandWelcomeModal() {
+  const c = S.companion;
+  return `<div class="modal-bg"><div class="panel modal" role="dialog" aria-label="Bienvenue sur l'île" style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px;padding:30px;background:#FFFBF2;width:620px">
+    ${c ? catSVG(c, 90) : ""}
+    <span style="font-size:13px;font-weight:800;letter-spacing:.08em;color:#2F5A80">L'ÎLE AUX COQUILLAGES</span>
+    <h1 style="font-size:30px">Bienvenue sur l'île !</h1>
+    <p style="margin:0;font-size:16px;line-height:1.5">Le vieux café de la plage n'attendait que toi${c ? ", et " + esc(CATS[c].n) + " a déjà trouvé sa place au soleil" : ""}. Fais tes courses à l'<b>Épicerie de la Plage</b>, cuisine tes trois recettes de plage et ouvre le café.</p>
+    <p class="muted" style="margin:0;font-weight:700">Guette les <b>bouteilles à la mer</b> sur la plage : elles apportent des messages. Et pour retourner à Bruyère, prends le bateau au ponton.</p>
+    <button class="btn green" data-a="closemodal">C'est parti !</button></div></div>`;
+}
+
+function treasureModal() {
+  return `<div class="modal-bg"><div class="panel modal" role="dialog" aria-label="Le trésor de l'îlot" style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px;padding:30px;background:#FFFBF2;width:620px">
+    <svg width="150" height="110" viewBox="0 0 150 110" aria-hidden="true"><rect x="25" y="50" width="100" height="54" rx="6" fill="#A97C5A"/><path d="M25 52 Q75 2 125 52Z" fill="#8A5A3B"/><rect x="25" y="62" width="100" height="8" fill="#C99A3E"/><rect x="68" y="58" width="14" height="18" rx="3" fill="#F2C46D"/>${[40, 58, 76, 94, 110].map((x, i) => `<circle cx="${x}" cy="${44 - (i % 2) * 6}" r="7" fill="#F2C46D" stroke="#C99A3E" stroke-width="2"/>`).join("")}</svg>
+    <span style="font-size:13px;font-weight:800;letter-spacing:.08em;color:#8A5A3B">LE TRÉSOR DE L'ÎLOT</span>
+    <h1 style="font-size:30px">Le coffre est ouvert !</h1>
+    <p style="margin:0;font-size:16px;line-height:1.5">Sous le palmier de l'îlot, la carte disait vrai : un vieux coffre plein de pièces d'or (+250 pièces)… et, roulé en boule dessus, un chat roux avec un cache-œil qui te regarde d'un air très sérieux.</p>
+    <div class="row" style="background:#FFF4E0;border-radius:16px;padding:12px 16px;text-align:left">${catSVG("doublon", 64)}<div><b style="font-family:var(--font-title);font-size:20px">Doublon rejoint ton café !</b><div class="muted" style="font-weight:700">${esc(CATS.doublon.story)}</div></div></div>
+    <button class="btn green" data-a="closemodal">Ahoy, Doublon !</button></div></div>`;
+}
+
 // ---------- Projets du village ----------
 function projectIcon(id, size = 70) {
   const P = PROJECTS[id], c = P.c;
@@ -1458,13 +1896,23 @@ function projectIcon(id, size = 70) {
     moulin: `<rect x="26" y="30" width="18" height="30" fill="#F6EEDF"/><path d="M24 32 L35 18 L46 32Z" fill="#A97C5A"/><g transform="translate(35 24)" stroke="#6B4A33" stroke-width="5" stroke-linecap="round"><path d="M0 0 L-18 -14 M0 0 L18 14 M0 0 L14 -18 M0 0 L-14 18"/></g>`,
     gare: `<rect x="10" y="26" width="50" height="26" rx="3" fill="#F6EEDF"/><path d="M6 28 L35 12 L64 28Z" fill="${c}"/><circle cx="35" cy="22" r="4" fill="#FBF5EA"/><rect x="18" y="34" width="10" height="18" fill="#8A5A3B"/><rect x="40" y="34" width="12" height="9" fill="#BFD8E0"/><path d="M0 58 h70 M0 62 h70" stroke="#6B4A33" stroke-width="2"/>`,
   }[id];
-  return `<svg width="${size}" height="${size}" viewBox="0 0 70 70" aria-hidden="true"><circle cx="35" cy="35" r="35" fill="#F3E9D6"/>${art}</svg>`;
+  const isle = onIsland() ? {
+    pont: `<rect x="0" y="44" width="70" height="20" fill="#9FDCDD"/><rect x="10" y="36" width="54" height="8" rx="2" fill="${c}"/>${[16, 30, 44, 58].map((x) => `<rect x="${x}" y="44" width="4" height="14" fill="#6B4A33"/>`).join("")}`,
+    lanternes: `<path d="M8 22 Q35 40 62 22" stroke="#4A3326" stroke-width="2" fill="none"/>${[16, 30, 44, 56].map((x, i) => `<circle cx="${x}" cy="${30 + (i === 1 || i === 2 ? 4 : 0)}" r="6" fill="${["#E06A6A", "#F2C46D", "#9CC3D2", "#E9A9B0"][i]}"/>`).join("")}`,
+    fontaine: `<path d="M27 60 L30 22 H40 L43 60Z" fill="#FBF5EA"/><path d="M29 34 h12 M28 46 h14" stroke="#E06A6A" stroke-width="5"/><rect x="28" y="14" width="14" height="10" rx="2" fill="#F7DFA0"/><path d="M42 18 L64 10 L64 28Z" fill="#F7DFA0" opacity=".7"/>`,
+    jardin: `<path d="M14 58 V36 L24 26 L34 36 V58Z M38 58 V40 L48 30 L58 40 V58Z" fill="#C9A27A"/><rect x="20" y="46" width="8" height="12" rx="4" fill="#6B4A33"/><rect x="44" y="48" width="8" height="10" rx="4" fill="#6B4A33"/>`,
+    kiosque: `<path d="M10 28 L35 10 L60 28Z" fill="${c}"/><rect x="33" y="28" width="4" height="30" fill="#C99A3E"/><circle cx="20" cy="44" r="6" fill="#FBF5EA"/><circle cx="50" cy="44" r="6" fill="#FBF5EA"/><rect x="10" y="56" width="50" height="5" rx="2" fill="#A97C5A"/>`,
+    terrasse: `<path d="M10 28 Q35 6 60 28Z" fill="${c}"/><rect x="33" y="28" width="4" height="26" fill="#6B4A33"/><ellipse cx="35" cy="56" rx="22" ry="6" fill="#F3DCA8"/>`,
+    moulin: `<path d="M30 62 Q34 40 30 20" stroke="#A97C5A" stroke-width="5" fill="none"/><path d="M30 20 q-18 -4 -24 8 M30 20 q-6 -16 -20 -14 M30 20 q12 -14 26 -8 M30 20 q18 2 22 14" stroke="#5E9C62" stroke-width="6" fill="none" stroke-linecap="round"/><circle cx="34" cy="26" r="4" fill="#8A6448"/>`,
+    gare: `<rect x="0" y="48" width="70" height="22" fill="#9FDCDD"/><path d="M8 42 H62 L56 54 H14Z" fill="${c}"/><rect x="20" y="30" width="26" height="12" rx="2" fill="#FBF5EA"/><rect x="24" y="33" width="6" height="5" fill="#9CC3D2"/><rect x="34" y="33" width="6" height="5" fill="#9CC3D2"/><rect x="40" y="20" width="4" height="10" fill="#E06A6A"/>`,
+  }[id] : null;
+  return `<svg width="${size}" height="${size}" viewBox="0 0 70 70" aria-hidden="true"><circle cx="35" cy="35" r="35" fill="${onIsland() ? "#F6E4B9" : "#F3E9D6"}"/>${isle || art}</svg>`;
 }
 function viewProjects() {
   return `
   <div style="position:absolute;inset:0;background:#EFE1C6"></div>
-  <div class="hud"><div><span class="pill dark">Projets du village · ${Object.keys(PROJECTS).filter(projDone).length} terminé(s)</span></div><div>${coinPill()}<button class="btn light small" data-a="village">← Village</button></div></div>
-  <p style="position:absolute;left:28px;top:76px;margin:0;font-weight:800;color:var(--ink2)">L'argent du café fait revivre Bruyère. Chaque projet change le village… et ton café.</p>
+  <div class="hud"><div><span class="pill dark">${onIsland() ? "Projets de l'île" : "Projets du village"} · ${Object.keys(PROJECTS).filter(projDone).length} terminé(s)</span></div><div>${coinPill()}<button class="btn light small" data-a="village">${onIsland() ? "← Plage" : "← Village"}</button></div></div>
+  <p style="position:absolute;left:28px;top:76px;margin:0;font-weight:800;color:var(--ink2)">${onIsland() ? "L'argent du café fait revivre la plage. Chaque projet change l'île… et ton café." : "L'argent du café fait revivre Bruyère. Chaque projet change le village… et ton café."}</p>
   <div class="grid" style="position:absolute;left:24px;right:24px;top:106px;bottom:20px;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;overflow:auto;padding:4px;align-content:start">
     ${Object.entries(PROJECTS).filter(([id]) => projVisible(id)).map(([id, P]) => { const got = S.projects[id] || 0, done = projDone(id), open = projOpen(id);
       return `<div class="card" style="gap:8px;min-height:250px;${done ? "background:#F1F7EE" : ""}${!open ? "opacity:.6" : ""}">
@@ -1480,10 +1928,10 @@ function viewProjects() {
     ${(() => { const h = Object.keys(PROJECTS).find((id) => !projVisible(id)); return h ? `<div class="card" style="align-items:center;justify-content:center;text-align:center;border:3px dashed var(--line);background:#FBF5EA;box-shadow:none;min-height:240px">
       <svg width="64" height="64" viewBox="0 0 70 70" aria-hidden="true"><circle cx="35" cy="35" r="35" fill="#F3E9D6"/><text x="35" y="47" text-anchor="middle" font-size="34" font-weight="800" fill="#C9B48E" font-family="sans-serif">?</text></svg>
       <b style="font-family:var(--font-title);font-size:17px">Prochain projet</b>
-      <span class="muted" style="font-weight:700;font-size:14px">Les villageois en discutent… Annonce dans ${projDay(h) - S.day} jour(s).</span></div>` : ""; })()}
+      <span class="muted" style="font-weight:700;font-size:14px">${onIsland() ? "Les voisins en discutent…" : "Les villageois en discutent…"} Annonce dans ${projDay(h) - S.day} jour(s).</span></div>` : ""; })()}
   </div>`;
 }
-function projectDoneModal(id) {
+function projectDoneModal(id, extra = "") {
   const P = PROJECTS[id];
   return `<div class="modal-bg"><div class="panel modal" role="dialog" aria-label="Projet terminé" style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px;padding:30px;background:#FFFBF2">
     ${projectIcon(id, 110)}
@@ -1491,7 +1939,9 @@ function projectDoneModal(id) {
     <h1 style="font-size:30px">${P.n}</h1>
     <p style="margin:0;font-size:16px">${esc(P.d)}</p>
     <p style="margin:0;font-weight:800;color:var(--ok)">${esc(P.fx)}</p>
-    <p class="muted" style="margin:0;font-weight:700">Tout le village est venu applaudir. Regarde la carte !</p>
+    <p class="muted" style="margin:0;font-weight:700">${onIsland() ? "Toute la plage est venue applaudir. Regarde la carte !" : "Tout le village est venu applaudir. Regarde la carte !"}</p>
+    ${extra ? `<p style="margin:0;font-weight:800;color:#8A5A3B;background:#F6E4B9;border-radius:12px;padding:8px 12px">${esc(extra)}</p>` : ""}
+    ${!onIsland() && Object.keys(PROJECTS).every(projDone) ? `<p style="margin:0;font-weight:800;color:#2F5A80;background:#E7F1FB;border-radius:12px;padding:8px 12px">Bruyère est comme neuve ! Un bateau t'attend : une nouvelle aventure commence sur l'île aux Coquillages.</p>` : ""}
     <button class="btn green" data-a="closemodal">Formidable !</button></div></div>`;
 }
 
@@ -1499,7 +1949,7 @@ function projectDoneModal(id) {
 function viewFriends() {
   return `
   <div style="position:absolute;inset:0;background:#EFE1C6"></div>
-  <div class="hud"><div><span class="pill dark">Carnet des villageois</span></div><div><button class="btn light small" data-a="village">← Village</button></div></div>
+  <div class="hud"><div><span class="pill dark">${onIsland() ? "Carnet des voisins" : "Carnet des villageois"}</span></div><div><button class="btn light small" data-a="village">${onIsland() ? "← Plage" : "← Village"}</button></div></div>
   <p style="position:absolute;left:28px;top:76px;margin:0;font-weight:800;color:var(--ink2)">Sers à chacun son plat préféré : votre amitié grandit trois fois plus vite.</p>
   <div class="grid" style="position:absolute;left:24px;right:24px;top:106px;bottom:20px;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;overflow:auto;padding:4px;align-content:start">
     ${VILLAGERS.map((v) => { const h = hearts(v.n), seen = (S.stories || {})[v.n] || 0, favKnown = h >= 1, nextAt = STORY_AT[seen];
@@ -1515,10 +1965,12 @@ function viewFriends() {
 
 // ---------- Album ----------
 function viewAlbum() {
-  const ids = Object.keys(CATS);
+  // à Bruyère : les animaux de Bruyère ; sur l'île : le compagnon et les animaux de l'île
+  const ids = onIsland() ? [...new Set([S.companion, ...S.cats.filter((c) => !CATS[c].isl), ...Object.keys(CATS).filter((c) => CATS[c].isl === "coq")])].filter(Boolean) : Object.keys(CATS).filter((c) => !CATS[c].isl);
+  if (onIsland() && ui.albumTab === "msgs") return viewBottles();
   return `
   <div style="position:absolute;inset:0;background:#EFE1C6"></div>
-  <div class="hud"><div><span class="pill dark">Album des animaux · ${S.cats.length} / ${ids.length}</span></div><div><button class="btn light small" data-a="village">← Village</button></div></div>
+  <div class="hud"><div><span class="pill dark">Album des animaux · ${ids.filter((c) => S.cats.includes(c)).length} / ${ids.length}</span>${onIsland() ? `<button class="pill" data-a="albumtab" data-tab="msgs" style="border:0">Messages en bouteille (${(S.bottles || []).length})</button>` : ""}</div><div><button class="btn light small" data-a="village">${onIsland() ? "← Plage" : "← Village"}</button></div></div>
   <div class="grid" style="position:absolute;left:24px;right:24px;top:96px;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px;bottom:16px;overflow:auto">
     ${ids.map((id) => { const c = CATS[id], have = S.cats.includes(id);
       return `<div class="card" style="align-items:center;text-align:center;justify-content:flex-start;gap:6px;padding:10px">
@@ -1526,7 +1978,7 @@ function viewAlbum() {
         <h2 style="font-size:18px">${have ? c.n : "???"}</h2>
         ${have ? `<span class="tag">${c.trait.toUpperCase()}</span>
           <div style="width:100%"><div class="between" style="font-size:13px;font-weight:800"><span>Humeur</span><span>${moodWord(S.mood[id] ?? 60)}</span></div><div class="bar"><i style="width:${S.mood[id] ?? 60}%;background:var(--sage-l)"></i></div></div>
-          ${c.kind === "dog" ? `<p style="margin:0;font-size:13px;font-weight:800;color:#8A4F2E">Chien · ${esc(c.race)}</p>` : ""}
+          ${c.kind === "dog" ? `<p style="margin:0;font-size:13px;font-weight:800;color:#8A4F2E">Chien · ${esc(c.race)}</p>${(S.dogCoins || {})[id] ? `<p style="margin:0;font-size:13px;font-weight:800;color:var(--ok)">${esc(c.n)} t'a rapporté ${S.dogCoins[id]} pièces</p>` : ""}` : ""}
           <p style="margin:0;font-size:14px"><b>Aime :</b> ${esc(c.likes)}</p>
           <p class="muted" style="margin:0;font-size:14px;font-style:italic">${esc(c.story)}</p>`
         : `<p class="muted" style="margin:0;font-weight:700">${c.kind === "dog" ? "Où le trouver ?" : "Comment l'attirer ?"}</p><p style="margin:0;font-size:15px">${esc(c.hint)}</p>`}
@@ -1534,14 +1986,26 @@ function viewAlbum() {
   </div>`;
 }
 
+function viewBottles() {
+  const got = (S.bottles || []).slice().sort((a, b) => a - b);
+  return `
+  <div style="position:absolute;inset:0;background:#F6E4B9"></div>
+  <div class="hud"><div><button class="pill" data-a="albumtab" data-tab="pets" style="border:0">Album des animaux</button><span class="pill dark">Messages en bouteille · ${got.length} / ${LETTERS.length}</span></div><div><button class="btn light small" data-a="village">← Plage</button></div></div>
+  <div class="grid" style="position:absolute;left:24px;right:24px;top:96px;bottom:16px;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;overflow:auto;align-content:start;padding:4px">
+    ${LETTERS.map((L, i) => got.includes(i) ? `<div class="card" style="background:#FBF0D2;gap:8px"><span class="muted" style="font-weight:800;font-size:12px">MESSAGE DE ${esc(L.from.toUpperCase())}</span><p style="margin:0;font-size:16px;line-height:1.45;font-family:Georgia,serif">${esc(L.text)}</p></div>`
+      : `<div class="card" style="align-items:center;justify-content:center;text-align:center;border:3px dashed var(--line);background:#FBF5EA;box-shadow:none;min-height:120px"><b style="font-family:var(--font-title);font-size:16px">Bouteille pas encore trouvée</b><span class="muted" style="font-size:13px;font-weight:700">Guette la plage chaque matin…</span></div>`).join("")}
+  </div>`;
+}
+
 // ---------- Modale lettre ----------
 function letterModal() {
-  const L = LETTERS[(S.day - 1) % LETTERS.length];
-  return `<div class="modal-bg"><div class="panel modal" role="dialog" aria-label="Lettre" style="display:flex;flex-direction:column;gap:14px;padding:28px;background:#FFFBF2">
-    <span class="muted" style="font-weight:800;font-size:13px">LETTRE DE ${esc(L.from.toUpperCase())}</span>
+  const L = LETTERS[(S.day - 1) % LETTERS.length], isle = onIsland();
+  return `<div class="modal-bg"><div class="panel modal" role="dialog" aria-label="${isle ? "Message en bouteille" : "Lettre"}" style="display:flex;flex-direction:column;gap:14px;padding:28px;background:${isle ? "#F6E7C4" : "#FFFBF2"}">
+    <span class="muted" style="font-weight:800;font-size:13px">${isle ? "MESSAGE EN BOUTEILLE · " : "LETTRE DE "}${esc(L.from.toUpperCase())}</span>
     <p style="margin:0;font-size:18px;line-height:1.5;font-family:Georgia,serif">${esc(L.text)}</p>
     ${L.coins ? `<b style="color:var(--ok)">+${L.coins} pièces</b>` : ""}${L.rep ? `<b style="color:var(--ok)">+${L.rep} réputation</b>` : ""}
-    <div class="row" style="justify-content:flex-end"><button class="btn green" data-a="closemodal">Ranger la lettre</button></div></div></div>`;
+    ${isle ? `<p class="muted" style="margin:0;font-size:13px;font-weight:700">Le message est rangé dans l'album, page « Messages en bouteille ».</p>` : ""}
+    <div class="row" style="justify-content:flex-end"><button class="btn green" data-a="closemodal">${isle ? "Ranger le message" : "Ranger la lettre"}</button></div></div></div>`;
 }
 
 // ---------- Modale « Comment jouer » ----------
@@ -1551,7 +2015,7 @@ function helpModal() {
       <span style="width:36px;height:36px;border-radius:50%;background:${color};color:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--font-title);font-weight:700;font-size:18px;flex-shrink:0">${n}</span>
       <div><b style="font-family:var(--font-title);font-size:18px">${title}</b><p style="margin:2px 0 0;font-size:14px;line-height:1.4">${text}</p></div>
     </div>`;
-  return `<div class="modal-bg"><div class="panel modal" role="dialog" aria-label="Comment jouer" style="width:760px;max-height:680px;display:flex;flex-direction:column;gap:10px;padding:22px 30px;background:#FFFBF2">
+  return `<div class="modal-bg"><div class="panel modal" role="dialog" aria-label="Comment jouer" style="width:760px;max-height:680px;overflow:auto;display:flex;flex-direction:column;gap:10px;padding:22px 30px;background:#FFFBF2">
     <div class="between"><h1 style="font-size:30px">Comment jouer</h1>${catSVG("caramel", 48)}</div>
     <p class="muted" style="margin:0;font-weight:700">Tu tiens un café à chats à Bruyère. Pas de chrono stressant ni d'échec : prends ton temps.</p>
     ${step(1, "#D9826B", "Le matin, fais tes courses", "Sur la carte du village, va à l'<b>Épicerie de Madame Rose</b>. Ajoute au panier les ingrédients des recettes que tu veux préparer, puis clique sur <b>Payer</b>. La nourriture des animaux, les chats et les <b>chiens</b> à adopter se trouvent à l'<b>Animalerie Les Moustaches</b>. Les chiens accueillent les clients, qui deviennent plus patients.")}
@@ -1562,6 +2026,8 @@ function helpModal() {
     <div style="background:#F3E9D6;border-radius:14px;padding:12px 16px;font-size:14px;line-height:1.5">
       <b>Astuces :</b> répare le pont pour acheter de nouvelles recettes à la <b>Librairie</b>. La <b>déco</b> de la brocante augmente les pourboires, ses <b>jouets</b> gardent les chats heureux, et certains objets attirent de nouveaux chats. Chaque <b>saison</b> apporte ses produits à l'épicerie et une recette offerte ; la <b>pluie</b> amène du monde, et le 6e jour de chaque saison, c'est la <b>fête</b> ! De nouveaux objets et recettes arrivent au fil des jours. Le bouton haut-parleur en haut coupe le son. Lis la <b>lettre</b> du jour à la poste. Va dire bonjour à <b>Papi Jules</b>, qui pêche au bord de la rivière. Donne des pièces pour <b>réparer le pont</b> : l'autre rive cache une boulangerie, une librairie (nouvelles recettes) et une poissonnerie.
     </div>
+    ${onIsland() ? `<div style="background:#E7F1FB;border-radius:14px;padding:12px 16px;font-size:14px;line-height:1.5"><b>Sur l'île aux Coquillages :</b> c'est toujours l'été ! Les ingrédients sont à l'<b>Épicerie de la Plage</b>, les recettes à la <b>Crêperie du Phare</b> et au <b>Glacier</b>, la déco à la <b>Boutique de surf</b> et aux <b>Souvenirs</b>. Chaque matin, une <b>bouteille à la mer</b> peut s'échouer sur la plage. Le <b>bateau</b> du ponton te ramène à Bruyère quand tu veux.</div>` : ""}
+    <div style="background:#FFF4E0;border-radius:14px;padding:10px 16px;font-size:14px;line-height:1.5"><b>Les chiens</b> rapportent parfois une petite trouvaille : quand une bulle dorée apparaît au-dessus d'un chien, touche-le !</div>
     <div class="row" style="justify-content:flex-end"><button class="btn green" data-a="closemodal">C'est parti !</button></div>
   </div></div>`;
 }
@@ -1595,11 +2061,30 @@ function julesModal() {
 function act(a, el, isKey = false) {
   const id = el.dataset.id;
   switch (a) {
-    case "new": S = newGame(); save(); go("village"); ui.modal = helpModal; render(); break;
+    case "new": clearSave(); applyIsland("bruyere"); S = TEST ? testGame() : newGame(); save(); saveMeta({ cur: "bruyere", coq: false }); go("village"); ui.modal = TEST ? null : helpModal; render(); if (TEST) toast("Mode test : Bruyère est terminée, le bateau pour l'île t'attend !"); break;
     case "help": ui.modal = helpModal; render(); break;
     case "launcher": location.href = "../"; break;
-    case "continue": S = Object.assign(newGame(), load() || {}); if (S.bridge && !S.projects.pont) S.projects.pont = S.bridge; go("village"); break;
+    case "continue": S = null; openIsland(loadMeta().cur); go("village"); break;
     case "village": go("village"); break;
+    case "depart": if (cafe) { toast("Termine d'abord ta journée au café !"); break; } ui.departPick = null; go("depart"); break;
+    case "departpick": ui.departPick = id; sfx(isDog(id) ? "bark" : "purr"); render(); break;
+    case "embark": {
+      const comp = ui.departPick; if (!comp || !S.cats.includes(comp)) break;
+      save(); const m = loadMeta(); m.coq = true; m.cur = "coq"; saveMeta(m);
+      localStorage.removeItem(islandKey("coq"));
+      applyIsland("coq"); S = newGame("coq", comp); S.recipes.forEach((r) => { S.showcase[r] = 0; }); save();
+      cafe = null; ui.cook = null; ui.kitchenSel = S.recipes[0]; ui.screen = "village"; ui.modal = islandWelcomeModal; sfx("done"); render(); break;
+    }
+    case "toisland": case "tobruyere": {
+      if (cafe || ui.cook) { toast("Termine d'abord ta journée au café !"); break; }
+      const dest = a === "toisland" ? "coq" : "bruyere"; openIsland(dest); sfx("bell");
+      go("village"); toast(dest === "coq" ? "Le bateau accoste sur l'île aux Coquillages." : "Te revoilà à Bruyère ! Papi Jules agite son chapeau sur le quai."); break;
+    }
+    case "grotte": toast(S.treasure ? "La grotte est calme. Doublon y fait parfois la sieste au frais." : (S.mapPieces || 0) >= 4 ? "D'après la carte, ce n'est pas ici… regarde plutôt l'îlot !" : "Il fait tout noir… On entend comme un drôle de bruit, tout au fond."); break;
+    case "treasure": if ((S.mapPieces || 0) < 4 || S.treasure) break;
+      S.treasure = true; S.coins += 250; if (!S.cats.includes("doublon")) { S.cats.push("doublon"); S.mood.doublon = 90; }
+      save(); sfx("done"); ui.modal = treasureModal; render(); break;
+    case "albumtab": ui.albumTab = el.dataset.tab; render(); break;
     case "tovillage": go("village"); toast("Le service est en pause pendant ta balade."); break;
     case "album": go("album"); break;
     case "friends": go("friends"); break;
@@ -1626,13 +2111,16 @@ function act(a, el, isKey = false) {
       const pid = el.dataset.id, P = PROJECTS[pid]; if (!P || projDone(pid) || !projOpen(pid)) break;
       const amt = Math.min(+el.dataset.amt || 25, S.coins, P.goal - (S.projects[pid] || 0)); if (amt <= 0) { toast("Pas assez de pièces."); break; }
       S.coins -= amt; S.projects[pid] = (S.projects[pid] || 0) + amt; save();
-      if (projDone(pid)) { sfx("done"); ui.modal = () => projectDoneModal(pid); render(); }
+      if (projDone(pid)) {
+        const extra = onIsland() && (S.mapPieces || 0) < 4 && !S.treasure ? "Pendant les travaux, on a trouvé quelque chose. " + addMapPiece() : "";
+        save(); sfx("done"); ui.modal = () => projectDoneModal(pid, extra); render();
+      }
       else { sfx("coin"); render(); toast("Merci pour le projet « " + P.n + " » !"); }
       break;
     }
     case "projects": go("projects"); break;
     case "bouquet": if (S.bouquet) { toast("Le bouquet embaume déjà le café."); break; } if (S.coins < 15) { toast("Pas assez de pièces."); break; } S.coins -= 15; S.bouquet = true; save(); render(); toast("Bouquet installé : +10 % de pourboires aujourd'hui"); break;
-    case "letter": if (S.letterRead) { toast("Pas de nouvelle lettre aujourd'hui."); break; } { const L = LETTERS[(S.day - 1) % LETTERS.length]; S.letterRead = true; S.coins += L.coins || 0; S.rep += L.rep || 0; save(); ui.modal = letterModal; render(); } break;
+    case "letter": if (S.letterRead) { toast(onIsland() ? "Pas de bouteille aujourd'hui." : "Pas de nouvelle lettre aujourd'hui."); break; } { const li = (S.day - 1) % LETTERS.length, L = LETTERS[li]; S.letterRead = true; if (onIsland()) { S.bottles = S.bottles || []; if (!S.bottles.includes(li)) S.bottles.push(li); sfx("swish"); } S.coins += L.coins || 0; S.rep += L.rep || 0; save(); ui.modal = letterModal; render(); } break;
     case "closemodal": ui.modal = null; render(); break;
     case "jules": {
       ui.modal = julesModal;
