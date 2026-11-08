@@ -81,11 +81,11 @@ const DAYS_PER_SEASON = 7;
 
 const ITEMS = {
   // Épicerie
-  farine:   { n: "Farine",          p: 6,  c: "#F3E7CF", shop: "epicerie", also: ["epiplage"] },
-  beurre:   { n: "Beurre",          p: 7,  c: "#F7DFA0", shop: "epicerie", also: ["epiplage"] },
-  oeufs:    { n: "Œufs",            p: 6,  c: "#FFFFFF", shop: "epicerie", also: ["epiplage"] },
-  lait:     { n: "Lait frais",      p: 8,  c: "#EAF3F6", shop: "epicerie", also: ["epiplage"] },
-  miel:     { n: "Miel",            p: 15, c: "#F2C46D", shop: "epicerie", also: ["epiplage"] },
+  farine:   { n: "Farine",          p: 6,  c: "#F3E7CF", shop: "epicerie", also: ["epiplage", "epicol"] },
+  beurre:   { n: "Beurre",          p: 7,  c: "#F7DFA0", shop: "epicerie", also: ["epiplage", "epicol", "fromagerie"] },
+  oeufs:    { n: "Œufs",            p: 6,  c: "#FFFFFF", shop: "epicerie", also: ["epiplage", "epicol"] },
+  lait:     { n: "Lait frais",      p: 8,  c: "#EAF3F6", shop: "epicerie", also: ["epiplage", "epicol", "fromagerie"] },
+  miel:     { n: "Miel",            p: 15, c: "#F2C46D", shop: "epicerie", also: ["epiplage", "epicol"] },
   // produits de saison : vendus seulement pendant leur saison
   rhubarbe: { n: "Rhubarbe",        p: 9,  c: "#E9A9B0", shop: "epicerie", season: "Printemps" },
   fraises:  { n: "Fraises",         p: 10, c: "#E06A6A", shop: "epicerie", season: "Printemps" },
@@ -94,25 +94,25 @@ const ITEMS = {
   menthe:   { n: "Menthe fraîche",  p: 8,  c: "#8FC79A", shop: "epicerie", season: "Été", also: ["epiplage"] },
   framboises:{ n: "Framboises",     p: 12, c: "#D9506A", shop: "epicerie", season: "Été", also: ["epiplage"] },
   potiron:  { n: "Potiron",         p: 9,  c: "#E8893A", shop: "epicerie", season: "Automne" },
-  chataignes:{ n: "Châtaignes",     p: 11, c: "#8A5A3B", shop: "epicerie", season: "Automne" },
+  chataignes:{ n: "Châtaignes",     p: 11, c: "#8A5A3B", shop: "epicerie", season: "Automne", also: ["epicol"] },
   figues:   { n: "Figues",          p: 12, c: "#7A4F7A", shop: "epicerie", season: "Automne" },
-  oranges:  { n: "Oranges",         p: 9,  c: "#F29A3A", shop: "epicerie", season: "Hiver" },
+  oranges:  { n: "Oranges",         p: 9,  c: "#F29A3A", shop: "epicerie", season: "Hiver", also: ["epicol"] },
   gingembre:{ n: "Gingembre",       p: 10, c: "#D9B56A", shop: "epicerie", season: "Hiver" },
   clementines:{ n: "Clémentines",   p: 9,  c: "#F2A65A", shop: "epicerie", season: "Hiver" },
-  citron:   { n: "Citrons",         p: 9,  c: "#F7E37A", shop: "epicerie", also: ["epiplage"] },
-  pomme:    { n: "Pommes",          p: 8,  c: "#C9D46A", shop: "epicerie" },
-  creme:    { n: "Crème fraîche",   p: 9,  c: "#FFFDF4", shop: "epicerie", also: ["epiplage"] },
+  citron:   { n: "Citrons",         p: 9,  c: "#F7E37A", shop: "epicerie", also: ["epiplage", "epicol"] },
+  pomme:    { n: "Pommes",          p: 8,  c: "#C9D46A", shop: "epicerie" , also: ["epicol"] },
+  creme:    { n: "Crème fraîche",   p: 9,  c: "#FFFDF4", shop: "epicerie", also: ["epiplage", "epicol", "fromagerie"] },
 
   // Autre rive
-  cacao:    { n: "Cacao",           p: 12, c: "#8A5A3B", shop: "epicerie" },
+  cacao:    { n: "Cacao",           p: 12, c: "#8A5A3B", shop: "epicerie" , also: ["epicol"] },
   cannelle: { n: "Cannelle",        p: 11, c: "#B8733F", shop: "epicerie" },
-  vanille:  { n: "Vanille",         p: 16, c: "#3E3433", shop: "epicerie", also: ["epiplage"] },
+  vanille:  { n: "Vanille",         p: 16, c: "#3E3433", shop: "epicerie", also: ["epiplage", "epicol"] },
   amandes:  { n: "Amandes",         p: 12, c: "#D9B98A", shop: "epicerie" },
   // Boulangerie (autre rive)
   levure:   { n: "Levure du boulanger", p: 8,  c: "#EFE3C2", shop: "boulangerie" },
   feuillete:{ n: "Pâte feuilletée", p: 14, c: "#F1D9A6", shop: "boulangerie" },
   pepites:  { n: "Pépites de chocolat", p: 13, c: "#5A3E2B", shop: "boulangerie" },
-  sucreglace:{ n: "Sucre glace",    p: 9,  c: "#FFFFFF", shop: "boulangerie", also: ["epiplage"] },
+  sucreglace:{ n: "Sucre glace",    p: 9,  c: "#FFFFFF", shop: "boulangerie", also: ["epiplage", "epicol"] },
   levain:   { n: "Pain au levain",  p: 10, c: "#C9965E", shop: "boulangerie" },
   saumon:   { n: "Saumon frais",    p: 14, c: "#F2A08A", shop: "poissonnerie", also: ["poissport"] },
   truite:   { n: "Truite fumée",    p: 13, c: "#E8A47E", shop: "poissonnerie" },
@@ -135,15 +135,22 @@ const ITEMS = {
   dorade:   { n: "Dorade",          p: 16, c: "#C9B9A8", shop: "poissport" },
   moules:   { n: "Moules",          p: 12, c: "#3E4A5A", shop: "poissport" },
   // Animalerie : tout pour les chats
-  croquettes:{ n: "Croquettes",     p: 12, c: "#C99A6B", shop: "animalerie", also: ["animplage"], cat: true, fx: 40 },
-  sardines: { n: "Sardines pour chats", p: 10, c: "#B9C6CC", shop: "animalerie", also: ["animplage"], cat: true, fx: 50 },
-  friandises:{ n: "Friandises",     p: 16, c: "#E9A9B0", shop: "animalerie", also: ["animplage"], cat: true, fx: 55 },
-  poisson:  { n: "Poisson pour chats", p: 18, c: "#9CC3D2", shop: "animalerie", also: ["animplage"], cat: true, fx: 70 },
-  crevettes:{ n: "Crevettes pour chats", p: 26, c: "#F2A08A", shop: "animalerie", also: ["animplage"], cat: true, fx: 90 },
-  croqchien:{ n: "Croquettes pour chiens", p: 12, c: "#B5774F", shop: "animalerie", also: ["animplage"], cat: true, dog: true, fx: 40 },
-  croqpoisson:{ n: "Croquettes au poisson", p: 15, c: "#9CC3D2", shop: "animplage", cat: true, fx: 55 },
-  biscuitchien:{ n: "Biscuits pour chiens", p: 16, c: "#D9A55B", shop: "animplage", cat: true, dog: true, fx: 55 },
-  os:       { n: "Os à mâcher",     p: 20, c: "#F6EEDF", shop: "animalerie", also: ["animplage"], cat: true, dog: true, fx: 70 },
+  // --- Mont Givre
+  myrtilles: { n: "Myrtilles",       p: 11, c: "#5B5FA8", shop: "epicol" },
+  pommeterre:{ n: "Pommes de terre", p: 6,  c: "#C9A06A", shop: "epicol" },
+  guimauve:  { n: "Guimauves",       p: 8,  c: "#F5D6DC", shop: "epicol" },
+  epices:    { n: "Épices de Noël",  p: 9,  c: "#B5653A", shop: "epicol" },
+  fromage:   { n: "Fromage à raclette", p: 14, c: "#F2D45C", shop: "fromagerie" },
+  comte:     { n: "Comté",           p: 15, c: "#E8C27A", shop: "fromagerie" },
+  croquettes:{ n: "Croquettes",     p: 12, c: "#C99A6B", shop: "animalerie", also: ["animplage", "animneige"], cat: true, fx: 40 },
+  sardines: { n: "Sardines pour chats", p: 10, c: "#B9C6CC", shop: "animalerie", also: ["animplage", "animneige"], cat: true, fx: 50 },
+  friandises:{ n: "Friandises",     p: 16, c: "#E9A9B0", shop: "animalerie", also: ["animplage", "animneige"], cat: true, fx: 55 },
+  poisson:  { n: "Poisson pour chats", p: 18, c: "#9CC3D2", shop: "animalerie", also: ["animplage", "animneige"], cat: true, fx: 70 },
+  crevettes:{ n: "Crevettes pour chats", p: 26, c: "#F2A08A", shop: "animalerie", also: ["animplage", "animneige"], cat: true, fx: 90 },
+  croqchien:{ n: "Croquettes pour chiens", p: 12, c: "#B5774F", shop: "animalerie", also: ["animplage", "animneige"], cat: true, dog: true, fx: 40 },
+  croqpoisson:{ n: "Croquettes au poisson", p: 15, c: "#9CC3D2", shop: "animplage", also: ["animneige"], cat: true, fx: 55 },
+  biscuitchien:{ n: "Biscuits pour chiens", p: 16, c: "#D9A55B", shop: "animplage", also: ["animneige"], cat: true, dog: true, fx: 55 },
+  os:       { n: "Os à mâcher",     p: 20, c: "#F6EEDF", shop: "animalerie", also: ["animplage", "animneige"], cat: true, dog: true, fx: 70 },
 };
 
 const RECIPES = {
@@ -175,6 +182,23 @@ const RECIPES = {
   gateaucoco:{ n: "Gâteau coco",      c: "#F4EDE2", isl: "coq", needs: { coco: 1, farine: 1, oeufs: 1, sucrecanne: 1 }, steps: ["Mélanger", "Cuire au four"], yield: 6, price: 19, book: 80, shop: "creperie", d: "Moelleux, avec des copeaux de coco." },
   tarteananas:{ n: "Tartelettes ananas", c: "#E8B930", isl: "coq", needs: { ananas: 1, farine: 1, beurre: 1 }, steps: ["Pétrir la pâte", "Garnir d'ananas", "Cuire au four"], yield: 4, price: 22, book: 90, shop: "creperie", d: "Le soleil dans une tartelette." },
   smoothierouge:{ n: "Smoothie fruits rouges", c: "#D9506A", isl: "coq", needs: { framboises: 1, banane: 1, lait: 1 }, steps: ["Mélanger"], yield: 6, price: 15, book: 60, shop: "glacier", d: "Tout rose et plein de vitamines." },
+  // --- Mont Givre : recettes de départ
+  chocochaud:{ n: "Chocolat chaud",   c: "#8A5A3B", isl: "givre", needs: { lait: 1, cacao: 1 }, steps: ["Chauffer le lait", "Mélanger"], yield: 6, price: 12, shop: "none", d: "Avec une montagne de chantilly." },
+  crepechat: { n: "Crêpes à la châtaigne", c: "#C9A06A", isl: "givre", needs: { farine: 1, oeufs: 1, lait: 1 }, steps: ["Fouetter la pâte", "Cuire à la poêle"], yield: 6, price: 13, shop: "none", d: "Nappées de crème de marrons." },
+  tartemyrt: { n: "Tarte aux myrtilles", c: "#5B5FA8", isl: "givre", needs: { farine: 1, beurre: 1, myrtilles: 1 }, steps: ["Pétrir la pâte", "Garnir de myrtilles", "Cuire au four"], yield: 6, price: 18, shop: "none", d: "La tarte des refuges." },
+  // Chocolaterie
+  truffes:   { n: "Truffes au chocolat", c: "#5A3E33", isl: "givre", needs: { cacao: 1, creme: 1 }, steps: ["Mélanger", "Façonner"], yield: 6, price: 16, book: 60, shop: "chocolaterie", d: "Roulées dans le cacao." },
+  guimauvechoc:{ n: "Guimauves au chocolat", c: "#F5D6DC", isl: "givre", needs: { guimauve: 1, cacao: 1 }, steps: ["Garnir les brochettes", "Mélanger"], yield: 6, price: 14, book: 50, shop: "chocolaterie", d: "À faire griller au coin du feu." },
+  viennois:  { n: "Chocolat viennois", c: "#7A4E33", isl: "givre", needs: { lait: 1, cacao: 1, creme: 1 }, steps: ["Chauffer le lait", "Fouetter la crème"], yield: 6, price: 17, book: 70, shop: "chocolaterie", d: "Le roi des chocolats chauds." },
+  orangettes:{ n: "Orangettes",        c: "#E8913A", isl: "givre", needs: { oranges: 1, cacao: 1 }, steps: ["Mélanger", "Façonner"], yield: 6, price: 18, book: 80, shop: "chocolaterie", d: "Des écorces d'orange enrobées de chocolat." },
+  painepices:{ n: "Pain d'épices",     c: "#B5653A", isl: "givre", needs: { farine: 1, miel: 1, epices: 1 }, steps: ["Mélanger", "Cuire au four"], yield: 6, price: 19, book: 90, shop: "chocolaterie", d: "Ça sent Noël dans tout le café." },
+  buche:     { n: "Bûche au chocolat", c: "#6B4A33", isl: "givre", needs: { farine: 1, oeufs: 2, cacao: 1, creme: 1 }, steps: ["Fouetter", "Cuire au four", "Façonner"], yield: 8, price: 26, book: 140, shop: "chocolaterie", d: "Avec un petit champignon en meringue." },
+  // Auberge du Col
+  soupechat: { n: "Velouté de châtaignes", c: "#B08A5A", isl: "givre", needs: { chataignes: 1, creme: 1 }, steps: ["Chauffer le bouillon", "Mélanger"], yield: 6, price: 15, book: 50, shop: "auberge", d: "Doux et réconfortant." },
+  vinchaud:  { n: "Jus chaud aux épices", c: "#B5404A", isl: "givre", needs: { oranges: 1, epices: 1, miel: 1 }, steps: ["Chauffer le bouillon", "Mélanger"], yield: 6, price: 14, book: 50, shop: "auberge", d: "Le « vin chaud » des enfants, sans alcool." },
+  raclette:  { n: "Raclette",          c: "#F2D45C", isl: "givre", needs: { fromage: 1, pommeterre: 1 }, steps: ["Cuire à la poêle", "Garnir"], yield: 4, price: 24, book: 100, shop: "auberge", d: "Le fromage qui coule… le bonheur." },
+  tartiflette:{ n: "Tartiflette",      c: "#E8C27A", isl: "givre", needs: { pommeterre: 1, fromage: 1, creme: 1 }, steps: ["Garnir le plat", "Cuire au four"], yield: 6, price: 25, book: 120, shop: "auberge", d: "Gratinée à souhait." },
+  fondue:    { n: "Fondue au comté",   c: "#E8C27A", isl: "givre", needs: { comte: 2, lait: 1 }, steps: ["Chauffer le bouillon", "Mélanger"], yield: 6, price: 28, book: 150, shop: "auberge", d: "On partage le caquelon entre amis." },
   // --- recettes de saison (la première de chaque saison est offerte par Madame Rose)
   pecheT:  { n: "Tarte aux pêches",    c: "#F5B38A", season: "Été", gift: true, needs: { peches: 2, farine: 1, beurre: 1 }, steps: ["Pétrir la pâte", "Garnir de pêches", "Cuire au four"], yield: 4, price: 24, book: 0, shop: "saison", d: "Le goût de l'été." },
   theglace:{ n: "Thé glacé à la menthe", c: "#8FC79A", season: "Été", needs: { menthe: 1, citron: 1, miel: 1 }, steps: ["Chauffer l'eau", "Laisser infuser"], yield: 6, price: 15, book: 60, shop: "librairie", d: "Pour les après-midis brûlants." },
@@ -240,6 +264,9 @@ const UNLOCK = {
   madeleine: 5, crumble: 8, cakecitron: 11, quiche: 14, gateaucoco: 4, tarteananas: 8, smoothierouge: 2,
   coucou: 4, bibliotheque: 7, piano: 12, tour: 5, tunnel: 2, plumeau: 1, frisbee: 2, corde: 5, chateausable: 4, ballon: 1,
   cannelle: 5, tigrou: 8, flocon: 11, gaufrette: 4, embrun: 5, pirouette: 7,
+  myrtilles: 1, guimauve: 2, comte: 4, viennois: 3, orangettes: 5, painepices: 7, buche: 10, raclette: 2, tartiflette: 5, fondue: 8, vinchaud: 3,
+  skis: 1, raquettes: 2, plaid: 3, couronne: 4, pommespin: 5, lanterneneige: 6, poele: 9, luge: 4, coussinchaud: 3, pingouin: 2,
+  myrtille: 1, marron: 3, igloo: 6, bernie: 2, barry: 5, toundra: 8,
   palmierpot: 2, raphia: 4, paddle: 7, etoiles: 2, filet: 5, carillon: 7, aquatropic: 10, coussinbouee: 3, biscuitchien: 2,
 };
 const unlocked = (id) => S.day >= (UNLOCK[id] || 1);
@@ -280,11 +307,21 @@ const DECOR = {
   tour:       { n: "Grand arbre à chat",    p: 110, c: "#C9A27A", d: "Jouet : les animaux restent heureux bien plus longtemps.", toy: 0.2 },
   tunnel:     { n: "Tunnel en tissu",       p: 40,  c: "#9CC3D2", d: "Jouet : les chats adorent s'y cacher.", toy: 0.12 },
   plumeau:    { n: "Canne à plumes",        p: 25,  c: "#E9A9B0", d: "Jouet : les chats restent heureux plus longtemps.", toy: 0.1 },
-  frisbee:    { n: "Frisbee",               p: 30,  c: "#F2C46D", d: "Jouet : les chiens restent joyeux plus longtemps.", toy: 0.1, shop: "animalerie", also: ["animplage"] },
-  corde:      { n: "Corde à tirer",         p: 30,  c: "#D9826B", d: "Jouet : les chiens restent joyeux plus longtemps.", toy: 0.1, shop: "animalerie", also: ["animplage"] },
+  frisbee:    { n: "Frisbee",               p: 30,  c: "#F2C46D", d: "Jouet : les chiens restent joyeux plus longtemps.", toy: 0.1, shop: "animalerie", also: ["animplage", "animneige"] },
+  corde:      { n: "Corde à tirer",         p: 30,  c: "#D9826B", d: "Jouet : les chiens restent joyeux plus longtemps.", toy: 0.1, shop: "animalerie", also: ["animplage", "animneige"] },
   chateausable:{ n: "Château de sable pour chats", p: 45, c: "#F3DCA8", d: "Jouet : les animaux restent heureux plus longtemps.", toy: 0.12, shop: "souvenirs" },
   ballon:     { n: "Ballon de plage",       p: 25,  c: "#E06A6A", d: "Jouet : les chiens restent joyeux plus longtemps.", toy: 0.1, shop: "animplage" },
-  balle:      { n: "Balle en caoutchouc", p: 25, c: "#C9677A", d: "Jouet : les chiens restent joyeux plus longtemps.", toy: 0.1, shop: "animalerie", also: ["animplage"] },
+  skis:       { n: "Skis en bois au mur",  p: 50,  c: "#C9677A", d: "+5 % de pourboires", tip: 0.05, shop: "skishop" },
+  raquettes:  { n: "Raquettes à neige",    p: 40,  c: "#A97C5A", d: "+5 % de pourboires", tip: 0.05, shop: "skishop" },
+  plaid:      { n: "Plaids écossais",      p: 45,  c: "#B5404A", d: "+5 % de pourboires", tip: 0.05, shop: "skishop" },
+  couronne:   { n: "Couronne de houx",     p: 35,  c: "#3F6B57", d: "+5 % de pourboires", tip: 0.05, shop: "skishop" },
+  pommespin:  { n: "Guirlande de pommes de pin", p: 40, c: "#8A5A3B", d: "+5 % de pourboires", tip: 0.05, shop: "skishop" },
+  lanterneneige:{ n: "Lanternes de neige",  p: 55,  c: "#F7D98A", d: "+5 % de pourboires", tip: 0.05, shop: "skishop" },
+  poele:      { n: "Poêle à bois",         p: 170, c: "#3E3433", d: "+10 % de pourboires : tout le monde reste au chaud", tip: 0.10, shop: "skishop" },
+  luge:       { n: "Luge en bois",         p: 60,  c: "#C9677A", d: "Jouet : les animaux adorent s'y installer.", toy: 0.12, shop: "skishop" },
+  coussinchaud:{ n: "Coussin chauffant",   p: 45,  c: "#E9A9B0", d: "Jouet : les animaux restent heureux bien plus longtemps.", toy: 0.15, shop: "animneige" },
+  pingouin:   { n: "Pingouin en peluche",  p: 25,  c: "#3E3433", d: "Jouet : les chiens restent joyeux plus longtemps.", toy: 0.1, shop: "animneige" },
+  balle:      { n: "Balle en caoutchouc", p: 25, c: "#C9677A", d: "Jouet : les chiens restent joyeux plus longtemps.", toy: 0.1, shop: "animalerie", also: ["animplage", "animneige"] },
   aquarium:   { n: "Aquarium",            p: 150, c: "#86B3C6", d: "Jouet géant ! Et un chat curieux pourrait venir…", toy: 0.30 },
 };
 
@@ -316,6 +353,10 @@ const CATS = {
   tigrou:   { price: 130, n: "Tigrou",   fur: "#9A9490", eye: "#9CC85A", trait: "Sportif",   likes: "Grimper partout, les tunnels", story: "Un tigré gris qui fait le tour du café en sautant de meuble en meuble.", hint: "Il attend à l'Animalerie Les Moustaches." },
   embrun:   { isl: "coq", price: 120, n: "Embrun", fur: "#7E93A6", eye: "#F2C46D", trait: "Rêveur", likes: "Regarder les vagues, les filets de pêche", story: "Un chat gris-bleu comme la mer un jour de vent.", hint: "Il attend à l'Animalerie de la Plage." },
   pirouette:{ isl: "coq", kind: "dog", price: 140, n: "Pirouette", race: "Jack russell", fur: "#FBF7F0", ear: "#B5653A", snout: "#FFFFFF", patch: "#B5653A", patchX: 40, line: "#D8C7A8", trait: "Acrobate", likes: "Sauter pour attraper les ballons", story: "Elle saute si haut qu'elle attrape les ballons de plage en plein vol.", hint: "Elle attend à l'Animalerie de la Plage." },
+  myrtille: { isl: "givre", price: 110, n: "Myrtille", fur: "#3E3E58", eye: "#F2C46D", trait: "Discrète", likes: "Dormir près du poêle, les myrtilles (pour jouer)", story: "Une chatte noire aux reflets bleus, qu'on ne voit que lorsqu'elle bouge dans la neige.", hint: "Elle attend à l'Animalerie des Neiges." },
+  marron:   { isl: "givre", price: 100, n: "Marron",   fur: "#8A5A3B", eye: "#E2A93B", trait: "Gourmand", likes: "Les châtaignes grillées, les genoux des clients", story: "Il s'assoit devant la poêle à châtaignes et attend. Longtemps.", hint: "Il attend à l'Animalerie des Neiges." },
+  igloo:    { isl: "givre", price: 150, n: "Igloo",    fur: "#F7F7F7", eye: "#6EA8D8", trait: "Duveteux", likes: "Se rouler dans la neige fraîche", story: "Une boule de poils blanche. Quand il neige, on ne le retrouve plus.", hint: "Il attend à l'Animalerie des Neiges." },
+  aurore:   { isl: "givre", secret: true, n: "Aurore", fur: "#FBF7F0", eye: "#8FD3B0", trait: "Mystérieuse", likes: "Les nuits étoilées, écrire des cartes postales", story: "C'est elle qui glissait les cartes postales sous ta porte. Depuis que les aurores sont revenues, elle ne quitte plus ton café.", hint: "Cette place est encore vide…" },
   // --- chiens : uniquement à l'Animalerie (ils ne viennent jamais tout seuls)
   doulio:   { kind: "dog", price: 150, n: "Doulio",   race: "Golden retriever", fur: "#FBF7F0", ear: "#E3C9A0", snout: "#FFFFFF", patch: "#E3C9A0", patchX: 40, line: "#D8C7A8", trait: "Joueur",      likes: "Les balles, les enfants, les câlins", story: "Blanc et beige, il court partout en remuant la queue et rapporte tout ce qu'on lui lance.", hint: "Il attend au rayon chiens de l'Animalerie." },
   pepette:  { kind: "dog", price: 120, n: "Pépette",  race: "Teckel",           fur: "#8A4F2E", ear: "#6B3A20", snout: "#B5774F", patch: "#8A4F2E", patchX: 24, line: "#8A4F2E", trait: "Curieuse",    likes: "Renifler sous les tables", story: "Elle connaît l'odeur de chaque client et devine leur commande avant eux.", hint: "Elle attend au rayon chiens de l'Animalerie." },
@@ -324,6 +365,9 @@ const CATS = {
   givre:    { kind: "dog", price: 190, n: "Givre",    race: "Husky",            fur: "#7E8790", ear: "#6B737C", snout: "#FFFFFF", patch: "#7E8790", patchX: 24, line: "#6B737C", eye: "#6EA8D8", pointy: true, mask: "#FFFFFF", trait: "Aventurier",  likes: "La neige, hurler avec la musique", story: "Ses yeux bleus font fondre tout le village. Les jours de neige, il est fou de joie.", hint: "Il attend au rayon chiens de l'Animalerie." },
   flocon:   { kind: "dog", price: 200, n: "Flocon",   race: "Samoyède",         fur: "#FFFFFF", ear: "#E6DCCD", snout: "#FFFFFF", patch: "#FFFFFF", patchX: 24, line: "#BFAE95", pointy: true, mask: "#F6F1EA", trait: "Souriant", likes: "La neige, les câlins des enfants", story: "Un gros nuage blanc qui sourit tout le temps.", hint: "Il attend au rayon chiens de l'Animalerie." },
   gaufrette:{ kind: "dog", price: 130, n: "Gaufrette", race: "Beagle",           fur: "#C98A4A", ear: "#6B3A20", snout: "#FFFFFF", patch: "#FFFFFF", patchX: 32, line: "#A86E38", trait: "Fouineuse", likes: "Renifler les sacs de courses", story: "Son nez trouve toujours le biscuit tombé sous une table.", hint: "Elle attend au rayon chiens de l'Animalerie." },
+  bernie:   { isl: "givre", kind: "dog", price: 190, n: "Bernie", race: "Bouvier bernois", fur: "#2F2826", ear: "#2F2826", snout: "#FFFFFF", patch: "#FFFFFF", patchX: 32, line: "#B5653A", mask: "#FFFFFF", trait: "Câlin", likes: "Tirer les luges des enfants", story: "Trois couleurs, un cœur énorme. Il tire la luge de Zoé tous les matins.", hint: "Il attend à l'Animalerie des Neiges." },
+  barry:    { isl: "givre", kind: "dog", price: 220, n: "Barry", race: "Saint-bernard", fur: "#FFFFFF", ear: "#B5653A", snout: "#FFFFFF", patch: "#B5653A", patchX: 40, line: "#D8C7A8", trait: "Sauveteur", likes: "Retrouver les gants perdus dans la neige", story: "Il porte un petit tonneau de chocolat chaud autour du cou. Pour les urgences.", hint: "Il attend à l'Animalerie des Neiges." },
+  toundra:  { isl: "givre", kind: "dog", price: 200, n: "Toundra", race: "Malamute", fur: "#6F7279", ear: "#4F5258", snout: "#FFFFFF", patch: "#6F7279", patchX: 24, line: "#4F5258", pointy: true, mask: "#FFFFFF", trait: "Infatigable", likes: "Courir dans la poudreuse", story: "La cousine de Givre le husky. Elle hurle à la lune avec lui.", hint: "Elle attend à l'Animalerie des Neiges." },
   patapouf: { kind: "dog", price: 220, n: "Patapouf", race: "Saint-bernard",    fur: "#F6EEDF", ear: "#B5653A", snout: "#FFFFFF", patch: "#B5653A", patchX: 40, line: "#D8C7A8", trait: "Tranquille",  likes: "Les siestes près du poêle", story: "Énorme et très doux, il ne se lève que pour les biscuits.", hint: "Il attend au rayon chiens de l'Animalerie." },
 };
 
@@ -440,6 +484,206 @@ const COQ = {
     gare:      { n: "Le bateau-navette",     goal: 900, c: "#6E8FB0", d: "Une navette relie l'île au continent plusieurs fois par jour.", fx: "Des touristes arrivent : +3 clients par jour, ils paient 50 % de plus", req: "pont" },
   },
 };
+const GIVRE = {
+  villagers: [
+    { n: "Odette", role: "l'aubergiste", c: "#E9A9B0", fav: "fondue", stories: [
+      "Odette tient l'auberge depuis cinquante ans. Elle connaît le prénom de chaque skieur.",
+      "Elle te raconte qu'autrefois, tout le village montait au sommet voir les aurores. « Quel spectacle ! »",
+      "Odette accroche ta photo derrière son comptoir, à côté de celle de ses petits-enfants." ] },
+    { n: "Henri", role: "le conducteur du téléphérique", c: "#9CB4C2", fav: "vinchaud", stories: [
+      "Henri astique sa cabine rouge tous les matins, même quand le téléphérique est en panne.",
+      "Il te confie qu'une petite chatte blanche montait souvent dans sa cabine… toute seule.",
+      "Henri te donne la casquette officielle du téléphérique. « Tu es de la maison, maintenant. »" ] },
+    { n: "Léna", role: "la monitrice de ski", c: "#F2B6A0", fav: "tartemyrt", stories: [
+      "Léna descend les pistes plus vite que le vent, mais elle a peur des escaliers.",
+      "Elle apprend à skier à Bernie. Enfin, Bernie apprend surtout à glisser sur le ventre.",
+      "Léna organise une descente aux flambeaux qui finit devant ton café." ] },
+    { n: "Monsieur Pierrot", role: "le fromager", c: "#A9C4A0", fav: "raclette", stories: [
+      "Monsieur Pierrot parle à ses fromages. Il dit qu'ils mûrissent mieux comme ça.",
+      "Il t'emmène à la cave d'affinage : des centaines de meules qui sentent la noisette.",
+      "Pierrot baptise un nouveau fromage « Le Ronron ». Il est très doux." ] },
+    { n: "Zoé", role: "la petite patineuse", c: "#F7E37A", fav: "crepechat", stories: [
+      "Zoé, 9 ans, tourne sur la patinoire du matin au soir. Elle veut être championne.",
+      "Elle a trouvé une carte postale signée « A. » sous un banc. Elle te la montre en secret.",
+      "Zoé invente une pirouette qu'elle appelle « le chat qui tourne ». Tout le monde applaudit." ] },
+    { n: "Gaspard", role: "le guide de montagne", c: "#B9C6CC", fav: "chocochaud", stories: [
+      "Gaspard connaît chaque sentier, chaque sapin et chaque marmotte du Mont Givre.",
+      "Il dit que les aurores ne reviennent que si quelqu'un les attend là-haut.",
+      "Gaspard t'offre une vieille lanterne de guide pour éclairer ton café." ] },
+    { n: "Rosa", role: "la chocolatière", c: "#C9A27A", fav: "truffes", stories: [
+      "Rosa goûte chaque chocolat les yeux fermés, « pour mieux sentir ».",
+      "Elle te montre sa recette secrète : une pincée de piment, juste une.",
+      "Rosa crée une truffe en forme de patte de chat, en ton honneur." ] },
+  ],
+  // les cartes postales glissées sous la porte : la plupart sont signées « A. »
+  letters: [
+    { from: "A.", text: "Autrefois, chaque soir d'hiver, le ciel du sommet devenait vert et violet. Tout le village montait pour le voir. Tu crois qu'on pourra le revoir un jour ?", coins: 10 },
+    { from: "Odette", text: "Bienvenue au Mont Givre ! Passe goûter ma fondue à l'auberge, c'est la meilleure de la vallée (ne le dis pas à Pierrot).", coins: 15 },
+    { from: "A.", text: "Depuis que le téléphérique s'est arrêté, plus personne ne monte au sommet. Le ciel est devenu tout noir, comme s'il boudait.", rep: 1 },
+    { from: "A.", text: "Je t'ai vu servir des chocolats chauds hier soir. On aurait dit que ton café réchauffait toute la montagne.", coins: 10 },
+    { from: "Papi Jules", text: "Le village te salue ! Tes chats de Bruyère vont bien. Ici, il pleut ; là-haut, j'espère qu'il neige pour toi.", coins: 20 },
+    { from: "A.", text: "Quand le téléphérique marchera de nouveau, monte au sommet un soir. Je t'attendrai. Signé : A.", coins: 0 },
+  ],
+  // mêmes clés que Bruyère (même effet), mais d'autres projets
+  projects: {
+    pont:      { n: "Rouvrir le téléphérique", goal: 300, c: "#E06A6A", d: "Réparer la cabine rouge d'Henri pour remonter au sommet.", fx: "+1 client par jour… et le sommet devient accessible" },
+    lanternes: { n: "Guirlandes lumineuses", goal: 120, c: "#F2C46D", d: "Des guirlandes entre tous les chalets du village.", fx: "+1 réputation chaque jour" },
+    fontaine:  { n: "La patinoire",          goal: 150, c: "#9CC3D2", d: "Rouvrir la patinoire sur le lac gelé.", fx: "Les clients sont 25 % plus patients" },
+    jardin:    { n: "Niches chauffées",      goal: 350, c: "#8FAF8A", d: "Des niches en bois bien au chaud pour les animaux du village.", fx: "Les animaux restent heureux plus longtemps" },
+    kiosque:   { n: "La piste de luge",      goal: 250, c: "#E9A9B0", d: "Tracer une belle piste de luge pour les enfants.", fx: "+5 % de pourboires" },
+    terrasse:  { n: "Terrasse chauffée",     goal: 400, c: "#B5404A", d: "Des tables dehors avec des braseros, face aux montagnes.", fx: "+2 clients par jour et +5 % de pourboires" },
+    moulin:    { n: "La ferme d'alpage",     goal: 600, c: "#6F9468", d: "Rouvrir la vieille ferme et ses vaches tachetées.", fx: "1 fromage à raclette et 2 bouteilles de lait offerts chaque matin", req: "pont" },
+    gare:      { n: "Le traîneau à chiens",  goal: 900, c: "#6E8FB0", d: "Un traîneau relie la gare au village.", fx: "Des skieurs arrivent : +3 clients par jour, ils paient 50 % de plus", req: "pont" },
+  },
+};
+// Dessin de la carte du Mont Givre (repris de la maquette)
+const GIVRE_SVG = `<defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#AFCDE3"/><stop offset="1" stop-color="#E6F0F6"/></linearGradient></defs>
+<rect width="960" height="720" fill="url(#sky)"/>
+<circle cx="120" cy="60" r="30" fill="#FFF7DC"/>
+<path d="M-20 240 L150 70 L260 170 L380 60 L520 200 L700 30 L900 210 L980 160 V300 H-20Z" fill="#9FB4C8"/>
+<path d="M150 70 L120 100 L140 96 L156 110 L176 92 L196 104Z M380 60 L346 96 L370 90 L388 104 L404 86 L424 100Z M700 30 L650 80 L680 72 L700 92 L722 70 L756 86Z" fill="#FFFFFF"/>
+<path d="M-20 260 L90 170 L210 240 L330 150 L470 250 L600 170 L760 250 L880 190 L980 240 V320 H-20Z" fill="#C3D3E0"/>
+<path d="M-20 270 Q200 230 420 262 T980 250 V740 H-20Z" fill="#F4F8FB"/>
+<path d="M-20 420 Q240 390 480 430 T980 410" stroke="#DCE7EF" stroke-width="30" fill="none" opacity=".6"/>
+<path d="M-20 560 Q300 530 600 570 T980 550" stroke="#DCE7EF" stroke-width="26" fill="none" opacity=".6"/>
+<path d="M872 300 L702 52" stroke="#4A3326" stroke-width="2"/><path d="M880 300 L710 52" stroke="#4A3326" stroke-width="1.5"/>
+<g transform="translate(686 30)"><rect width="40" height="26" rx="3" fill="#8A6B5A"/><path d="M-4 2 L20 -10 L44 2Z" fill="#C9677A"/></g>
+<g transform="translate(852 292)"><rect x="0" y="16" width="70" height="44" rx="4" fill="#8A6B5A"/><path d="M-6 20 L35 -6 L76 20Z" fill="#C9677A"/><path d="M-8 20 Q35 4 78 20 Q35 12 -8 20Z" fill="#FFFFFF"/><rect x="24" y="34" width="22" height="26" rx="3" fill="#6B4A33"/></g>
+<path d="M150 250 Q60 330 120 400 T80 520" stroke="#E3ECF3" stroke-width="22" fill="none" stroke-linecap="round"/><path d="M150 250 Q60 330 120 400 T80 520" stroke="#C9D7E3" stroke-width="2" stroke-dasharray="6 8" fill="none"/>
+<g transform="translate(96 470) rotate(-20)"><path d="M0 10 H34 q6 0 6 -6" stroke="#8A5A3B" stroke-width="3" fill="none"/><rect x="2" y="0" width="30" height="8" rx="2" fill="#C9677A"/></g>
+<ellipse cx="250" cy="610" rx="150" ry="50" fill="#BFE0EE" stroke="#FFFFFF" stroke-width="6"/>
+<path d="M150 610 q40 -20 80 0 t80 0 M190 630 q30 -14 60 0" stroke="#FFFFFF" stroke-width="2" fill="none" opacity=".8"/>
+<path d="M110 635 v-14" stroke="#8A5A3B" stroke-width="3"/>
+<path d="M140 640 v-14" stroke="#8A5A3B" stroke-width="3"/>
+<path d="M170 646 v-14" stroke="#8A5A3B" stroke-width="3"/>
+<path d="M200 651 v-14" stroke="#8A5A3B" stroke-width="3"/>
+<path d="M230 656 v-14" stroke="#8A5A3B" stroke-width="3"/>
+<path d="M260 658 v-14" stroke="#8A5A3B" stroke-width="3"/>
+<path d="M290 653 v-14" stroke="#8A5A3B" stroke-width="3"/>
+<path d="M320 647 v-14" stroke="#8A5A3B" stroke-width="3"/>
+<path d="M350 642 v-14" stroke="#8A5A3B" stroke-width="3"/>
+<path d="M380 637 v-14" stroke="#8A5A3B" stroke-width="3"/>
+<g transform="translate(430 600)"><circle cy="20" r="18" fill="#FFFFFF" stroke="#DCE7EF" stroke-width="2"/><circle cy="-6" r="12" fill="#FFFFFF" stroke="#DCE7EF" stroke-width="2"/><path d="M0 -6 l10 2 l-10 2z" fill="#F29A3A"/><circle cx="-4" cy="-9" r="1.6" fill="#2F2522"/><circle cx="4" cy="-9" r="1.6" fill="#2F2522"/><path d="M-12 4 h24" stroke="#E06A6A" stroke-width="4"/><rect x="-9" y="-26" width="18" height="10" fill="#3E3433"/></g>
+<path d="M640 690 H980 M640 704 H980" stroke="#8A6B5A" stroke-width="3"/><path d="M650 686 v22" stroke="#A97C5A" stroke-width="4"/><path d="M668 686 v22" stroke="#A97C5A" stroke-width="4"/><path d="M686 686 v22" stroke="#A97C5A" stroke-width="4"/><path d="M704 686 v22" stroke="#A97C5A" stroke-width="4"/><path d="M722 686 v22" stroke="#A97C5A" stroke-width="4"/><path d="M740 686 v22" stroke="#A97C5A" stroke-width="4"/><path d="M758 686 v22" stroke="#A97C5A" stroke-width="4"/><path d="M776 686 v22" stroke="#A97C5A" stroke-width="4"/><path d="M794 686 v22" stroke="#A97C5A" stroke-width="4"/><path d="M812 686 v22" stroke="#A97C5A" stroke-width="4"/><path d="M830 686 v22" stroke="#A97C5A" stroke-width="4"/><path d="M848 686 v22" stroke="#A97C5A" stroke-width="4"/><path d="M866 686 v22" stroke="#A97C5A" stroke-width="4"/><path d="M884 686 v22" stroke="#A97C5A" stroke-width="4"/><path d="M902 686 v22" stroke="#A97C5A" stroke-width="4"/><path d="M920 686 v22" stroke="#A97C5A" stroke-width="4"/><path d="M938 686 v22" stroke="#A97C5A" stroke-width="4"/><path d="M956 686 v22" stroke="#A97C5A" stroke-width="4"/><path d="M974 686 v22" stroke="#A97C5A" stroke-width="4"/>
+<g transform="translate(700 580) scale(0.75)"><ellipse cx="60.0" cy="100" rx="78.0" ry="10" fill="#C9D7E3" opacity=".7"/><rect x="6" y="26" width="108" height="70" rx="4" fill="#E6D2B8"/><path d="M6 40 H114" stroke="#00000014" stroke-width="2"/><path d="M6 56 H114" stroke="#00000014" stroke-width="2"/><path d="M6 72 H114" stroke="#00000014" stroke-width="2"/><path d="M6 88 H114" stroke="#00000014" stroke-width="2"/><path d="M-10 34 L60.0 -14 L130 34Z" fill="#4C6F94"/><path d="M-12 34 Q30.0 24 60.0 -16 Q90.0 24 132 34 Q60.0 26 -12 34Z" fill="#FFFFFF"/><path d="M-12 34 q8 8 16 0 q8 8 16 0 q8 8 16 0" fill="#FFFFFF"/><rect x="46.0" y="58" width="28" height="38" rx="4" fill="#6B4A33"/><rect x="16" y="48" width="24" height="20" rx="3" fill="#F7D98A"/><rect x="80" y="48" width="24" height="20" rx="3" fill="#F7D98A"/><path d="M28 48 v20 M16 58 h24 M92 48 v20 M80 58 h24" stroke="#8A5A3B" stroke-width="2"/><path d="M14 70 h28 M78 70 h28" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round"/><rect x="82" y="-8" width="14" height="26" fill="#8A6B5A"/></g>
+<g transform="translate(860 660)"><rect x="0" y="0" width="70" height="28" rx="6" fill="#C9677A"/><rect x="8" y="6" width="12" height="10" rx="2" fill="#DDEEF6"/><rect x="26" y="6" width="12" height="10" rx="2" fill="#DDEEF6"/><rect x="44" y="6" width="12" height="10" rx="2" fill="#DDEEF6"/><circle cx="14" cy="30" r="5" fill="#3E3433"/><circle cx="56" cy="30" r="5" fill="#3E3433"/><rect x="-30" y="4" width="28" height="24" rx="5" fill="#4C6F94"/><rect x="-24" y="-10" width="8" height="14" fill="#3E3433"/></g>
+<g transform="translate(290 210) scale(1)"><ellipse cx="75.0" cy="116" rx="93.0" ry="10" fill="#C9D7E3" opacity=".7"/><rect x="6" y="26" width="138" height="86" rx="4" fill="#C9A27A"/><path d="M6 40 H144" stroke="#00000014" stroke-width="2"/><path d="M6 56 H144" stroke="#00000014" stroke-width="2"/><path d="M6 72 H144" stroke="#00000014" stroke-width="2"/><path d="M6 88 H144" stroke="#00000014" stroke-width="2"/><path d="M-10 34 L75.0 -14 L160 34Z" fill="#C9677A"/><path d="M-12 34 Q37.5 24 75.0 -16 Q112.5 24 162 34 Q75.0 26 -12 34Z" fill="#FFFFFF"/><path d="M-12 34 q8 8 16 0 q8 8 16 0 q8 8 16 0" fill="#FFFFFF"/><rect x="61.0" y="74" width="28" height="38" rx="4" fill="#6B4A33"/><rect x="16" y="48" width="24" height="20" rx="3" fill="#F7D98A"/><rect x="110" y="48" width="24" height="20" rx="3" fill="#F7D98A"/><path d="M28 48 v20 M16 58 h24 M122 48 v20 M110 58 h24" stroke="#8A5A3B" stroke-width="2"/><path d="M14 70 h28 M108 70 h28" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round"/><rect x="112" y="-8" width="14" height="26" fill="#8A6B5A"/><g fill="#FFFFFF" opacity=".75"><circle cx="119" cy="-18" r="7"><animate attributeName="cy" values="-18;-40" dur="3s" repeatCount="indefinite"/><animate attributeName="opacity" values=".8;0" dur="3s" repeatCount="indefinite"/></circle><circle cx="123" cy="-30" r="9"><animate attributeName="cy" values="-26;-52" dur="3s" begin="1.5s" repeatCount="indefinite"/><animate attributeName="opacity" values=".8;0" dur="3s" begin="1.5s" repeatCount="indefinite"/></circle></g></g>
+<g transform="translate(560 250) scale(0.85)"><ellipse cx="60.0" cy="100" rx="78.0" ry="10" fill="#C9D7E3" opacity=".7"/><rect x="6" y="26" width="108" height="70" rx="4" fill="#E6D2B8"/><path d="M6 40 H114" stroke="#00000014" stroke-width="2"/><path d="M6 56 H114" stroke="#00000014" stroke-width="2"/><path d="M6 72 H114" stroke="#00000014" stroke-width="2"/><path d="M6 88 H114" stroke="#00000014" stroke-width="2"/><path d="M-10 34 L60.0 -14 L130 34Z" fill="#E0A63A"/><path d="M-12 34 Q30.0 24 60.0 -16 Q90.0 24 132 34 Q60.0 26 -12 34Z" fill="#FFFFFF"/><path d="M-12 34 q8 8 16 0 q8 8 16 0 q8 8 16 0" fill="#FFFFFF"/><rect x="46.0" y="58" width="28" height="38" rx="4" fill="#6B4A33"/><rect x="16" y="48" width="24" height="20" rx="3" fill="#F7D98A"/><rect x="80" y="48" width="24" height="20" rx="3" fill="#F7D98A"/><path d="M28 48 v20 M16 58 h24 M92 48 v20 M80 58 h24" stroke="#8A5A3B" stroke-width="2"/><path d="M14 70 h28 M78 70 h28" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round"/><rect x="82" y="-8" width="14" height="26" fill="#8A6B5A"/><g fill="#FFFFFF" opacity=".75"><circle cx="89" cy="-18" r="7"><animate attributeName="cy" values="-18;-40" dur="3s" repeatCount="indefinite"/><animate attributeName="opacity" values=".8;0" dur="3s" repeatCount="indefinite"/></circle><circle cx="93" cy="-30" r="9"><animate attributeName="cy" values="-26;-52" dur="3s" begin="1.5s" repeatCount="indefinite"/><animate attributeName="opacity" values=".8;0" dur="3s" begin="1.5s" repeatCount="indefinite"/></circle></g></g>
+<g transform="translate(60 300) scale(0.8)"><ellipse cx="60.0" cy="100" rx="78.0" ry="10" fill="#C9D7E3" opacity=".7"/><rect x="6" y="26" width="108" height="70" rx="4" fill="#D9B98E"/><path d="M6 40 H114" stroke="#00000014" stroke-width="2"/><path d="M6 56 H114" stroke="#00000014" stroke-width="2"/><path d="M6 72 H114" stroke="#00000014" stroke-width="2"/><path d="M6 88 H114" stroke="#00000014" stroke-width="2"/><path d="M-10 34 L60.0 -14 L130 34Z" fill="#5E8C6A"/><path d="M-12 34 Q30.0 24 60.0 -16 Q90.0 24 132 34 Q60.0 26 -12 34Z" fill="#FFFFFF"/><path d="M-12 34 q8 8 16 0 q8 8 16 0 q8 8 16 0" fill="#FFFFFF"/><rect x="46.0" y="58" width="28" height="38" rx="4" fill="#6B4A33"/><rect x="16" y="48" width="24" height="20" rx="3" fill="#F7D98A"/><rect x="80" y="48" width="24" height="20" rx="3" fill="#F7D98A"/><path d="M28 48 v20 M16 58 h24 M92 48 v20 M80 58 h24" stroke="#8A5A3B" stroke-width="2"/><path d="M14 70 h28 M78 70 h28" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round"/><rect x="82" y="-8" width="14" height="26" fill="#8A6B5A"/></g>
+<g transform="translate(420 390) scale(0.82)"><ellipse cx="60.0" cy="100" rx="78.0" ry="10" fill="#C9D7E3" opacity=".7"/><rect x="6" y="26" width="108" height="70" rx="4" fill="#8A5A3B"/><path d="M6 40 H114" stroke="#00000014" stroke-width="2"/><path d="M6 56 H114" stroke="#00000014" stroke-width="2"/><path d="M6 72 H114" stroke="#00000014" stroke-width="2"/><path d="M6 88 H114" stroke="#00000014" stroke-width="2"/><path d="M-10 34 L60.0 -14 L130 34Z" fill="#C9677A"/><path d="M-12 34 Q30.0 24 60.0 -16 Q90.0 24 132 34 Q60.0 26 -12 34Z" fill="#FFFFFF"/><path d="M-12 34 q8 8 16 0 q8 8 16 0 q8 8 16 0" fill="#FFFFFF"/><rect x="46.0" y="58" width="28" height="38" rx="4" fill="#6B4A33"/><rect x="16" y="48" width="24" height="20" rx="3" fill="#F7D98A"/><rect x="80" y="48" width="24" height="20" rx="3" fill="#F7D98A"/><path d="M28 48 v20 M16 58 h24 M92 48 v20 M80 58 h24" stroke="#8A5A3B" stroke-width="2"/><path d="M14 70 h28 M78 70 h28" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round"/><rect x="82" y="-8" width="14" height="26" fill="#8A6B5A"/><g fill="#FFFFFF" opacity=".75"><circle cx="89" cy="-18" r="7"><animate attributeName="cy" values="-18;-40" dur="3s" repeatCount="indefinite"/><animate attributeName="opacity" values=".8;0" dur="3s" repeatCount="indefinite"/></circle><circle cx="93" cy="-30" r="9"><animate attributeName="cy" values="-26;-52" dur="3s" begin="1.5s" repeatCount="indefinite"/><animate attributeName="opacity" values=".8;0" dur="3s" begin="1.5s" repeatCount="indefinite"/></circle></g></g>
+<g transform="translate(620 420) scale(0.82)"><ellipse cx="60.0" cy="100" rx="78.0" ry="10" fill="#C9D7E3" opacity=".7"/><rect x="6" y="26" width="108" height="70" rx="4" fill="#C9A27A"/><path d="M6 40 H114" stroke="#00000014" stroke-width="2"/><path d="M6 56 H114" stroke="#00000014" stroke-width="2"/><path d="M6 72 H114" stroke="#00000014" stroke-width="2"/><path d="M6 88 H114" stroke="#00000014" stroke-width="2"/><path d="M-10 34 L60.0 -14 L130 34Z" fill="#4C6F94"/><path d="M-12 34 Q30.0 24 60.0 -16 Q90.0 24 132 34 Q60.0 26 -12 34Z" fill="#FFFFFF"/><path d="M-12 34 q8 8 16 0 q8 8 16 0 q8 8 16 0" fill="#FFFFFF"/><rect x="46.0" y="58" width="28" height="38" rx="4" fill="#6B4A33"/><rect x="16" y="48" width="24" height="20" rx="3" fill="#F7D98A"/><rect x="80" y="48" width="24" height="20" rx="3" fill="#F7D98A"/><path d="M28 48 v20 M16 58 h24 M92 48 v20 M80 58 h24" stroke="#8A5A3B" stroke-width="2"/><path d="M14 70 h28 M78 70 h28" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round"/><rect x="82" y="-8" width="14" height="26" fill="#8A6B5A"/><g fill="#FFFFFF" opacity=".75"><circle cx="89" cy="-18" r="7"><animate attributeName="cy" values="-18;-40" dur="3s" repeatCount="indefinite"/><animate attributeName="opacity" values=".8;0" dur="3s" repeatCount="indefinite"/></circle><circle cx="93" cy="-30" r="9"><animate attributeName="cy" values="-26;-52" dur="3s" begin="1.5s" repeatCount="indefinite"/><animate attributeName="opacity" values=".8;0" dur="3s" begin="1.5s" repeatCount="indefinite"/></circle></g></g>
+<g transform="translate(760 430) scale(0.78)"><ellipse cx="60.0" cy="100" rx="78.0" ry="10" fill="#C9D7E3" opacity=".7"/><rect x="6" y="26" width="108" height="70" rx="4" fill="#E6D2B8"/><path d="M6 40 H114" stroke="#00000014" stroke-width="2"/><path d="M6 56 H114" stroke="#00000014" stroke-width="2"/><path d="M6 72 H114" stroke="#00000014" stroke-width="2"/><path d="M6 88 H114" stroke="#00000014" stroke-width="2"/><path d="M-10 34 L60.0 -14 L130 34Z" fill="#3F8F9A"/><path d="M-12 34 Q30.0 24 60.0 -16 Q90.0 24 132 34 Q60.0 26 -12 34Z" fill="#FFFFFF"/><path d="M-12 34 q8 8 16 0 q8 8 16 0 q8 8 16 0" fill="#FFFFFF"/><rect x="46.0" y="58" width="28" height="38" rx="4" fill="#6B4A33"/><rect x="16" y="48" width="24" height="20" rx="3" fill="#F7D98A"/><rect x="80" y="48" width="24" height="20" rx="3" fill="#F7D98A"/><path d="M28 48 v20 M16 58 h24 M92 48 v20 M80 58 h24" stroke="#8A5A3B" stroke-width="2"/><path d="M14 70 h28 M78 70 h28" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round"/><rect x="82" y="-8" width="14" height="26" fill="#8A6B5A"/></g>
+<g transform="translate(220 400) scale(0.78)"><ellipse cx="60.0" cy="100" rx="78.0" ry="10" fill="#C9D7E3" opacity=".7"/><rect x="6" y="26" width="108" height="70" rx="4" fill="#D9B98E"/><path d="M6 40 H114" stroke="#00000014" stroke-width="2"/><path d="M6 56 H114" stroke="#00000014" stroke-width="2"/><path d="M6 72 H114" stroke="#00000014" stroke-width="2"/><path d="M6 88 H114" stroke="#00000014" stroke-width="2"/><path d="M-10 34 L60.0 -14 L130 34Z" fill="#E06A6A"/><path d="M-12 34 Q30.0 24 60.0 -16 Q90.0 24 132 34 Q60.0 26 -12 34Z" fill="#FFFFFF"/><path d="M-12 34 q8 8 16 0 q8 8 16 0 q8 8 16 0" fill="#FFFFFF"/><rect x="46.0" y="58" width="28" height="38" rx="4" fill="#6B4A33"/><rect x="16" y="48" width="24" height="20" rx="3" fill="#F7D98A"/><rect x="80" y="48" width="24" height="20" rx="3" fill="#F7D98A"/><path d="M28 48 v20 M16 58 h24 M92 48 v20 M80 58 h24" stroke="#8A5A3B" stroke-width="2"/><path d="M14 70 h28 M78 70 h28" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round"/><rect x="82" y="-8" width="14" height="26" fill="#8A6B5A"/></g>
+<g transform="translate(30 250) scale(0.9)"><rect x="-4" y="40" width="8" height="12" fill="#6B4A33"/><path d="M0 -10 L22 22 H-22Z M0 6 L26 44 H-26Z" fill="#3F6B57"/><path d="M0 -10 L10 4 Q0 0 -10 4Z M-14 18 Q0 12 14 18 L18 24 Q0 16 -18 24Z M-18 38 Q0 30 18 38 L22 44 Q0 36 -22 44Z" fill="#FFFFFF"/></g>
+<g transform="translate(250 300) scale(0.7)"><rect x="-4" y="40" width="8" height="12" fill="#6B4A33"/><path d="M0 -10 L22 22 H-22Z M0 6 L26 44 H-26Z" fill="#3F6B57"/><path d="M0 -10 L10 4 Q0 0 -10 4Z M-14 18 Q0 12 14 18 L18 24 Q0 16 -18 24Z M-18 38 Q0 30 18 38 L22 44 Q0 36 -22 44Z" fill="#FFFFFF"/></g>
+<g transform="translate(480 300) scale(0.6)"><rect x="-4" y="40" width="8" height="12" fill="#6B4A33"/><path d="M0 -10 L22 22 H-22Z M0 6 L26 44 H-26Z" fill="#3F6B57"/><path d="M0 -10 L10 4 Q0 0 -10 4Z M-14 18 Q0 12 14 18 L18 24 Q0 16 -18 24Z M-18 38 Q0 30 18 38 L22 44 Q0 36 -22 44Z" fill="#FFFFFF"/></g>
+<g transform="translate(520 250) scale(0.8)"><rect x="-4" y="40" width="8" height="12" fill="#6B4A33"/><path d="M0 -10 L22 22 H-22Z M0 6 L26 44 H-26Z" fill="#3F6B57"/><path d="M0 -10 L10 4 Q0 0 -10 4Z M-14 18 Q0 12 14 18 L18 24 Q0 16 -18 24Z M-18 38 Q0 30 18 38 L22 44 Q0 36 -22 44Z" fill="#FFFFFF"/></g>
+<g transform="translate(700 250) scale(0.7)"><rect x="-4" y="40" width="8" height="12" fill="#6B4A33"/><path d="M0 -10 L22 22 H-22Z M0 6 L26 44 H-26Z" fill="#3F6B57"/><path d="M0 -10 L10 4 Q0 0 -10 4Z M-14 18 Q0 12 14 18 L18 24 Q0 16 -18 24Z M-18 38 Q0 30 18 38 L22 44 Q0 36 -22 44Z" fill="#FFFFFF"/></g>
+<g transform="translate(820 380) scale(0.8)"><rect x="-4" y="40" width="8" height="12" fill="#6B4A33"/><path d="M0 -10 L22 22 H-22Z M0 6 L26 44 H-26Z" fill="#3F6B57"/><path d="M0 -10 L10 4 Q0 0 -10 4Z M-14 18 Q0 12 14 18 L18 24 Q0 16 -18 24Z M-18 38 Q0 30 18 38 L22 44 Q0 36 -22 44Z" fill="#FFFFFF"/></g>
+<g transform="translate(900 420) scale(0.9)"><rect x="-4" y="40" width="8" height="12" fill="#6B4A33"/><path d="M0 -10 L22 22 H-22Z M0 6 L26 44 H-26Z" fill="#3F6B57"/><path d="M0 -10 L10 4 Q0 0 -10 4Z M-14 18 Q0 12 14 18 L18 24 Q0 16 -18 24Z M-18 38 Q0 30 18 38 L22 44 Q0 36 -22 44Z" fill="#FFFFFF"/></g>
+<g transform="translate(30 600) scale(1)"><rect x="-4" y="40" width="8" height="12" fill="#6B4A33"/><path d="M0 -10 L22 22 H-22Z M0 6 L26 44 H-26Z" fill="#3F6B57"/><path d="M0 -10 L10 4 Q0 0 -10 4Z M-14 18 Q0 12 14 18 L18 24 Q0 16 -18 24Z M-18 38 Q0 30 18 38 L22 44 Q0 36 -22 44Z" fill="#FFFFFF"/></g>
+<g transform="translate(60 660) scale(0.8)"><rect x="-4" y="40" width="8" height="12" fill="#6B4A33"/><path d="M0 -10 L22 22 H-22Z M0 6 L26 44 H-26Z" fill="#3F6B57"/><path d="M0 -10 L10 4 Q0 0 -10 4Z M-14 18 Q0 12 14 18 L18 24 Q0 16 -18 24Z M-18 38 Q0 30 18 38 L22 44 Q0 36 -22 44Z" fill="#FFFFFF"/></g>
+<g transform="translate(560 560) scale(0.8)"><rect x="-4" y="40" width="8" height="12" fill="#6B4A33"/><path d="M0 -10 L22 22 H-22Z M0 6 L26 44 H-26Z" fill="#3F6B57"/><path d="M0 -10 L10 4 Q0 0 -10 4Z M-14 18 Q0 12 14 18 L18 24 Q0 16 -18 24Z M-18 38 Q0 30 18 38 L22 44 Q0 36 -22 44Z" fill="#FFFFFF"/></g>
+<g transform="translate(600 620) scale(0.7)"><rect x="-4" y="40" width="8" height="12" fill="#6B4A33"/><path d="M0 -10 L22 22 H-22Z M0 6 L26 44 H-26Z" fill="#3F6B57"/><path d="M0 -10 L10 4 Q0 0 -10 4Z M-14 18 Q0 12 14 18 L18 24 Q0 16 -18 24Z M-18 38 Q0 30 18 38 L22 44 Q0 36 -22 44Z" fill="#FFFFFF"/></g>
+<g transform="translate(920 560) scale(0.8)"><rect x="-4" y="40" width="8" height="12" fill="#6B4A33"/><path d="M0 -10 L22 22 H-22Z M0 6 L26 44 H-26Z" fill="#3F6B57"/><path d="M0 -10 L10 4 Q0 0 -10 4Z M-14 18 Q0 12 14 18 L18 24 Q0 16 -18 24Z M-18 38 Q0 30 18 38 L22 44 Q0 36 -22 44Z" fill="#FFFFFF"/></g>
+<g transform="translate(520 470) scale(0.6)"><rect x="-4" y="40" width="8" height="12" fill="#6B4A33"/><path d="M0 -10 L22 22 H-22Z M0 6 L26 44 H-26Z" fill="#3F6B57"/><path d="M0 -10 L10 4 Q0 0 -10 4Z M-14 18 Q0 12 14 18 L18 24 Q0 16 -18 24Z M-18 38 Q0 30 18 38 L22 44 Q0 36 -22 44Z" fill="#FFFFFF"/></g>
+<g transform="translate(180 520) scale(0.7)"><rect x="-4" y="40" width="8" height="12" fill="#6B4A33"/><path d="M0 -10 L22 22 H-22Z M0 6 L26 44 H-26Z" fill="#3F6B57"/><path d="M0 -10 L10 4 Q0 0 -10 4Z M-14 18 Q0 12 14 18 L18 24 Q0 16 -18 24Z M-18 38 Q0 30 18 38 L22 44 Q0 36 -22 44Z" fill="#FFFFFF"/></g>
+<g transform="translate(400 520) scale(0.6)"><rect x="-4" y="40" width="8" height="12" fill="#6B4A33"/><path d="M0 -10 L22 22 H-22Z M0 6 L26 44 H-26Z" fill="#3F6B57"/><path d="M0 -10 L10 4 Q0 0 -10 4Z M-14 18 Q0 12 14 18 L18 24 Q0 16 -18 24Z M-18 38 Q0 30 18 38 L22 44 Q0 36 -22 44Z" fill="#FFFFFF"/></g>
+<g transform="translate(720 530) scale(0.7)"><rect x="-4" y="40" width="8" height="12" fill="#6B4A33"/><path d="M0 -10 L22 22 H-22Z M0 6 L26 44 H-26Z" fill="#3F6B57"/><path d="M0 -10 L10 4 Q0 0 -10 4Z M-14 18 Q0 12 14 18 L18 24 Q0 16 -18 24Z M-18 38 Q0 30 18 38 L22 44 Q0 36 -22 44Z" fill="#FFFFFF"/></g>
+<path d="M282 244 l3 6 l3 -6z" fill="#DDEEF6"/><path d="M299 244 l3 9 l3 -9z" fill="#DDEEF6"/><path d="M316 244 l3 12 l3 -12z" fill="#DDEEF6"/><path d="M333 244 l3 6 l3 -6z" fill="#DDEEF6"/><path d="M350 244 l3 9 l3 -9z" fill="#DDEEF6"/><path d="M367 244 l3 12 l3 -12z" fill="#DDEEF6"/><path d="M384 244 l3 6 l3 -6z" fill="#DDEEF6"/><path d="M401 244 l3 9 l3 -9z" fill="#DDEEF6"/><path d="M418 244 l3 12 l3 -12z" fill="#DDEEF6"/><path d="M435 244 l3 6 l3 -6z" fill="#DDEEF6"/><path d="M552 280 l3 6 l3 -6z" fill="#DDEEF6"/><path d="M569 280 l3 9 l3 -9z" fill="#DDEEF6"/><path d="M587 280 l3 12 l3 -12z" fill="#DDEEF6"/><path d="M604 280 l3 6 l3 -6z" fill="#DDEEF6"/><path d="M621 280 l3 9 l3 -9z" fill="#DDEEF6"/><path d="M639 280 l3 12 l3 -12z" fill="#DDEEF6"/><path d="M52 324 l3 6 l3 -6z" fill="#DDEEF6"/><path d="M68 324 l3 9 l3 -9z" fill="#DDEEF6"/><path d="M85 324 l3 12 l3 -12z" fill="#DDEEF6"/><path d="M101 324 l3 6 l3 -6z" fill="#DDEEF6"/><path d="M117 324 l3 9 l3 -9z" fill="#DDEEF6"/><path d="M134 324 l3 12 l3 -12z" fill="#DDEEF6"/><path d="M412 414 l3 6 l3 -6z" fill="#DDEEF6"/><path d="M429 414 l3 9 l3 -9z" fill="#DDEEF6"/><path d="M445 414 l3 12 l3 -12z" fill="#DDEEF6"/><path d="M462 414 l3 6 l3 -6z" fill="#DDEEF6"/><path d="M479 414 l3 9 l3 -9z" fill="#DDEEF6"/><path d="M495 414 l3 12 l3 -12z" fill="#DDEEF6"/><path d="M612 446 l3 6 l3 -6z" fill="#DDEEF6"/><path d="M629 446 l3 9 l3 -9z" fill="#DDEEF6"/><path d="M645 446 l3 12 l3 -12z" fill="#DDEEF6"/><path d="M662 446 l3 6 l3 -6z" fill="#DDEEF6"/><path d="M679 446 l3 9 l3 -9z" fill="#DDEEF6"/><path d="M695 446 l3 12 l3 -12z" fill="#DDEEF6"/><path d="M754 456 l3 6 l3 -6z" fill="#DDEEF6"/><path d="M770 456 l3 9 l3 -9z" fill="#DDEEF6"/><path d="M786 456 l3 12 l3 -12z" fill="#DDEEF6"/><path d="M802 456 l3 6 l3 -6z" fill="#DDEEF6"/><path d="M818 456 l3 9 l3 -9z" fill="#DDEEF6"/><path d="M834 456 l3 12 l3 -12z" fill="#DDEEF6"/><path d="M212 424 l3 6 l3 -6z" fill="#DDEEF6"/><path d="M228 424 l3 9 l3 -9z" fill="#DDEEF6"/><path d="M244 424 l3 12 l3 -12z" fill="#DDEEF6"/><path d="M260 424 l3 6 l3 -6z" fill="#DDEEF6"/><path d="M276 424 l3 9 l3 -9z" fill="#DDEEF6"/><path d="M292 424 l3 12 l3 -12z" fill="#DDEEF6"/>
+<g transform="translate(470 330)"><rect x="-2" y="0" width="4" height="40" fill="#3E3433"/><rect x="-7" y="-10" width="14" height="12" rx="3" fill="#3E3433"/><rect x="-5" y="-8" width="10" height="8" rx="2" fill="#F7D98A"/><circle cx="0" cy="-4" r="14" fill="#FFE9A8" opacity=".25"/><path d="M-8 -10 q8 -6 16 0" fill="#FFFFFF"/></g><g transform="translate(200 360)"><rect x="-2" y="0" width="4" height="40" fill="#3E3433"/><rect x="-7" y="-10" width="14" height="12" rx="3" fill="#3E3433"/><rect x="-5" y="-8" width="10" height="8" rx="2" fill="#F7D98A"/><circle cx="0" cy="-4" r="14" fill="#FFE9A8" opacity=".25"/><path d="M-8 -10 q8 -6 16 0" fill="#FFFFFF"/></g><g transform="translate(560 520)"><rect x="-2" y="0" width="4" height="40" fill="#3E3433"/><rect x="-7" y="-10" width="14" height="12" rx="3" fill="#3E3433"/><rect x="-5" y="-8" width="10" height="8" rx="2" fill="#F7D98A"/><circle cx="0" cy="-4" r="14" fill="#FFE9A8" opacity=".25"/><path d="M-8 -10 q8 -6 16 0" fill="#FFFFFF"/></g><g transform="translate(720 380)"><rect x="-2" y="0" width="4" height="40" fill="#3E3433"/><rect x="-7" y="-10" width="14" height="12" rx="3" fill="#3E3433"/><rect x="-5" y="-8" width="10" height="8" rx="2" fill="#F7D98A"/><circle cx="0" cy="-4" r="14" fill="#FFE9A8" opacity=".25"/><path d="M-8 -10 q8 -6 16 0" fill="#FFFFFF"/></g>
+<g transform="translate(250 300)"><circle cx="8" cy="18" r="6" fill="#A97C5A" stroke="#6B4A33" stroke-width="1.5"/><circle cx="20" cy="18" r="6" fill="#A97C5A" stroke="#6B4A33" stroke-width="1.5"/><circle cx="32" cy="18" r="6" fill="#A97C5A" stroke="#6B4A33" stroke-width="1.5"/><circle cx="8" cy="8" r="6" fill="#A97C5A" stroke="#6B4A33" stroke-width="1.5"/><circle cx="20" cy="8" r="6" fill="#A97C5A" stroke="#6B4A33" stroke-width="1.5"/><circle cx="32" cy="8" r="6" fill="#A97C5A" stroke="#6B4A33" stroke-width="1.5"/><path d="M0 10 q20 -10 40 0" stroke="#FFFFFF" stroke-width="4" fill="none"/></g>
+<g transform="translate(452 312)"><path d="M0 10 H30 q5 0 5 -5" stroke="#8A5A3B" stroke-width="2.5" fill="none"/><rect x="2" y="2" width="26" height="7" rx="2" fill="#E0A63A"/></g>
+<g transform="translate(284 352)"><rect x="-2" y="10" width="4" height="22" fill="#6B4A33"/><rect x="-10" y="0" width="20" height="14" rx="5" fill="#E06A6A"/><path d="M-10 2 q10 -8 20 0" fill="#FFFFFF"/><rect x="8" y="-6" width="3" height="10" fill="#4A3326"/><rect x="8" y="-6" width="8" height="5" fill="#F2C46D"/></g>
+<path d="M760 250 L900 200" stroke="#4A3326" stroke-width="1.5"/><path d="M760 250 v14" stroke="#6B6461" stroke-width="3"/><path d="M795 238 v14" stroke="#6B6461" stroke-width="3"/><path d="M830 225 v14" stroke="#6B6461" stroke-width="3"/><path d="M865 212 v14" stroke="#6B6461" stroke-width="3"/><path d="M900 200 v14" stroke="#6B6461" stroke-width="3"/>
+<g><animateTransform attributeName="transform" type="translate" values="0 0;-70 46;0 0" dur="9s" repeatCount="indefinite"/><g transform="translate(880 236) rotate(-14)"><circle cx="0" cy="-12" r="4" fill="#F2C9A0"/><path d="M-4 -16 h8 v-3 q-4 -4 -8 0z" fill="#E06A6A"/><rect x="-4" y="-8" width="8" height="10" rx="3" fill="#E06A6A"/><path d="M-3 2 l-2 6 M3 2 l2 6" stroke="#3E3433" stroke-width="2"/><path d="M-12 9 H12" stroke="#5FA9B4" stroke-width="2.5" stroke-linecap="round"/><path d="M6 -4 l8 10" stroke="#8A6B5A" stroke-width="1.5"/></g></g>
+<g><animateTransform attributeName="transform" type="translate" values="0 0;60 30;0 0" dur="11s" repeatCount="indefinite"/><g transform="translate(560 196) rotate(10)"><circle cx="0" cy="-12" r="4" fill="#F2C9A0"/><path d="M-4 -16 h8 v-3 q-4 -4 -8 0z" fill="#8C5E9E"/><rect x="-4" y="-8" width="8" height="10" rx="3" fill="#8C5E9E"/><path d="M-3 2 l-2 6 M3 2 l2 6" stroke="#3E3433" stroke-width="2"/><path d="M-12 9 H12" stroke="#5FA9B4" stroke-width="2.5" stroke-linecap="round"/><path d="M6 -4 l8 10" stroke="#8A6B5A" stroke-width="1.5"/></g></g>
+<g transform="translate(240 226) rotate(-12)"><circle cx="0" cy="-12" r="4" fill="#F2C9A0"/><path d="M-4 -16 h8 v-3 q-4 -4 -8 0z" fill="#5FA9B4"/><rect x="-4" y="-8" width="8" height="10" rx="3" fill="#5FA9B4"/><path d="M-3 2 l-2 6 M3 2 l2 6" stroke="#3E3433" stroke-width="2"/><path d="M-12 9 H12" stroke="#5FA9B4" stroke-width="2.5" stroke-linecap="round"/><path d="M6 -4 l8 10" stroke="#8A6B5A" stroke-width="1.5"/></g>
+<path d="M70 180 q-6 30 4 60 q-10 20 -4 40" stroke="#DDEEF6" stroke-width="14" fill="none" stroke-linecap="round"/><path d="M70 180 q-6 30 4 60 q-10 20 -4 40" stroke="#FFFFFF" stroke-width="4" fill="none" stroke-linecap="round" opacity=".8"/>
+<g transform="translate(330 520)"><path d="M0 30 A34 30 0 0 1 68 30Z" fill="#FFFFFF" stroke="#C9D7E3" stroke-width="2"/><path d="M8 18 h52 M18 6 h32 M24 18 v12 M44 18 v12 M34 6 v12" stroke="#C9D7E3" stroke-width="1.5"/><path d="M24 30 v-10 a10 10 0 0 1 20 0 v10z" fill="#8FA5B8"/></g>
+<g transform="translate(500 600) scale(1 1)"><circle cx="0" cy="-12" r="5" fill="#F2C9A0"/><path d="M-5 -15 h10 v-3 q-5 -5 -10 0z" fill="#E0A63A"/><circle cx="0" cy="-21" r="2.5" fill="#FFFFFF"/><rect x="-5" y="-7" width="10" height="12" rx="4" fill="#E0A63A"/><path d="M5 -5 l7 -6" stroke="#E0A63A" stroke-width="3" stroke-linecap="round"/><circle cx="13" cy="-12" r="3" fill="#FFFFFF" stroke="#C9D7E3"/></g><g transform="translate(560 596) scale(-1 1)"><circle cx="0" cy="-12" r="5" fill="#F2C9A0"/><path d="M-5 -15 h10 v-3 q-5 -5 -10 0z" fill="#5E8C6A"/><circle cx="0" cy="-21" r="2.5" fill="#FFFFFF"/><rect x="-5" y="-7" width="10" height="12" rx="4" fill="#5E8C6A"/><path d="M5 -5 l7 -6" stroke="#5E8C6A" stroke-width="3" stroke-linecap="round"/><circle cx="13" cy="-12" r="3" fill="#FFFFFF" stroke="#C9D7E3"/></g>
+<circle cx="530" cy="588" r="3" fill="#FFFFFF" stroke="#C9D7E3"><animate attributeName="cx" values="516;546;516" dur="2s" repeatCount="indefinite"/></circle>
+<g transform="translate(88 560)"><rect x="0" y="16" width="44" height="26" rx="3" fill="#8A5A3B"/><path d="M-4 18 L22 2 L48 18Z" fill="#E06A6A"/><path d="M-4 18 h52" stroke="#FFFFFF" stroke-width="4"/><rect x="10" y="22" width="9" height="10" rx="2" fill="#FBF5EA"/><rect x="25" y="22" width="9" height="10" rx="2" fill="#FBF5EA"/><path d="M14 18 q2 -6 0 -10 M30 18 q2 -6 0 -10" stroke="#FFFFFF" stroke-width="1.5" fill="none" opacity=".8"/></g>
+<g transform="translate(360 618)"><ellipse rx="12" ry="5" fill="#5F8FA8"/><path d="M8 -4 l10 -24" stroke="#8A6B5A" stroke-width="2"/><path d="M18 -28 q4 14 -4 26" stroke="#4A3326" stroke-width="1" fill="none"/></g>
+<g transform="translate(150 470)"><rect x="-2" y="0" width="4" height="34" fill="#6B4A33"/><path d="M-26 2 h40 l8 7 l-8 7 h-40z" fill="#A97C5A"/><path d="M-22 9 h30" stroke="#FBF5EA" stroke-width="2" stroke-dasharray="4 3"/><path d="M-26 2 h40" stroke="#FFFFFF" stroke-width="3"/></g>
+<ellipse cx="380" cy="360" rx="3" ry="5" fill="#DCE7EF" transform="rotate(-30 380 360)"/><ellipse cx="396" cy="374" rx="3" ry="5" fill="#DCE7EF" transform="rotate(-30 396 374)"/><ellipse cx="412" cy="372" rx="3" ry="5" fill="#DCE7EF" transform="rotate(-30 412 372)"/><ellipse cx="428" cy="386" rx="3" ry="5" fill="#DCE7EF" transform="rotate(-30 428 386)"/><ellipse cx="444" cy="384" rx="3" ry="5" fill="#DCE7EF" transform="rotate(-30 444 384)"/><ellipse cx="460" cy="398" rx="3" ry="5" fill="#DCE7EF" transform="rotate(-30 460 398)"/>
+<circle cx="620" cy="360" r="2" fill="#DCE7EF"/><circle cx="632" cy="363" r="2" fill="#DCE7EF"/><circle cx="644" cy="354" r="2" fill="#DCE7EF"/><circle cx="656" cy="357" r="2" fill="#DCE7EF"/><circle cx="668" cy="348" r="2" fill="#DCE7EF"/><circle cx="680" cy="351" r="2" fill="#DCE7EF"/><circle cx="692" cy="342" r="2" fill="#DCE7EF"/><circle cx="704" cy="345" r="2" fill="#DCE7EF"/>
+<g transform="translate(726 344)"><path d="M0 8 q10 -10 20 0 q-4 6 -10 6 q-6 0 -10 -6z" fill="#E07A3A"/><path d="M20 4 l6 -6 l2 6z M18 2 l4 -8 l2 6z" fill="#E07A3A"/><path d="M0 8 q-12 -2 -16 -10 q8 8 16 4" fill="#E07A3A"/><path d="M-16 -2 q4 4 8 4" stroke="#FFFFFF" stroke-width="3" fill="none"/></g>
+<g stroke="#4A3326" stroke-width="1.8" fill="none" stroke-linecap="round"><path d="M250 120 q5 -5 10 0 q5 -5 10 0"/><path d="M280 104 q4 -4 8 0 q4 -4 8 0"/><path d="M540 110 q5 -5 10 0 q5 -5 10 0"/></g>
+<g transform="translate(520 360)"><rect x="0" y="8" width="40" height="5" fill="#8A5A3B"/><rect x="2" y="13" width="4" height="9" fill="#6B4A33"/><rect x="34" y="13" width="4" height="9" fill="#6B4A33"/><path d="M0 8 q20 -8 40 0" fill="#FFFFFF"/></g>
+<g transform="translate(470 250) scale(.6)"><path d="M0 -10 L22 22 H-22Z M0 6 L26 44 H-26Z" fill="#3F6B57"/><circle cx="-6" cy="14" r="3.5" fill="#E06A6A"/><circle cx="8" cy="18" r="3.5" fill="#F2C46D"/><circle cx="-12" cy="36" r="3.5" fill="#9CC3D2"/><circle cx="10" cy="34" r="3.5" fill="#E06A6A"/><circle cx="0" cy="26" r="3.5" fill="#F2C46D"/><path d="M0 -18 l3 6 h6 l-5 4 l2 6 l-6 -4 l-6 4 l2 -6 l-5 -4 h6z" fill="#F2C46D"/><rect x="-4" y="44" width="8" height="10" fill="#6B4A33"/></g>
+<g transform="translate(470 540)"><ellipse cx="0" cy="0" rx="14" ry="8" fill="#A97C5A"/><circle cx="14" cy="-8" r="5" fill="#A97C5A"/><path d="M12 -12 l-3 -8 M16 -12 l3 -8 M10 -16 l-4 -2 M18 -16 l4 -2" stroke="#6B4A33" stroke-width="1.5"/><path d="M-8 6 v8 M8 6 v8" stroke="#8A5A3B" stroke-width="2"/></g>
+<circle cx="331" cy="154" r="2" fill="#FFFFFF" opacity=".9"><animate attributeName="cy" values="-566;154" dur="11s" repeatCount="indefinite"/></circle>
+<circle cx="49" cy="74" r="2.5" fill="#FFFFFF" opacity=".9"><animate attributeName="cy" values="-646;74" dur="6s" repeatCount="indefinite"/></circle>
+<circle cx="374" cy="596" r="1.5" fill="#FFFFFF" opacity=".9"><animate attributeName="cy" values="-124;596" dur="10s" repeatCount="indefinite"/></circle>
+<circle cx="219" cy="38" r="1.5" fill="#FFFFFF" opacity=".9"><animate attributeName="cy" values="-682;38" dur="9s" repeatCount="indefinite"/></circle>
+<circle cx="428" cy="71" r="1.5" fill="#FFFFFF" opacity=".9"><animate attributeName="cy" values="-649;71" dur="6s" repeatCount="indefinite"/></circle>
+<circle cx="564" cy="434" r="1.5" fill="#FFFFFF" opacity=".9"><animate attributeName="cy" values="-286;434" dur="12s" repeatCount="indefinite"/></circle>
+<circle cx="579" cy="126" r="1.5" fill="#FFFFFF" opacity=".9"><animate attributeName="cy" values="-594;126" dur="11s" repeatCount="indefinite"/></circle>
+<circle cx="642" cy="596" r="1.5" fill="#FFFFFF" opacity=".9"><animate attributeName="cy" values="-124;596" dur="10s" repeatCount="indefinite"/></circle>
+<circle cx="599" cy="406" r="1.5" fill="#FFFFFF" opacity=".9"><animate attributeName="cy" values="-314;406" dur="7s" repeatCount="indefinite"/></circle>
+<circle cx="47" cy="570" r="1.5" fill="#FFFFFF" opacity=".9"><animate attributeName="cy" values="-150;570" dur="8s" repeatCount="indefinite"/></circle>
+<circle cx="429" cy="147" r="2.5" fill="#FFFFFF" opacity=".9"><animate attributeName="cy" values="-573;147" dur="6s" repeatCount="indefinite"/></circle>
+<circle cx="584" cy="315" r="2.5" fill="#FFFFFF" opacity=".9"><animate attributeName="cy" values="-405;315" dur="12s" repeatCount="indefinite"/></circle>
+<circle cx="698" cy="185" r="1.5" fill="#FFFFFF" opacity=".9"><animate attributeName="cy" values="-535;185" dur="10s" repeatCount="indefinite"/></circle>
+<circle cx="584" cy="654" r="1.5" fill="#FFFFFF" opacity=".9"><animate attributeName="cy" values="-66;654" dur="8s" repeatCount="indefinite"/></circle>
+<circle cx="99" cy="560" r="2.5" fill="#FFFFFF" opacity=".9"><animate attributeName="cy" values="-160;560" dur="6s" repeatCount="indefinite"/></circle>
+<circle cx="577" cy="61" r="2.5" fill="#FFFFFF" opacity=".9"><animate attributeName="cy" values="-659;61" dur="7s" repeatCount="indefinite"/></circle>
+<circle cx="508" cy="696" r="2.5" fill="#FFFFFF" opacity=".9"><animate attributeName="cy" values="-24;696" dur="9s" repeatCount="indefinite"/></circle>
+<circle cx="795" cy="321" r="2" fill="#FFFFFF" opacity=".9"><animate attributeName="cy" values="-399;321" dur="10s" repeatCount="indefinite"/></circle>
+<circle cx="945" cy="464" r="2" fill="#FFFFFF" opacity=".9"><animate attributeName="cy" values="-256;464" dur="8s" repeatCount="indefinite"/></circle>
+<circle cx="254" cy="184" r="2.5" fill="#FFFFFF" opacity=".9"><animate attributeName="cy" values="-536;184" dur="12s" repeatCount="indefinite"/></circle>
+<circle cx="249" cy="83" r="2.5" fill="#FFFFFF" opacity=".9"><animate attributeName="cy" values="-637;83" dur="8s" repeatCount="indefinite"/></circle>
+<circle cx="537" cy="506" r="2" fill="#FFFFFF" opacity=".9"><animate attributeName="cy" values="-214;506" dur="11s" repeatCount="indefinite"/></circle>
+<circle cx="459" cy="294" r="2.5" fill="#FFFFFF" opacity=".9"><animate attributeName="cy" values="-426;294" dur="6s" repeatCount="indefinite"/></circle>
+<circle cx="120" cy="524" r="2" fill="#FFFFFF" opacity=".9"><animate attributeName="cy" values="-196;524" dur="7s" repeatCount="indefinite"/></circle>
+<circle cx="775" cy="350" r="1.5" fill="#FFFFFF" opacity=".9"><animate attributeName="cy" values="-370;350" dur="9s" repeatCount="indefinite"/></circle>
+<circle cx="431" cy="40" r="2.5" fill="#FFFFFF" opacity=".9"><animate attributeName="cy" values="-680;40" dur="6s" repeatCount="indefinite"/></circle>
+<circle cx="782" cy="571" r="2.5" fill="#FFFFFF" opacity=".9"><animate attributeName="cy" values="-149;571" dur="12s" repeatCount="indefinite"/></circle>
+<circle cx="896" cy="321" r="2" fill="#FFFFFF" opacity=".9"><animate attributeName="cy" values="-399;321" dur="11s" repeatCount="indefinite"/></circle>
+<circle cx="358" cy="608" r="2" fill="#FFFFFF" opacity=".9"><animate attributeName="cy" values="-112;608" dur="10s" repeatCount="indefinite"/></circle>
+<circle cx="816" cy="467" r="1.5" fill="#FFFFFF" opacity=".9"><animate attributeName="cy" values="-253;467" dur="12s" repeatCount="indefinite"/></circle>
+<circle cx="95" cy="276" r="2" fill="#FFFFFF" opacity=".9"><animate attributeName="cy" values="-444;276" dur="11s" repeatCount="indefinite"/></circle>
+<circle cx="680" cy="66" r="1.5" fill="#FFFFFF" opacity=".9"><animate attributeName="cy" values="-654;66" dur="11s" repeatCount="indefinite"/></circle>
+<circle cx="718" cy="317" r="2.5" fill="#FFFFFF" opacity=".9"><animate attributeName="cy" values="-403;317" dur="10s" repeatCount="indefinite"/></circle>
+<circle cx="697" cy="456" r="2" fill="#FFFFFF" opacity=".9"><animate attributeName="cy" values="-264;456" dur="11s" repeatCount="indefinite"/></circle>
+<circle cx="395" cy="684" r="2" fill="#FFFFFF" opacity=".9"><animate attributeName="cy" values="-36;684" dur="6s" repeatCount="indefinite"/></circle>
+<circle cx="472" cy="363" r="1.5" fill="#FFFFFF" opacity=".9"><animate attributeName="cy" values="-357;363" dur="10s" repeatCount="indefinite"/></circle>
+<circle cx="119" cy="505" r="1.5" fill="#FFFFFF" opacity=".9"><animate attributeName="cy" values="-215;505" dur="7s" repeatCount="indefinite"/></circle>
+<circle cx="786" cy="294" r="1.5" fill="#FFFFFF" opacity=".9"><animate attributeName="cy" values="-426;294" dur="11s" repeatCount="indefinite"/></circle>
+<circle cx="253" cy="407" r="2" fill="#FFFFFF" opacity=".9"><animate attributeName="cy" values="-313;407" dur="12s" repeatCount="indefinite"/></circle>
+<circle cx="508" cy="82" r="1.5" fill="#FFFFFF" opacity=".9"><animate attributeName="cy" values="-638;82" dur="9s" repeatCount="indefinite"/></circle>
+<circle cx="411" cy="562" r="2" fill="#FFFFFF" opacity=".9"><animate attributeName="cy" values="-158;562" dur="7s" repeatCount="indefinite"/></circle>
+<circle cx="838" cy="440" r="2.5" fill="#FFFFFF" opacity=".9"><animate attributeName="cy" values="-280;440" dur="8s" repeatCount="indefinite"/></circle>
+<circle cx="723" cy="425" r="2" fill="#FFFFFF" opacity=".9"><animate attributeName="cy" values="-295;425" dur="11s" repeatCount="indefinite"/></circle>
+<circle cx="905" cy="389" r="1.5" fill="#FFFFFF" opacity=".9"><animate attributeName="cy" values="-331;389" dur="7s" repeatCount="indefinite"/></circle>
+<circle cx="84" cy="180" r="1.5" fill="#FFFFFF" opacity=".9"><animate attributeName="cy" values="-540;180" dur="7s" repeatCount="indefinite"/></circle>
+<circle cx="674" cy="238" r="1.5" fill="#FFFFFF" opacity=".9"><animate attributeName="cy" values="-482;238" dur="9s" repeatCount="indefinite"/></circle>
+<circle cx="851" cy="603" r="1.5" fill="#FFFFFF" opacity=".9"><animate attributeName="cy" values="-117;603" dur="8s" repeatCount="indefinite"/></circle>
+<circle cx="288" cy="4" r="1.5" fill="#FFFFFF" opacity=".9"><animate attributeName="cy" values="-716;4" dur="9s" repeatCount="indefinite"/></circle>
+<circle cx="547" cy="378" r="2.5" fill="#FFFFFF" opacity=".9"><animate attributeName="cy" values="-342;378" dur="10s" repeatCount="indefinite"/></circle>
+<circle cx="326" cy="128" r="2.5" fill="#FFFFFF" opacity=".9"><animate attributeName="cy" values="-592;128" dur="12s" repeatCount="indefinite"/></circle>
+<circle cx="527" cy="632" r="2.5" fill="#FFFFFF" opacity=".9"><animate attributeName="cy" values="-88;632" dur="11s" repeatCount="indefinite"/></circle>
+<circle cx="757" cy="55" r="2" fill="#FFFFFF" opacity=".9"><animate attributeName="cy" values="-665;55" dur="12s" repeatCount="indefinite"/></circle>
+<circle cx="798" cy="696" r="2.5" fill="#FFFFFF" opacity=".9"><animate attributeName="cy" values="-24;696" dur="9s" repeatCount="indefinite"/></circle>
+<circle cx="407" cy="408" r="2" fill="#FFFFFF" opacity=".9"><animate attributeName="cy" values="-312;408" dur="6s" repeatCount="indefinite"/></circle>
+<circle cx="493" cy="649" r="2" fill="#FFFFFF" opacity=".9"><animate attributeName="cy" values="-71;649" dur="6s" repeatCount="indefinite"/></circle>
+<circle cx="195" cy="68" r="1.5" fill="#FFFFFF" opacity=".9"><animate attributeName="cy" values="-652;68" dur="9s" repeatCount="indefinite"/></circle>
+<circle cx="166" cy="112" r="2" fill="#FFFFFF" opacity=".9"><animate attributeName="cy" values="-608;112" dur="10s" repeatCount="indefinite"/></circle>
+<circle cx="53" cy="104" r="1.5" fill="#FFFFFF" opacity=".9"><animate attributeName="cy" values="-616;104" dur="10s" repeatCount="indefinite"/></circle>
+<circle cx="154" cy="549" r="1.5" fill="#FFFFFF" opacity=".9"><animate attributeName="cy" values="-171;549" dur="8s" repeatCount="indefinite"/></circle>
+<circle cx="628" cy="26" r="1.5" fill="#FFFFFF" opacity=".9"><animate attributeName="cy" values="-694;26" dur="12s" repeatCount="indefinite"/></circle>
+<circle cx="212" cy="628" r="2" fill="#FFFFFF" opacity=".9"><animate attributeName="cy" values="-92;628" dur="7s" repeatCount="indefinite"/></circle>
+<circle cx="649" cy="258" r="2" fill="#FFFFFF" opacity=".9"><animate attributeName="cy" values="-462;258" dur="10s" repeatCount="indefinite"/></circle>
+<circle cx="372" cy="485" r="1.5" fill="#FFFFFF" opacity=".9"><animate attributeName="cy" values="-235;485" dur="6s" repeatCount="indefinite"/></circle>
+<circle cx="869" cy="499" r="2" fill="#FFFFFF" opacity=".9"><animate attributeName="cy" values="-221;499" dur="9s" repeatCount="indefinite"/></circle>
+<circle cx="495" cy="319" r="1.5" fill="#FFFFFF" opacity=".9"><animate attributeName="cy" values="-401;319" dur="7s" repeatCount="indefinite"/></circle>
+<circle cx="104" cy="350" r="2.5" fill="#FFFFFF" opacity=".9"><animate attributeName="cy" values="-370;350" dur="8s" repeatCount="indefinite"/></circle>
+<circle cx="490" cy="708" r="1.5" fill="#FFFFFF" opacity=".9"><animate attributeName="cy" values="-12;708" dur="10s" repeatCount="indefinite"/></circle>
+<circle cx="23" cy="210" r="2.5" fill="#FFFFFF" opacity=".9"><animate attributeName="cy" values="-510;210" dur="8s" repeatCount="indefinite"/></circle>
+<circle cx="150" cy="706" r="2.5" fill="#FFFFFF" opacity=".9"><animate attributeName="cy" values="-14;706" dur="6s" repeatCount="indefinite"/></circle>
+<circle cx="776" cy="540" r="2" fill="#FFFFFF" opacity=".9"><animate attributeName="cy" values="-180;540" dur="11s" repeatCount="indefinite"/></circle>`;
+const GIVRE_EXTRA = {"pont": "<g><animateTransform attributeName=\"transform\" type=\"translate\" values=\"0 0;-110 -160;0 0\" dur=\"18s\" repeatCount=\"indefinite\"/><g transform=\"translate(818 220)\"><path d=\"M14 -6 V2\" stroke=\"#4A3326\" stroke-width=\"2\"/><rect x=\"0\" y=\"2\" width=\"30\" height=\"24\" rx=\"5\" fill=\"#E06A6A\"/><rect x=\"5\" y=\"7\" width=\"8\" height=\"8\" rx=\"2\" fill=\"#DDEEF6\"/><rect x=\"17\" y=\"7\" width=\"8\" height=\"8\" rx=\"2\" fill=\"#DDEEF6\"/></g></g>", "fontaine2": "<g transform=\"translate(240 590)\"><circle cx=\"0\" cy=\"0\" r=\"7\" fill=\"#F2C9A0\"/><rect x=\"-6\" y=\"6\" width=\"12\" height=\"14\" rx=\"4\" fill=\"#5FA9B4\"/><path d=\"M-6 22 l-4 6 M6 22 l4 6\" stroke=\"#4A3326\" stroke-width=\"2\"/><path d=\"M-7 -4 h14 v-4 q-7 -6 -14 0z\" fill=\"#E06A6A\"/></g>", "lanternes": "<path d=\"M452 262 Q504.0 310 556 286\" stroke=\"#4A3326\" stroke-width=\"1.2\" fill=\"none\"/><circle cx=\"464\" cy=\"275\" r=\"3\" fill=\"#F2C46D\"><animate attributeName=\"opacity\" values=\"1;.4;1\" dur=\"1.7999999999999998s\" repeatCount=\"indefinite\"/></circle><circle cx=\"475\" cy=\"283\" r=\"3\" fill=\"#8FC79A\"><animate attributeName=\"opacity\" values=\"1;.4;1\" dur=\"2.2s\" repeatCount=\"indefinite\"/></circle><circle cx=\"487\" cy=\"289\" r=\"3\" fill=\"#9CC3D2\"><animate attributeName=\"opacity\" values=\"1;.4;1\" dur=\"1.4s\" repeatCount=\"indefinite\"/></circle><circle cx=\"498\" cy=\"293\" r=\"3\" fill=\"#E06A6A\"><animate attributeName=\"opacity\" values=\"1;.4;1\" dur=\"1.7999999999999998s\" repeatCount=\"indefinite\"/></circle><circle cx=\"510\" cy=\"296\" r=\"3\" fill=\"#F2C46D\"><animate attributeName=\"opacity\" values=\"1;.4;1\" dur=\"2.2s\" repeatCount=\"indefinite\"/></circle><circle cx=\"521\" cy=\"297\" r=\"3\" fill=\"#8FC79A\"><animate attributeName=\"opacity\" values=\"1;.4;1\" dur=\"1.4s\" repeatCount=\"indefinite\"/></circle><circle cx=\"533\" cy=\"296\" r=\"3\" fill=\"#9CC3D2\"><animate attributeName=\"opacity\" values=\"1;.4;1\" dur=\"1.7999999999999998s\" repeatCount=\"indefinite\"/></circle><circle cx=\"544\" cy=\"293\" r=\"3\" fill=\"#E06A6A\"><animate attributeName=\"opacity\" values=\"1;.4;1\" dur=\"2.2s\" repeatCount=\"indefinite\"/></circle><path d=\"M308 412 Q362.0 442 416 424\" stroke=\"#4A3326\" stroke-width=\"1.2\" fill=\"none\"/><circle cx=\"320\" cy=\"421\" r=\"3\" fill=\"#F2C46D\"><animate attributeName=\"opacity\" values=\"1;.4;1\" dur=\"1.7999999999999998s\" repeatCount=\"indefinite\"/></circle><circle cx=\"332\" cy=\"426\" r=\"3\" fill=\"#8FC79A\"><animate attributeName=\"opacity\" values=\"1;.4;1\" dur=\"2.2s\" repeatCount=\"indefinite\"/></circle><circle cx=\"344\" cy=\"430\" r=\"3\" fill=\"#9CC3D2\"><animate attributeName=\"opacity\" values=\"1;.4;1\" dur=\"1.4s\" repeatCount=\"indefinite\"/></circle><circle cx=\"356\" cy=\"432\" r=\"3\" fill=\"#E06A6A\"><animate attributeName=\"opacity\" values=\"1;.4;1\" dur=\"1.7999999999999998s\" repeatCount=\"indefinite\"/></circle><circle cx=\"368\" cy=\"434\" r=\"3\" fill=\"#F2C46D\"><animate attributeName=\"opacity\" values=\"1;.4;1\" dur=\"2.2s\" repeatCount=\"indefinite\"/></circle><circle cx=\"380\" cy=\"434\" r=\"3\" fill=\"#8FC79A\"><animate attributeName=\"opacity\" values=\"1;.4;1\" dur=\"1.4s\" repeatCount=\"indefinite\"/></circle><circle cx=\"392\" cy=\"433\" r=\"3\" fill=\"#9CC3D2\"><animate attributeName=\"opacity\" values=\"1;.4;1\" dur=\"1.7999999999999998s\" repeatCount=\"indefinite\"/></circle><circle cx=\"404\" cy=\"430\" r=\"3\" fill=\"#E06A6A\"><animate attributeName=\"opacity\" values=\"1;.4;1\" dur=\"2.2s\" repeatCount=\"indefinite\"/></circle><path d=\"M504 426 Q560.0 470 616 452\" stroke=\"#4A3326\" stroke-width=\"1.2\" fill=\"none\"/><circle cx=\"516\" cy=\"438\" r=\"3\" fill=\"#F2C46D\"><animate attributeName=\"opacity\" values=\"1;.4;1\" dur=\"1.7999999999999998s\" repeatCount=\"indefinite\"/></circle><circle cx=\"529\" cy=\"445\" r=\"3\" fill=\"#8FC79A\"><animate attributeName=\"opacity\" values=\"1;.4;1\" dur=\"2.2s\" repeatCount=\"indefinite\"/></circle><circle cx=\"541\" cy=\"451\" r=\"3\" fill=\"#9CC3D2\"><animate attributeName=\"opacity\" values=\"1;.4;1\" dur=\"1.4s\" repeatCount=\"indefinite\"/></circle><circle cx=\"554\" cy=\"456\" r=\"3\" fill=\"#E06A6A\"><animate attributeName=\"opacity\" values=\"1;.4;1\" dur=\"1.7999999999999998s\" repeatCount=\"indefinite\"/></circle><circle cx=\"566\" cy=\"459\" r=\"3\" fill=\"#F2C46D\"><animate attributeName=\"opacity\" values=\"1;.4;1\" dur=\"2.2s\" repeatCount=\"indefinite\"/></circle><circle cx=\"579\" cy=\"460\" r=\"3\" fill=\"#8FC79A\"><animate attributeName=\"opacity\" values=\"1;.4;1\" dur=\"1.4s\" repeatCount=\"indefinite\"/></circle><circle cx=\"591\" cy=\"460\" r=\"3\" fill=\"#9CC3D2\"><animate attributeName=\"opacity\" values=\"1;.4;1\" dur=\"1.7999999999999998s\" repeatCount=\"indefinite\"/></circle><circle cx=\"604\" cy=\"458\" r=\"3\" fill=\"#E06A6A\"><animate attributeName=\"opacity\" values=\"1;.4;1\" dur=\"2.2s\" repeatCount=\"indefinite\"/></circle>", "fontaine": "<g><animateTransform attributeName=\"transform\" type=\"translate\" values=\"0 0;80 6;0 0\" dur=\"7s\" repeatCount=\"indefinite\"/><g transform=\"translate(170 612)\"><circle r=\"6\" fill=\"#F2C9A0\"/><rect x=\"-5\" y=\"5\" width=\"10\" height=\"12\" rx=\"4\" fill=\"#C9677A\"/><path d=\"M-5 19 l-4 5 M5 19 l4 5\" stroke=\"#4A3326\" stroke-width=\"2\"/><path d=\"M-7 -3 h14 v-4 q-7 -6 -14 0z\" fill=\"#F2C46D\"/></g></g>", "gare": "<g transform=\"translate(600 610)\"><rect x=\"40\" y=\"6\" width=\"34\" height=\"8\" rx=\"3\" fill=\"#C9677A\"/><path d=\"M38 16 H78 q6 0 6 -6\" stroke=\"#8A5A3B\" stroke-width=\"2.5\" fill=\"none\"/><g transform=\"translate(0 6)\"><ellipse cx=\"6\" cy=\"4\" rx=\"7\" ry=\"4\" fill=\"#9A9490\"/><circle cx=\"-1\" cy=\"0\" r=\"3.5\" fill=\"#9A9490\"/><path d=\"M-3 -3 l1 -4 l2 3 M0 -3 l2 -4 l1 4\" fill=\"#9A9490\"/></g><g transform=\"translate(14 6)\"><ellipse cx=\"6\" cy=\"4\" rx=\"7\" ry=\"4\" fill=\"#F1ECE4\"/><circle cx=\"-1\" cy=\"0\" r=\"3.5\" fill=\"#F1ECE4\"/><path d=\"M-3 -3 l1 -4 l2 3 M0 -3 l2 -4 l1 4\" fill=\"#F1ECE4\"/></g><path d=\"M12 10 H40\" stroke=\"#4A3326\" stroke-width=\"1\"/></g>"};
 // Dessin de la carte de l'île (repris de la maquette)
 const ISLE_SVG = `<defs>
 <pattern id="sable" width="40" height="40" patternUnits="userSpaceOnUse"><rect width="40" height="40" fill="#F6E4B9"></rect><circle cx="8" cy="10" r="1.4" fill="#E6CF9C"></circle><circle cx="28" cy="22" r="1.2" fill="#E6CF9C"></circle><circle cx="18" cy="34" r="1" fill="#FBF0D2"></circle><circle cx="34" cy="6" r="1" fill="#FBF0D2"></circle></pattern>
@@ -567,24 +811,45 @@ const ISLE_SVG = `<defs>
 <g transform="translate(520 6)"><g><animateTransform attributeName="transform" type="translate" values="0 20;0 20;20 -10;40 20;40 20" keyTimes="0;.55;.7;.85;1" dur="8s" repeatCount="indefinite"></animateTransform><path d="M0 10 q20 -22 46 -4 q-6 2 -10 6 q-18 -8 -36 -2z" fill="#7E95A8"></path><path d="M20 -4 l6 -8 l4 8z" fill="#7E95A8"></path><circle cx="38" cy="2" r="1.5" fill="#2F2522"></circle></g></g>
 <!-- mouettes -->
 <g stroke="#FBF5EA" stroke-width="3" fill="none" stroke-linecap="round"><animateTransform attributeName="transform" type="translate" values="-60 0;900 -20" dur="24s" repeatCount="indefinite"></animateTransform><path d="M0 40 q7 -7 14 0 q7 -7 14 0"></path><path d="M34 58 q6 -6 12 0 q6 -6 12 0"></path></g>`;
-const ISLANDS = { bruyere: BRUYERE, coq: COQ };
+const ISLANDS = { bruyere: BRUYERE, coq: COQ, givre: GIVRE };
 function applyIsland(id) {
   const d = ISLANDS[id] || BRUYERE;
   VILLAGERS = d.villagers; LETTERS = d.letters; PROJECTS = d.projects;
 }
 const onIsland = () => S && S.island === "coq";
+const onGivre = () => S && S.island === "givre";
+const away = () => S && S.island && S.island !== "bruyere";
+// Textes : version île, version Bruyère ; le Mont Givre a sa propre version de chaque texte de l'île
+const GIVRE_TXT = {
+  "PROJETS DE L'ÎLE": "PROJETS DU MONT GIVRE", "L'île prépare un nouveau projet…": "Le Mont Givre prépare un nouveau projet…", "Voisins": "Voisins",
+  "animplage": "animneige", "← Plage": "← Village", "epiplage": "epicol", "Acheter à l'Épicerie de la Plage": "Acheter à l'Épicerie du Col",
+  "Nouvelles recettes à la <b>Crêperie du Phare</b> et au <b>Glacier de Marina</b>.": "Nouvelles recettes à la <b>Chocolaterie</b> et à l'<b>Auberge du Col</b>.",
+  "Les lampions ont attiré du monde sur la plage : +1 réputation.": "Les guirlandes lumineuses ont attiré du monde : +1 réputation.",
+  "Nouveau projet sur l'île : « ": "Nouveau projet au Mont Givre : « ", "#F6E4B9": "#E6EFF5", "Projets de l'île": "Projets du Mont Givre",
+  "L'argent du café fait revivre la plage. Chaque projet change l'île… et ton café.": "L'argent du café réveille la montagne. Chaque projet change le Mont Givre… et ton café.",
+  "Les voisins en discutent…": "Les voisins en discutent au coin du feu…", "Tous les projets de l'île sont terminés !": "Tous les projets du Mont Givre sont terminés !", "Toute la plage est venue applaudir. Regarde la carte !": "Tout le Mont Givre est venu applaudir. Regarde la carte !",
+  "Carnet des voisins": "Carnet des voisins", "Pas de bouteille aujourd'hui.": "Pas de carte postale aujourd'hui.",
+};
+const txt = (isl, bru) => !S || S.island === "bruyere" || !S.island ? bru : S.island === "givre" ? (GIVRE_TXT[isl] ?? isl) : isl;
+
 // une sauvegarde par joueur du lanceur (sinon une seule, « local »)
 const JOUEUR = (() => { try { return (window.MesJeux && MesJeux.session()) || JSON.parse(localStorage.getItem("mesjeux_session")); } catch (e) { return null; } })();
 // Mode test (adresse terminée par ?test) : partie séparée, Bruyère déjà terminée, aucun point envoyé au lanceur
 const TEST = /[?&]test\b/.test(location.search);
 const SAVE_KEY = "ronrons-bruyere-save-v1-" + (JOUEUR && JOUEUR.id ? JOUEUR.id : "local") + (TEST ? "-test" : "");
 const META_KEY = SAVE_KEY + "-meta";
-const islandKey = (id) => id === "coq" ? SAVE_KEY + "-coq" : SAVE_KEY;
-function loadMeta() { try { return Object.assign({ cur: "bruyere", trophy: false, coq: false }, JSON.parse(localStorage.getItem(META_KEY) || "{}")); } catch (e) { return { cur: "bruyere", trophy: false, coq: false }; } }
+const islandKey = (id) => id && id !== "bruyere" ? SAVE_KEY + "-" + id : SAVE_KEY;
+const META0 = () => ({ cur: "bruyere", trophy: false, coq: false, coqDone: false, givre: false });
+function loadMeta() { try { return Object.assign(META0(), JSON.parse(localStorage.getItem(META_KEY) || "{}")); } catch (e) { return META0(); } }
 function saveMeta(m) { try { localStorage.setItem(META_KEY, JSON.stringify(m)); } catch (e) {} }
 
 // ---------- État ----------
 function newGame(island = "bruyere", companion = null) {
+  if (island === "givre") {
+    const g = newGame("bruyere");
+    return Object.assign(g, { island: "givre", coins: 50, pantry: {}, recipes: ["chocochaud", "crepechat", "tartemyrt"],
+      cats: companion ? [companion] : [], mood: companion ? { [companion]: 80 } : {}, companion, weather: "neige" });
+  }
   if (island === "coq") {
     const g = newGame("bruyere");
     return Object.assign(g, { island: "coq", coins: 50, pantry: {}, recipes: ["smoothie", "glacecoco", "beignets"],
@@ -619,7 +884,11 @@ let S = null;               // état sauvegardé
 let ui = { screen: "title", shopTab: "epicerie", cart: {}, kitchenSel: "tarte", cook: null, modal: null };
 let cafe = null;            // état temporaire du service
 
-function save() { if (!S) return; try { localStorage.setItem(islandKey(S.island || "bruyere"), JSON.stringify(S)); } catch (e) {} }
+function noteDone() {
+  if (S && S.island === "coq" && Object.keys(PROJECTS).every(projDone)) { const m = loadMeta(); if (!m.coqDone) { m.coqDone = true; saveMeta(m); } }
+}
+function save() {
+  noteDone(); if (!S) return; try { localStorage.setItem(islandKey(S.island || "bruyere"), JSON.stringify(S)); } catch (e) {} }
 function load(id = loadMeta().cur) { try { const r = localStorage.getItem(islandKey(id)); return r ? JSON.parse(r) : null; } catch (e) { return null; } }
 function clearSave() { try { localStorage.removeItem(SAVE_KEY); localStorage.removeItem(islandKey("coq")); localStorage.removeItem(META_KEY); } catch (e) {} }
 function openIsland(id) {
@@ -634,7 +903,7 @@ function openIsland(id) {
   cafe = null; ui.cook = null; ui.kitchenSel = S.recipes[0];
 }
 
-const season = () => S.island === "coq" ? "Été" : SEASONS[Math.floor((S.day - 1) / DAYS_PER_SEASON) % 4]; // sur l'île, c'est toujours l'été
+const season = () => S.island === "givre" ? "Hiver" : S.island === "coq" ? "Été" : SEASONS[Math.floor((S.day - 1) / DAYS_PER_SEASON) % 4]; // sur l'île, c'est toujours l'été
 const dayInSeason = () => ((S.day - 1) % DAYS_PER_SEASON) + 1;
 const projDone = (id) => ((S.projects || {})[id] || 0) >= PROJECTS[id].goal;
 const projVisible = (id) => S.day >= projDay(id) || ((S.projects || {})[id] || 0) > 0;
@@ -646,7 +915,7 @@ const FESTIVALS = { "Printemps": "Fête des fleurs", "Été": "Marché nocturne"
 const festival = () => dayInSeason() === 6 ? FESTIVALS[season()] : null;
 const weather = () => S.weather || "soleil";
 function rollWeather() { const o = WEATHER_ODDS[season()]; let r = Math.random(); for (const [k, p] of Object.entries(o)) { if ((r -= p) <= 0) return k; } return "soleil"; }
-const clientsPerDay = () => 8 + (onIsland() && projDone("pont") ? 1 : 0) + (projDone("terrasse") ? 2 : 0) + (projDone("gare") ? 3 : 0) + (weather() === "pluie" ? 2 : 0) + (weather() === "neige" ? 1 : 0) + (festival() ? 3 : 0);
+const clientsPerDay = () => 8 + (away() && projDone("pont") ? 1 : 0) + (projDone("terrasse") ? 2 : 0) + (projDone("gare") ? 3 : 0) + (weather() === "pluie" ? 2 : 0) + (weather() === "neige" ? 1 : 0) + (festival() ? 3 : 0);
 const qty = (k) => S.pantry[k] || 0;
 const canCook = (id) => Object.entries(RECIPES[id].needs).every(([k, v]) => qty(k) >= v);
 const decorBonus = () => (festival() ? 0.2 : 0) + S.decor.reduce((t, d) => t + (DECOR[d]?.tip || 0), 0) + (projDone("kiosque") ? 0.05 : 0) + (projDone("terrasse") ? 0.05 : 0) + (typeof S.bouquet === "number" ? S.bouquet : S.bouquet ? 0.1 : 0);
@@ -708,6 +977,10 @@ function catSVG(id, size = 64, sleeping = false) {
     matelot:  `<path d="M14 40 h36 M12 46 h40 M16 52 h32" stroke="#4C6F94" stroke-width="3" stroke-linecap="round"/>`,
     tigrou:   `<path d="M22 18 h20 M18 26 h8 M38 26 h8 M10 36 h7 M47 36 h7 M12 46 h6 M46 46 h6" stroke="#6B6461" stroke-width="3" stroke-linecap="round"/>`,
     embrun:   `<path d="M24 40 Q32 34 40 40 Q42 52 32 56 Q22 52 24 40Z" fill="#DCE6EA"/>`,
+    aurore:   `<path d="M14 50 Q32 60 50 50" stroke="#8FD3B0" stroke-width="2.5" fill="none"/><path d="M18 52 Q32 62 46 52" stroke="#B49CE0" stroke-width="2" fill="none"/><circle cx="32" cy="57" r="3" fill="#F2C46D"/>`,
+    myrtille: `<ellipse cx="32" cy="44" rx="10" ry="7" fill="#4E4E6E"/>`,
+    marron:   `<path d="M22 18 h20 M16 30 h6 M42 30 h6" stroke="#6B4A33" stroke-width="3" stroke-linecap="round"/><ellipse cx="32" cy="44" rx="11" ry="8" fill="#B08A5A"/>`,
+    igloo:    `<path d="M8 40 l-5 2 M8 46 l-5 4 M56 40 l5 2 M56 46 l5 4" stroke="#F7F7F7" stroke-width="3" stroke-linecap="round"/>`,
     filou:    `<path d="M12 22 L16 4 L26 14Z M52 22 L48 4 L38 14Z" fill="#5A4234"/><ellipse cx="32" cy="42" rx="11" ry="9" fill="#7A5A44"/>`,
     coquille: `<path d="M14 22 L18 6 L28 15 Q24 26 14 30Z" fill="#E59A5B"/><path d="M50 22 L46 6 L38 15 Q42 28 54 34Z" fill="#3A302C"/>`,
     mousse:   `<path d="M8 40 l-5 2 M8 46 l-5 4 M56 40 l5 2 M56 46 l5 4" stroke="#B9BCC4" stroke-width="3" stroke-linecap="round"/><ellipse cx="32" cy="46" rx="14" ry="10" fill="#E3E5EA"/>`,
@@ -867,14 +1140,14 @@ document.addEventListener("visibilitychange", () => { if (document.hidden && S) 
 function render() {
   autoSave();
   if (ui.screen !== "cafe") stopCafe();
-  const views = { depart: viewDepart, projects: viewProjects, friends: viewFriends, title: viewTitle, village: () => onIsland() ? viewIsland() : viewVillage(), shop: viewShop, kitchen: viewKitchen, cafe: viewCafe, album: viewAlbum, summary: viewSummary };
+  const views = { depart: viewDepart, projects: viewProjects, friends: viewFriends, title: viewTitle, village: () => onGivre() ? viewGivre() : onIsland() ? viewIsland() : viewVillage(), shop: viewShop, kitchen: viewKitchen, cafe: viewCafe, album: viewAlbum, summary: viewSummary };
   $stage.innerHTML = views[ui.screen]() + soundButton() + (ui.modal ? ui.modal() : "");
   if (ui.screen === "cafe" && cafe) animateCats();
   syncCookTimer();
 }
 
 function viewTitle() {
-  const has = !!load(), isle = loadMeta().cur === "coq";
+  const has = !!load(), cur = loadMeta().cur, isle = cur === "coq";
   return `
   <div style="position:absolute;inset:0;background:#CFE3E6"></div>
   <svg width="1280" height="720" viewBox="0 0 1280 720" aria-hidden="true" style="position:absolute;inset:0">
@@ -895,7 +1168,7 @@ function viewTitle() {
   <div style="position:absolute;left:1100px;top:548px">${catSVG("brume", 52, true)}</div>
   <div style="position:absolute;left:96px;top:96px;display:flex;flex-direction:column;gap:28px;width:560px">
     <div style="display:flex;flex-direction:column;gap:6px">
-      <p style="margin:0;font-family:var(--font-title);font-weight:600;font-size:20px;letter-spacing:.08em;text-transform:uppercase;color:var(--sage)">${isle ? "Un café à chats sur l'île aux Coquillages" : "Un café à chats au village de Bruyère"}</p>
+      <p style="margin:0;font-family:var(--font-title);font-weight:600;font-size:20px;letter-spacing:.08em;text-transform:uppercase;color:var(--sage)">${cur === "givre" ? "Un café à chats au Mont Givre" : isle ? "Un café à chats sur l'île aux Coquillages" : "Un café à chats au village de Bruyère"}</p>
       <h1 style="font-weight:700;font-size:96px;line-height:.95">Ronron<br>Café</h1>
     </div>
     <nav aria-label="Menu principal" style="display:flex;flex-direction:column;gap:12px;width:340px">
@@ -1054,6 +1327,47 @@ function viewIsland() {
   <div class="hud" style="right:340px"><div><span class="pill">Île aux Coquillages</span>${datePill(cafe ? "Service en pause" : "Matin")}</div><div></div></div>
   ${mapAside()}`;
 }
+function travelButtons() {
+  const m = loadMeta(), b = (a, label, bg, sh, dest = "") => `<button class="btn small" data-a="${a}" ${dest ? `data-dest="${dest}"` : ""} style="background:${bg};box-shadow:0 4px 0 ${sh}">${label}</button>`;
+  return (m.coq ? b("toisland", "Bateau pour l'île →", "#5FA9B4", "#3F8F9A") : b("depart", "Partir sur l'île aux Coquillages →", "#5FA9B4", "#3F8F9A", "coq"))
+    + (m.coqDone ? (m.givre ? b("togivre", "Train pour le Mont Givre →", "#6E8FB0", "#4C6F94") : b("depart", "Prendre le train pour le Mont Givre →", "#6E8FB0", "#4C6F94", "givre")) : "");
+}
+// ---------- Carte du Mont Givre ----------
+function viewGivre() {
+  const card = !S.letterRead, E = GIVRE_EXTRA;
+  const lab = (x, y, a, t, sub, extra = "") => `<button class="hot${extra}" data-a="${a.split(":")[0]}" ${a.includes(":") ? `data-tab="${a.split(":")[1]}"` : ""} style="left:${x}px;top:${y}px"><b>${t}</b><small>${sub}</small></button>`;
+  return `
+  <div style="position:absolute;inset:0;background:#E6F0F6"></div>
+  <svg width="960" height="720" viewBox="0 0 960 720" aria-hidden="true" style="position:absolute;left:0;top:0">
+    ${GIVRE_SVG}
+    ${S.aurora ? `<g transform="translate(0 -14)" opacity=".85">${auroraBands(960, 120)}</g>` : ""}
+    ${projDone("lanternes") ? E.lanternes : ""}
+    ${projDone("pont") ? E.pont : `<g transform="translate(870 270)"><rect x="0" y="2" width="30" height="24" rx="5" fill="#E06A6A"/><rect x="5" y="7" width="8" height="8" rx="2" fill="#DDEEF6"/><rect x="17" y="7" width="8" height="8" rx="2" fill="#DDEEF6"/><rect x="-8" y="-14" width="46" height="12" rx="3" fill="#FBF5EA" stroke="#8A5A3B"/><text x="15" y="-5" text-anchor="middle" font-size="9" font-weight="800" fill="#B5404A" font-family="sans-serif">EN PANNE</text></g>`}
+    ${projDone("fontaine") ? E.fontaine + E.fontaine2 : `<g transform="translate(250 600)"><rect x="-2" y="0" width="4" height="26" fill="#6B4A33"/><rect x="-24" y="-14" width="48" height="16" rx="3" fill="#FBF5EA" stroke="#8A5A3B"/><text x="0" y="-2" text-anchor="middle" font-size="10" font-weight="800" fill="#B5404A" font-family="sans-serif">FERMÉE</text></g>`}
+    ${projDone("gare") ? `<g><animateTransform attributeName="transform" type="translate" values="0 0;-40 0;0 0" dur="10s" repeatCount="indefinite"/>${E.gare}</g>` : ""}
+    ${projDone("jardin") ? [[868, 476], [904, 482]].map(([x, y]) => `<g transform="translate(${x} ${y})"><path d="M0 26 V10 L14 0 L28 10 V26Z" fill="#A97C5A"/><path d="M-3 11 L14 -2 L31 11" stroke="#FFFFFF" stroke-width="4" fill="none" stroke-linecap="round"/><rect x="8" y="12" width="12" height="14" rx="6" fill="#4A3326"/><circle cx="14" cy="-6" r="3" fill="#F7D98A" opacity=".8"/></g>`).join("") : ""}
+    ${projDone("kiosque") ? `<g><animateMotion dur="6s" repeatCount="indefinite" path="M150 250 Q60 330 120 400 T80 520"/><g transform="translate(-14 -10)"><rect x="0" y="6" width="26" height="6" rx="2" fill="#5FA9B4"/><circle cx="12" cy="0" r="5" fill="#F2C9A0"/><path d="M7 -3 h10 v-3 q-5 -5 -10 0z" fill="#E06A6A"/></g></g>` : ""}
+    ${projDone("terrasse") ? [[452, 352], [500, 342]].map(([x, y]) => `<g transform="translate(${x} ${y})"><ellipse cx="14" cy="18" rx="16" ry="5" fill="#8A5A3B"/><rect x="12" y="18" width="4" height="10" fill="#6B4A33"/><path d="M30 6 v22" stroke="#3E3433" stroke-width="2"/><path d="M26 6 h8 l-2 -6 h-4z" fill="#E0A63A"/><circle cx="30" cy="0" r="6" fill="#F29A3A" opacity=".5"><animate attributeName="opacity" values=".6;.2;.6" dur="1.2s" repeatCount="indefinite"/></circle></g>`).join("") : ""}
+    ${projDone("moulin") ? `<g transform="translate(756 214) scale(.7)"><rect x="0" y="20" width="90" height="56" fill="#B5404A"/><path d="M-8 24 L45 -8 L98 24Z" fill="#8A5A3B"/><path d="M-10 24 Q45 6 100 24 Q45 14 -10 24Z" fill="#FFFFFF"/><rect x="34" y="40" width="22" height="36" fill="#FBF5EA"/><path d="M34 40 l22 36 M56 40 l-22 36" stroke="#B5404A" stroke-width="3"/></g><g transform="translate(830 262)"><ellipse cx="14" cy="8" rx="15" ry="9" fill="#FFFFFF" stroke="#C9D7E3"/><ellipse cx="8" cy="6" rx="5" ry="4" fill="#3E3433"/><circle cx="30" cy="4" r="6" fill="#FFFFFF" stroke="#C9D7E3"/><path d="M4 16 v6 M24 16 v6" stroke="#3E3433" stroke-width="2"/></g>` : ""}
+  </svg>
+  ${card ? `<button data-a="letter" aria-label="Une carte postale t'attend dans la boîte aux lettres : ouvre-la" title="Carte postale" style="position:absolute;left:262px;top:330px;width:46px;height:46px;border:0;background:none;padding:0">
+    <svg width="46" height="46" viewBox="0 0 46 46" aria-hidden="true"><circle cx="23" cy="23" r="20" fill="#FFF3C4" opacity=".6"><animate attributeName="r" values="14;21;14" dur="1.8s" repeatCount="indefinite"/></circle><g transform="translate(10 12) rotate(-8)"><rect width="26" height="18" rx="2" fill="#FBF5EA" stroke="#8A5A3B" stroke-width="1.5"/><rect x="17" y="3" width="6" height="7" fill="#9CC3D2"/><path d="M4 6 h9 M4 10 h9 M4 14 h7" stroke="#C9B48E" stroke-width="1.5"/></g></svg>
+  </button><div class="hot" style="left:240px;top:384px;padding:4px 10px;pointer-events:none"><b style="font-size:13px">Carte postale !</b></div>` : ""}
+  ${weatherFX(960, 720, 90)}
+  ${festival() ? `<svg width="960" height="60" viewBox="0 0 960 60" aria-hidden="true" style="position:absolute;left:0;top:64px;pointer-events:none"><path d="M0 10 Q240 40 480 10 T960 10" stroke="#8A5A3B" stroke-width="2" fill="none"/>${Array.from({length:24},(_,i)=>`<path d="M${20+i*40} ${14+Math.sin(i/3.8*Math.PI)*-10+12} l10 18 l10 -18z" fill="${["#E06A6A","#F2C46D","#8FAF8A","#9CC3D2"][i%4]}"/>`).join("")}</svg>` : ""}
+  ${lab(306, 308, cafe ? "opencafe" : "kitchen", "Ton café-refuge", cafe ? "Service en pause" : "Rentrer cuisiner")}
+  ${lab(530, 330, "shop:epicol", "Épicerie du Col", "Ingrédients", " main")}
+  ${lab(28, 374, "shop:fromagerie", "Fromagerie", "Fromages, lait…")}
+  ${lab(400, 470, "shop:chocolaterie", "Chocolaterie", "Recettes sucrées")}
+  ${lab(600, 500, "shop:auberge", "Auberge du Col", "Plats de montagne")}
+  ${lab(744, 510, "shop:animneige", "Animalerie des Neiges", "Nourriture et animaux")}
+  ${lab(186, 476, "shop:skishop", "Boutique de ski", "Déco")}
+  ${lab(800, 354, "sommet", "Téléphérique", projDone("pont") ? "Monter au sommet" : "En panne")}
+  ${lab(570, 640, "tobruyere", "Gare", "Train pour Bruyère")}
+  <button class="hot" data-a="sommet" style="left:660px;top:4px;padding:5px 11px"><b style="font-size:14px">Le sommet</b></button>
+  <div class="hud" style="right:340px"><div><span class="pill">Mont Givre</span>${datePill(cafe ? "Service en pause" : "Matin")}</div><div></div></div>
+  ${mapAside()}`;
+}
 function mapAside() {
   return `
   <aside class="panel" style="position:absolute;right:24px;top:18px;bottom:24px;width:290px;display:flex;flex-direction:column;gap:12px">
@@ -1063,19 +1377,19 @@ function mapAside() {
     </div>
     ${(() => { const ids = Object.keys(PROJECTS), doneN = ids.filter(projDone).length, nx = ids.find((id) => !projDone(id) && projOpen(id));
       return `<div style="background:#fff;border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:8px">
-      <div class="between"><span style="font-size:12px;font-weight:800;letter-spacing:.06em;color:var(--ok)">${onIsland() ? "PROJETS DE L'ÎLE" : "PROJETS DU VILLAGE"}</span><span style="font-size:12px;font-weight:800">${doneN} / ${ids.length}</span></div>
+      <div class="between"><span style="font-size:12px;font-weight:800;letter-spacing:.06em;color:var(--ok)">${txt("PROJETS DE L'ÎLE", "PROJETS DU VILLAGE")}</span><span style="font-size:12px;font-weight:800">${doneN} / ${ids.length}</span></div>
       ${nx ? `<b style="font-family:var(--font-title);font-size:17px">${PROJECTS[nx].n}</b>
       <div class="bar" style="height:10px"><i style="width:${Math.min(100, (S.projects[nx] || 0) / PROJECTS[nx].goal * 100)}%;background:var(--terra)"></i></div>
       <span style="font-size:12px;font-weight:700">${S.projects[nx] || 0} / ${PROJECTS[nx].goal} pièces · ${esc(PROJECTS[nx].fx)}</span>
       <div class="row" style="gap:6px"><button class="btn small" data-a="donate" data-id="${nx}" data-amt="25" style="flex:1" ${S.coins < 25 ? "disabled" : ""}>Donner 25</button><button class="btn light small" data-a="projects" style="flex:1">Tous les projets</button></div>`
-      : doneN === ids.length ? (onIsland() ? `<b style="font-family:var(--font-title);font-size:17px;color:var(--ok)">Tous les projets de l'île sont terminés !</b><button class="btn light small" data-a="projects">Voir les projets</button>`
-        : `<b style="font-family:var(--font-title);font-size:17px;color:var(--ok)">Tous les projets sont terminés !</b>${loadMeta().coq ? `<button class="btn small" data-a="toisland" style="background:#5FA9B4;box-shadow:0 4px 0 #3F8F9A">Bateau pour l'île →</button>` : `<button class="btn small" data-a="depart" style="background:#5FA9B4;box-shadow:0 4px 0 #3F8F9A">Partir sur l'île aux Coquillages →</button>`}<button class="btn light small" data-a="projects">Voir les projets</button>`)
-      : `<b style="font-family:var(--font-title);font-size:16px">${onIsland() ? "L'île prépare un nouveau projet…" : "Le village prépare un nouveau projet…"}</b><span class="muted" style="font-size:12px;font-weight:700">${(() => { const h = ids.find((id) => !projVisible(id)); return h ? "Il sera annoncé dans " + (projDay(h) - S.day) + " jour(s)." : ""; })()}</span><button class="btn light small" data-a="projects">Voir les projets</button>`}
+      : doneN === ids.length ? (away() ? `<b style="font-family:var(--font-title);font-size:17px;color:var(--ok)">${txt("Tous les projets de l'île sont terminés !", "")}</b>${onIsland() ? `<span class="muted" style="font-size:12px;font-weight:700">Un train t'attend à la gare de Bruyère : direction le Mont Givre !</span>` : ""}<button class="btn light small" data-a="projects">Voir les projets</button>`
+        : `<b style="font-family:var(--font-title);font-size:17px;color:var(--ok)">Tous les projets sont terminés !</b>${travelButtons()}<button class="btn light small" data-a="projects">Voir les projets</button>`)
+      : `<b style="font-family:var(--font-title);font-size:16px">${txt("L'île prépare un nouveau projet…", "Le village prépare un nouveau projet…")}</b><span class="muted" style="font-size:12px;font-weight:700">${(() => { const h = ids.find((id) => !projVisible(id)); return h ? "Il sera annoncé dans " + (projDay(h) - S.day) + " jour(s)." : ""; })()}</span><button class="btn light small" data-a="projects">Voir les projets</button>`}
     </div>`; })()}
     <div style="font-size:14px" class="muted">Animaux au café : <b style="color:var(--ink)">${S.cats.map((c) => CATS[c].n).join(", ")}</b></div>
     ${onIsland() && (S.mapPieces || 0) > 0 && !S.treasure ? `<div class="row" data-a="showmap" role="button" tabindex="0" aria-label="Voir tes bouts de carte" style="cursor:pointer;gap:8px;background:#F6E4B9;border-radius:12px;padding:8px 10px;font-size:13px;font-weight:800;box-shadow:0 3px 0 #D8C7A8"><svg width="26" height="20" viewBox="0 0 26 20" aria-hidden="true"><rect x="1" y="1" width="24" height="18" fill="#EBD9A8" stroke="#A88A52" stroke-width="1.5"/><path d="M15 6 l5 5 M20 6 l-5 5" stroke="#E06A6A" stroke-width="2"/></svg>Bouts de carte : ${S.mapPieces} / 4 <span style="margin-left:auto;color:#8A5A3B">Voir</span></div>` : ""}
     <div style="margin-top:auto;display:flex;flex-direction:column;gap:8px">
-      <div class="row" style="gap:6px"><button class="btn light small" data-a="album" style="flex:1;padding:8px 4px">Animaux</button><button class="btn light small" data-a="friends" style="flex:1;padding:8px 4px">${onIsland() ? "Voisins" : "Villageois"}</button><button class="btn light small" data-a="help" style="flex:1;padding:8px 4px">Aide</button></div>
+      <div class="row" style="gap:6px"><button class="btn light small" data-a="album" style="flex:1;padding:8px 4px">Animaux</button><button class="btn light small" data-a="friends" style="flex:1;padding:8px 4px">${txt("Voisins", "Villageois")}</button><button class="btn light small" data-a="help" style="flex:1;padding:8px 4px">Aide</button></div>
       ${cafe ? `<button class="btn green" data-a="opencafe">Retour au café →</button>` : `<button class="btn green" data-a="kitchen">Rentrer cuisiner →</button>`}
     </div>
   </aside>`;
@@ -1105,6 +1419,13 @@ const SHOPS = {
   poissport:    { n: "Poissonnerie du Port", who: "Paco", c: "#4C6F94", hair: "casquette", hello: "Thon, cabillaud, crevettes, saumon : tout vient de ma pêche de ce matin ! Papi Jules m'a écrit : je dois bien m'occuper de toi." },
   surf:         { n: "Playa & Co", who: "Lou", c: "#E06A6A", hair: "long", hello: "Bienvenue chez Playa & Co ! Planches, transats, hamac, palmiers… toute la déco de plage pour donner un air de vacances à ton café." },
   souvenirs:    { n: "Souvenirs de l'île", who: "Capitaine Albert", c: "#8C5E9E", hair: "court", hello: "Coquillages, maquettes de bateau… Chaque objet a une histoire. Demande-moi, je te les raconte toutes !" },
+  // --- Mont Givre
+  epicol:       { n: "Épicerie du Col", who: "Solange", c: "#C99A3E", hair: "chignon", hello: "Bienvenue au Mont Givre ! Myrtilles, pommes de terre, guimauves… et tout ce qu'il faut pour cuisiner au chaud." },
+  fromagerie:   { n: "Fromagerie Alpine", who: "Monsieur Pierrot", c: "#5E8C6A", hair: "court", hello: "Goûte-moi ce comté ! Douze mois d'affinage. Pour la raclette, j'ai ce qu'il te faut aussi." },
+  chocolaterie: { n: "Chocolaterie", who: "Rosa", c: "#8A5A3B", hair: "carre", hello: "Truffes, orangettes, bûches… Toutes mes recettes au chocolat, pour réchauffer tes clients." },
+  auberge:      { n: "Auberge du Col", who: "Odette", c: "#B5404A", hair: "rose", hello: "À l'auberge, on cuisine comme à la montagne : fondue, raclette, tartiflette. Je te donne mes recettes !" },
+  animneige:    { n: "Animalerie des Neiges", who: "Mathis", c: "#3F8F9A", hair: "casquette", hello: "Nourriture et animaux ! Des chats tout duveteux et des chiens qui adorent la neige." },
+  skishop:      { n: "Boutique de ski", who: "Léna", c: "#C9677A", hair: "long", hello: "Skis, raquettes, plaids, poêle à bois… Tout pour transformer ton café en vrai chalet !" },
   poissonnerie: { n: "Poissonnerie du Quai", who: "Papi Jules", c: "#4C6F94", hair: "casquette", hello: "Depuis que le pont est réparé, je ne pêche plus au bord de l'eau : je vends ma pêche ici : saumon, truite fumée, crevettes, thon, cabillaud… Les recettes sont à la librairie. Et si tu fais la soupe de ma Jeanne, je viendrai la goûter !" },
 };
 // Coiffures des commerçants (dessinées derrière / devant le visage / par-dessus)
@@ -1144,12 +1465,12 @@ function nextUnlockIn(tab) {
   return days.length ? { days: Math.min(...days), n: days.length } : null;
 }
 const inShop = (x, tab) => x.shop === tab || (x.also || []).includes(tab);
-const animShop = () => onIsland() ? "animplage" : "refuge";
+const animShop = () => txt("animplage", "refuge");
 const animShopName = () => SHOPS[animShop()].n;
 function shopCatalogAll(tab) {
-  if (tab === "refuge" || tab === "animplage") {
-    const it = tab === "refuge" ? "animalerie" : "animplage";
-    const here = (c) => tab === "refuge" ? !c.isl : c.isl === "coq";
+  if (tab === "refuge" || tab === "animplage" || tab === "animneige") {
+    const it = tab === "refuge" ? "animalerie" : tab;
+    const here = (c) => tab === "refuge" ? !c.isl : c.isl === (tab === "animplage" ? "coq" : "givre");
     return [
     ...Object.entries(ITEMS).filter(([, x]) => inShop(x, it)).map(([id, x]) => ({ id, kind: "item", n: x.n, p: x.p, c: x.c, sub: (x.dog ? "Pour les chiens" : "Pour les chats") + " · +" + x.fx + " de bonne humeur · stock : " + qty(id) })),
     ...Object.entries(DECOR).filter(([, d]) => inShop(d, it)).map(([id, d]) => ({ id, kind: "decor", n: d.n, p: d.p, c: d.c, sub: d.d, owned: S.decor.includes(id) })),
@@ -1158,8 +1479,8 @@ function shopCatalogAll(tab) {
   ]; }
   if (tab === "fleuriste") return Object.entries(BOUQUETS).map(([id, b]) => ({ id, kind: "bouquet", n: "Bouquet de " + b.n.toLowerCase(), p: b.p, c: b.c, sub: b.d, owned: S.bouquetId === id }));
   if (tab === "brocante") return Object.entries(DECOR).filter(([, d]) => !d.shop).map(([id, d]) => ({ id, kind: "decor", n: d.n, p: d.p, c: d.c, sub: d.d, owned: S.decor.includes(id) }));
-  if (tab === "surf" || tab === "souvenirs") return Object.entries(DECOR).filter(([, d]) => d.shop === tab).map(([id, d]) => ({ id, kind: "decor", n: d.n, p: d.p, c: d.c, sub: d.d, owned: S.decor.includes(id) }));
-  if (tab === "librairie" || tab === "ecole" || tab === "creperie" || tab === "glacier") return Object.entries(RECIPES).filter(([id, r]) => inShop(r, tab) && (!r.season || r.season === season() || S.recipes.includes(id))).map(([id, r]) => ({ id, kind: "book", n: r.n, p: r.book, c: r.c, sub: (r.d ? r.d + " " : "") + r.price + " pièces la part · " + Object.keys(r.needs).map((k) => ITEMS[k].n.toLowerCase()).join(", "), owned: S.recipes.includes(id) }));
+  if (tab === "surf" || tab === "souvenirs" || tab === "skishop") return Object.entries(DECOR).filter(([, d]) => d.shop === tab).map(([id, d]) => ({ id, kind: "decor", n: d.n, p: d.p, c: d.c, sub: d.d, owned: S.decor.includes(id) }));
+  if (tab === "librairie" || tab === "ecole" || tab === "creperie" || tab === "glacier" || tab === "chocolaterie" || tab === "auberge") return Object.entries(RECIPES).filter(([id, r]) => inShop(r, tab) && (!r.season || r.season === season() || S.recipes.includes(id))).map(([id, r]) => ({ id, kind: "book", n: r.n, p: r.book, c: r.c, sub: (r.d ? r.d + " " : "") + r.price + " pièces la part · " + Object.keys(r.needs).map((k) => ITEMS[k].n.toLowerCase()).join(", "), owned: S.recipes.includes(id) }));
   return Object.entries(ITEMS).filter(([, it]) => inShop(it, tab) && (!it.season || it.season === season())).map(([id, it]) => ({ id, kind: "item", n: it.n, p: it.p, c: it.c, seasonal: !!it.season, sub: it.cat ? "Pour les chats" : "En stock : " + qty(id) }));
 }
 function cartTotal() {
@@ -1188,9 +1509,9 @@ function viewShop() {
     <div class="panel" style="padding:16px 18px"><b style="font-family:var(--font-title);font-size:18px;color:${sh.c}">${sh.who}</b><p style="margin:4px 0 0;font-size:15px;line-height:1.45">${esc(sh.hello)}</p></div>
   </div>
   <div style="position:absolute;left:356px;top:96px;width:560px;display:flex;flex-direction:column;gap:14px">
-    <div class="between"><h1 style="font-weight:700;font-size:28px">${sh.n}</h1><button class="btn light small" data-a="village">${onIsland() ? "← Plage" : "← Village"}</button></div>
+    <div class="between"><h1 style="font-weight:700;font-size:28px">${sh.n}</h1><button class="btn light small" data-a="village">${txt("← Plage", "← Village")}</button></div>
     <div class="grid" style="grid-template-columns:repeat(3,minmax(0,1fr));max-height:568px;overflow:auto;padding:4px 4px 10px">
-      ${ui.shopTab === "animplage" && !S.cats.includes("doublon") ? `<div class="card" style="order:98;align-items:center;justify-content:center;text-align:center;background:#EFE4D2;box-shadow:inset 0 0 0 2px var(--line)">${silhouetteSVG(50)}<b style="font-family:var(--font-title);font-size:16px;color:#8A7660">???</b><span class="muted" style="font-size:13px;font-weight:700">Cette place est encore vide…</span></div>` : ""}
+      ${(ui.shopTab === "animplage" && !S.cats.includes("doublon")) || (ui.shopTab === "animneige" && !S.cats.includes("aurore")) ? `<div class="card" style="order:98;align-items:center;justify-content:center;text-align:center;background:#EFE4D2;box-shadow:inset 0 0 0 2px var(--line)">${silhouetteSVG(50)}<b style="font-family:var(--font-title);font-size:16px;color:#8A7660">???</b><span class="muted" style="font-size:13px;font-weight:700">Cette place est encore vide…</span></div>` : ""}
       ${(() => { const nx = nextUnlockIn(ui.shopTab); return nx ? `<div class="card" style="order:99;align-items:center;justify-content:center;text-align:center;border:3px dashed var(--line);background:#FBF5EA;box-shadow:none"><b style="font-family:var(--font-title);font-size:16px">${nx.n} nouveauté(s)</b><span class="muted" style="font-size:13px;font-weight:700">Arrivage dans ${nx.days} jour(s)</span></div>` : ""; })()}
       ${list.map((it) => {
         const q = ui.cart[it.id] || 0;
@@ -1305,7 +1626,7 @@ function viewKitchen() {
         <span style="width:34px;height:34px;border-radius:50%;background:${x.c};border:3px solid #fff;box-shadow:0 0 0 2px ${ok ? "var(--sage-l)" : "var(--line)"};flex-shrink:0"></span>
         <span><b style="font-family:var(--font-title);font-size:16px;display:block">${x.n}</b><span class="muted" style="font-size:12px;font-weight:700">${ok ? "Ingrédients OK" : "Il manque des ingrédients"} · ${x.yield} parts · ${x.price} p.</span></span></button>`; }).join("")}
     </div>
-    <div class="muted" style="padding:10px 12px;border-radius:14px;border:2px dashed var(--line);font-size:13px;font-weight:700">${onIsland() ? "Nouvelles recettes à la <b>Crêperie du Phare</b> et au <b>Glacier de Marina</b>." : "Nouvelles recettes à la <b>Librairie Le Chat Lettré</b>, de l'autre côté du pont."}</div>
+    <div class="muted" style="padding:10px 12px;border-radius:14px;border:2px dashed var(--line);font-size:13px;font-weight:700">${txt("Nouvelles recettes à la <b>Crêperie du Phare</b> et au <b>Glacier de Marina</b>.", "Nouvelles recettes à la <b>Librairie Le Chat Lettré</b>, de l'autre côté du pont.")}</div>
   </section>
   <section aria-label="Plan de travail" style="position:absolute;left:348px;top:92px;width:560px;height:604px;border-radius:22px;overflow:hidden;background:#F3E4C9;box-shadow:0 6px 0 var(--line)">
     <svg width="560" height="604" viewBox="0 0 560 604" aria-hidden="true" style="position:absolute;inset:0">
@@ -1348,7 +1669,7 @@ function viewKitchen() {
         <div class="row" style="gap:6px">${steps.map((_, i) => `<span style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;${i < si ? "background:var(--sage);color:#fff" : i === si ? "background:var(--terra);color:#fff" : "background:#EADBB8;color:var(--ink2)"}">${i + 1}</span>`).join("")}</div></div>
       <p class="muted" style="margin:0;font-weight:700">${esc(hint)}</p>
       ${cooking ? `<div class="bar" style="height:10px"><i id="cookbar" style="width:${kind === "add" ? (c.drops.filter(Boolean).length / units.length * 100) : (kind === "knead" || kind === "tap") ? (c.taps / TAPS[kind] * 100) : c.prog * 100}%;background:var(--terra);transition:width .1s"></i></div>` : ""}
-      ${button || (!cooking && missing.length && !cafe) ? `<div class="row">${button}${!cooking && missing.length && !cafe ? `<button class="btn light small" data-a="shop" data-tab="${onIsland() ? "epiplage" : "epicerie"}">${onIsland() ? "Acheter à l'Épicerie de la Plage" : "Acheter chez Madame Rose"}</button>` : ""}</div>` : ""}
+      ${button || (!cooking && missing.length && !cafe) ? `<div class="row">${button}${!cooking && missing.length && !cafe ? `<button class="btn light small" data-a="shop" data-tab="${txt("epiplage", "epicerie")}">${txt("Acheter à l'Épicerie de la Plage", "Acheter chez Madame Rose")}</button>` : ""}</div>` : ""}
     </div>
   </section>
   <aside style="position:absolute;right:24px;top:92px;width:324px;height:604px;display:flex;flex-direction:column;gap:12px">
@@ -1382,6 +1703,7 @@ const CAT_SPOTS = [
   { x: 272, y: 486, req: "panier", floor: true }, { x: 176, y: 440, req: "fauteuil", floor: true }, { x: 1000, y: 112, req: "aquarium" },
   { x: 440, y: 520, floor: true }, { x: 1206, y: 520, floor: true }, { x: 160, y: 520, floor: true },
   { x: 682, y: 270, req: "hamac" }, { x: 1000, y: 108, req: "aquatropic" }, { x: 446, y: 506, req: "coussinbouee", floor: true },
+  { x: 252, y: 444, req: "luge", floor: true }, { x: 446, y: 500, req: "coussinchaud", floor: true },
   { x: 746, y: 240, req: "tour" }, { x: 742, y: 326, req: "tour" }, { x: 400, y: 494, req: "tunnel", floor: true }, { x: 124, y: 430, req: "chateausable", floor: true },
 ];
 const nowS = () => performance.now() / 1000;
@@ -1712,7 +2034,7 @@ function viewCafe() {
       <rect x="4" y="6" width="212" height="200" rx="8" fill="#CFE3E6"/>
       <circle cx="170" cy="50" r="20" fill="#F7DFA0"/>
       <ellipse cx="50" cy="40" rx="30" ry="9" fill="#EAF3F4"/>
-      ${onIsland() ? `<rect x="4" y="120" width="212" height="86" fill="#7FC6D3"/><path d="M4 130 q26 -6 53 0 t53 0 t53 0 t53 0" stroke="#FFFFFF" stroke-width="3" fill="none" opacity=".7"/><path d="M4 206 V176 Q110 160 216 176 V206Z" fill="#F3DCA8"/><g transform="translate(150 96)"><path d="M0 26 H30 L26 34 H4Z" fill="#C9677A"/><rect x="14" y="0" width="3" height="26" fill="#6B4A33"/><path d="M17 2 L30 24 H17Z" fill="#FBF5EA"/></g><g transform="translate(26 120) scale(.5)"><path d="M14 90 Q20 40 8 0" stroke="#A97C5A" stroke-width="7" fill="none"/><path d="M8 0 q-30 -6 -40 12 M8 0 q-12 -26 -34 -24 M8 0 q18 -24 40 -16 M8 0 q30 2 36 24" stroke="#5E9C62" stroke-width="8" fill="none" stroke-linecap="round"/></g>`
+      ${onGivre() ? `<rect x="4" y="6" width="212" height="200" fill="#C9DCEB"/><path d="M4 150 L60 70 L110 130 L160 60 L216 140 V206 H4Z" fill="#9FB4C8"/><path d="M60 70 L46 92 L60 88 L70 98 Z M160 60 L144 84 L158 80 L170 92Z" fill="#FFFFFF"/><path d="M4 176 Q110 150 216 172 V206 H4Z" fill="#F4F8FB"/>${[[30, 170], [70, 178], [190, 168]].map(([x, y]) => `<path transform="translate(${x} ${y})" d="M0 -18 L10 0 H-10Z M0 -8 L12 10 H-12Z" fill="#3F6B57"/>`).join("")}<g transform="translate(120 160)"><rect x="0" y="8" width="30" height="20" fill="#C9A27A"/><path d="M-4 10 L15 -4 L34 10Z" fill="#FFFFFF"/><rect x="11" y="16" width="8" height="12" fill="#F7D98A"/></g>${Array.from({ length: 14 }, (_, i) => `<circle cx="${10 + (i * 37) % 200}" cy="${10 + (i * 29) % 180}" r="2" fill="#FFFFFF"><animate attributeName="cy" values="${(i * 29) % 180 - 180};${10 + (i * 29) % 180}" dur="${5 + i % 4}s" repeatCount="indefinite"/></circle>`).join("")}` : onIsland() ? `<rect x="4" y="120" width="212" height="86" fill="#7FC6D3"/><path d="M4 130 q26 -6 53 0 t53 0 t53 0 t53 0" stroke="#FFFFFF" stroke-width="3" fill="none" opacity=".7"/><path d="M4 206 V176 Q110 160 216 176 V206Z" fill="#F3DCA8"/><g transform="translate(150 96)"><path d="M0 26 H30 L26 34 H4Z" fill="#C9677A"/><rect x="14" y="0" width="3" height="26" fill="#6B4A33"/><path d="M17 2 L30 24 H17Z" fill="#FBF5EA"/></g><g transform="translate(26 120) scale(.5)"><path d="M14 90 Q20 40 8 0" stroke="#A97C5A" stroke-width="7" fill="none"/><path d="M8 0 q-30 -6 -40 12 M8 0 q-12 -26 -34 -24 M8 0 q18 -24 40 -16 M8 0 q30 2 36 24" stroke="#5E9C62" stroke-width="8" fill="none" stroke-linecap="round"/></g>`
       : `<ellipse cx="60" cy="190" rx="90" ry="44" fill="${tint}"/><ellipse cx="180" cy="196" rx="80" ry="36" fill="#8FAF8A"/>
       <g transform="translate(140 130)"><rect x="0" y="14" width="40" height="30" fill="#F6EEDF"/><path d="M-4 16 L20 0 L44 16Z" fill="#D9826B"/></g>
       <circle cx="30" cy="150" r="16" fill="#6F9468"/><circle cx="46" cy="140" r="12" fill="#7FA478"/>`}
@@ -1801,6 +2123,17 @@ function viewCafe() {
     ${deco("corde") ? `<g transform="translate(600 484)"><path d="M0 0 q20 -10 40 0 t40 0" stroke="#D9826B" stroke-width="7" fill="none" stroke-linecap="round"/><path d="M0 0 q20 -10 40 0 t40 0" stroke="#FBF5EA" stroke-width="2" stroke-dasharray="4 6" fill="none"/><circle cx="-4" cy="0" r="7" fill="#D9826B"/><circle cx="84" cy="0" r="7" fill="#D9826B"/></g>` : ""}
     ${deco("chateausable") ? `<g transform="translate(96 470)"><rect x="0" y="30" width="90" height="40" fill="#F3DCA8"/><rect x="0" y="16" width="22" height="20" fill="#E8CC92"/><rect x="68" y="16" width="22" height="20" fill="#E8CC92"/><rect x="30" y="6" width="30" height="30" fill="#E8CC92"/><path d="M0 16 h5 v-6 h6 v6 h5 v-6 h6 v6 M68 16 h5 v-6 h6 v6 h5 v-6 h6 v6" fill="#E8CC92"/><path d="M36 70 v-20 q9 -10 18 0 v20z" fill="#B99A60"/><path d="M45 6 v-16" stroke="#6B4A33" stroke-width="2"/><path d="M45 -10 l12 4 l-12 4z" fill="#E06A6A"/></g>` : ""}
     ${deco("ballon") ? `<g transform="translate(760 486)"><circle r="16" fill="#FBF5EA"/><path d="M0 -16 A16 16 0 0 1 14 8 L0 0Z" fill="#E06A6A"/><path d="M14 8 A16 16 0 0 1 -14 8 L0 0Z" fill="#5FA9B4"/><path d="M-14 8 A16 16 0 0 1 0 -16 L0 0Z" fill="#F2C46D"/></g>` : ""}
+    <!-- déco du Mont Givre -->
+    ${deco("pommespin") ? `<path d="M0 26 Q160 70 320 26 T640 26 T960 26 T1280 26" stroke="#3F6B57" stroke-width="5" fill="none"/>${Array.from({ length: 16 }, (_, i) => `<g transform="translate(${40 + i * 80} ${36 + (i % 2) * 8})"><ellipse rx="6" ry="9" fill="#8A5A3B"/><path d="M-5 -3 h10 M-5 3 h10" stroke="#6B4A33" stroke-width="1.5"/>${i % 3 === 0 ? `<circle cx="10" cy="-6" r="3" fill="#E06A6A"/>` : ""}</g>`).join("")}` : ""}
+    ${deco("couronne") ? `<g transform="translate(1000 196)"><circle r="26" fill="none" stroke="#3F6B57" stroke-width="12"/><circle r="26" fill="none" stroke="#5E8C6A" stroke-width="4" stroke-dasharray="6 6"/>${[0, 1, 2, 3, 4].map((k) => `<circle cx="${Math.cos(k * 1.26) * 26}" cy="${Math.sin(k * 1.26) * 26}" r="3.5" fill="#E06A6A"/>`).join("")}<path d="M-8 22 l8 10 l8 -10" fill="#E06A6A"/></g>` : ""}
+    ${deco("raquettes") ? `<g transform="translate(960 250)">${[0, 34].map((x) => `<g transform="translate(${x} 0) rotate(${x ? 8 : -8})"><ellipse cx="14" cy="34" rx="13" ry="30" fill="none" stroke="#A97C5A" stroke-width="4"/><path d="M4 20 h20 M2 34 h24 M4 48 h20 M14 6 v58" stroke="#C9A27A" stroke-width="1.5"/></g>`).join("")}</g>` : ""}
+    ${deco("skis") ? `<g transform="translate(1096 300)">${[0, 16].map((x) => `<rect x="${x}" y="0" width="10" height="150" rx="5" fill="#C9677A" transform="rotate(${x ? 6 : 3})"/><path d="M${x + 1} 2 q4 -10 8 0" fill="#C9677A"/>`).join("")}<rect x="-2" y="70" width="34" height="6" rx="2" fill="#3E3433"/></g>` : ""}
+    ${deco("lanterneneige") ? `<g transform="translate(468 222)"><rect x="4" y="8" width="26" height="34" rx="3" fill="#FFF3C4" stroke="#3E3433" stroke-width="3"/><path d="M0 8 h34 l-6 -8 h-22z" fill="#3E3433"/><circle cx="17" cy="26" r="6" fill="#F7D98A"><animate attributeName="opacity" values="1;.6;1" dur="1.6s" repeatCount="indefinite"/></circle><circle cx="17" cy="26" r="26" fill="#FFE9A8" opacity=".25"/><path d="M0 44 h34" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round"/></g>` : ""}
+    ${deco("poele") ? `<g transform="translate(870 300)"><rect x="34" y="-300" width="16" height="320" fill="#3E3433"/><rect x="0" y="20" width="84" height="110" rx="10" fill="#3E3433"/><rect x="14" y="50" width="56" height="44" rx="6" fill="#2F2826"/><path d="M24 92 q8 -30 18 -10 q8 -26 18 8 z" fill="#F29A3A"><animate attributeName="opacity" values="1;.7;1" dur=".8s" repeatCount="indefinite"/></path><path d="M30 92 q6 -16 12 -4 q6 -14 10 4z" fill="#F7D98A"/><rect x="6" y="130" width="10" height="12" fill="#2F2826"/><rect x="68" y="130" width="10" height="12" fill="#2F2826"/><ellipse cx="42" cy="70" rx="90" ry="70" fill="#F29A3A" opacity=".08"/><g transform="translate(96 96)">${[0, 1, 2].map((k) => `<circle cx="${k * 12}" cy="34" r="6" fill="#A97C5A" stroke="#6B4A33" stroke-width="1.5"/>`).join("")}<circle cx="6" cy="24" r="6" fill="#A97C5A" stroke="#6B4A33" stroke-width="1.5"/><circle cx="18" cy="24" r="6" fill="#A97C5A" stroke="#6B4A33" stroke-width="1.5"/></g></g>` : ""}
+    ${deco("plaid") ? `<g transform="translate(100 470)"><rect x="0" y="40" width="80" height="16" rx="5" fill="#B5404A"/><rect x="4" y="26" width="72" height="16" rx="5" fill="#3F6B57"/><rect x="8" y="12" width="64" height="16" rx="5" fill="#B5404A"/><path d="M20 12 v44 M40 12 v44 M60 12 v44 M0 48 h80 M4 34 h72 M8 20 h64" stroke="#F2C46D" stroke-width="1.5" opacity=".7"/></g>` : ""}
+    ${deco("luge") ? `<g transform="translate(238 496)"><rect x="0" y="0" width="80" height="12" rx="4" fill="#C9677A"/><path d="M6 12 v12 M74 12 v12" stroke="#8A5A3B" stroke-width="4"/><path d="M-6 26 H84 q10 0 10 -12" stroke="#8A5A3B" stroke-width="4" fill="none" stroke-linecap="round"/></g>` : ""}
+    ${deco("coussinchaud") ? `<g transform="translate(470 540)"><ellipse rx="40" ry="13" fill="#E9A9B0"/><ellipse rx="30" ry="8" fill="#F5C6CF"/><path d="M-16 -16 q4 -8 0 -14 M0 -18 q4 -8 0 -14 M16 -16 q4 -8 0 -14" stroke="#F29A3A" stroke-width="2" fill="none" opacity=".6"/></g>` : ""}
+    ${deco("pingouin") ? `<g transform="translate(760 470)"><ellipse cx="0" cy="12" rx="12" ry="16" fill="#3E3433"/><ellipse cx="0" cy="15" rx="8" ry="12" fill="#FFFFFF"/><circle cx="-3" cy="2" r="1.6" fill="#2F2522"/><circle cx="3" cy="2" r="1.6" fill="#2F2522"/><path d="M-2 5 h4 l-2 3z" fill="#F29A3A"/><path d="M-5 28 h4 M1 28 h4" stroke="#F29A3A" stroke-width="3"/><path d="M-12 -2 q12 -10 24 0" fill="#E06A6A"/></g>` : ""}
     ${deco("pelote") ? `<g transform="translate(1180 560)"><circle r="14" fill="#E9A9B0"/><path d="M-10 -8 q10 8 20 0 M-12 2 q12 8 24 0 M-6 10 q8 -20 0 -24" stroke="#C9677A" stroke-width="2" fill="none"/><path d="M12 6 q20 10 30 -4" stroke="#E9A9B0" stroke-width="2" fill="none"/></g>` : ""}
     ${seatsX.map((x, i) => cafeTable(x + 50, 545, cloths[i], deco("bougies"))).join("")}
   </svg>
@@ -1879,12 +2212,13 @@ function endDay() {
     moka: () => S.servedTotal >= 20,
     pistache: () => bridgeDone(),
   };
-  if (!onIsland()) for (const id of Object.keys(cond)) if (!S.cats.includes(id) && cond[id]()) { S.cats.push(id); S.mood[id] = 60; newcomers.push(id); break; } // un nouveau chat par jour max
+  if (!away()) for (const id of Object.keys(cond)) if (!S.cats.includes(id) && cond[id]()) { S.cats.push(id); S.mood[id] = 60; newcomers.push(id); break; } // un nouveau chat par jour max
   summaryData = { events: cafe.events, served: cafe.served, missed: cafe.missed, earned: cafe.earned, tips: cafe.tips, newcomers, mood: Math.round(avgMood()) };
   // les plats non vendus restent (un peu moins frais, c'est cozy)
   const morning = [];
-  if (projDone("lanternes")) { S.rep += 1; morning.push(onIsland() ? "Les lampions ont attiré du monde sur la plage : +1 réputation." : "Les lanternes ont attiré du monde sur la place : +1 réputation."); }
-  if (projDone("moulin") && onIsland()) { S.pantry.coco = qty("coco") + 2; S.pantry.banane = qty("banane") + 1; morning.push("La cocoteraie t'a donné 2 noix de coco et des bananes."); }
+  if (projDone("lanternes")) { S.rep += 1; morning.push(txt("Les lampions ont attiré du monde sur la plage : +1 réputation.", "Les lanternes ont attiré du monde sur la place : +1 réputation.")); }
+  if (projDone("moulin") && onGivre()) { S.pantry.fromage = qty("fromage") + 1; S.pantry.lait = qty("lait") + 2; morning.push("La ferme d'alpage t'a livré un fromage à raclette et 2 bouteilles de lait."); }
+  else if (projDone("moulin") && onIsland()) { S.pantry.coco = qty("coco") + 2; S.pantry.banane = qty("banane") + 1; morning.push("La cocoteraie t'a donné 2 noix de coco et des bananes."); }
   else if (projDone("moulin")) { S.pantry.farine = qty("farine") + 2; S.pantry.miel = qty("miel") + 1; morning.push("Le meunier t'a livré 2 farines et 1 pot de miel."); }
   if (cafe.mapFrom) morning.push(CATS[cafe.mapFrom].n + " t'a rapporté un mystérieux bout de carte (" + S.mapPieces + " / 4). Regarde-le depuis la carte de l'île !");
   const found = cafe.dogCoins || 0;
@@ -1892,7 +2226,7 @@ function endDay() {
   summaryData.morning = morning;
   S.day++; S.phase = "matin"; S.letterRead = false; S.bouquet = false; S.bouquetId = null;
   S.weather = rollWeather();
-  if (dayInSeason() === 1 && !onIsland()) {
+  if (dayInSeason() === 1 && !away()) {
     morning.push("Une nouvelle saison commence : " + season() + " ! L'épicerie a de nouveaux produits de saison.");
     const gift = Object.entries(RECIPES).find(([id, r]) => r.gift && r.season === season() && !S.recipes.includes(id));
     if (gift) { S.recipes.push(gift[0]); morning.push("Madame Rose t'offre la recette de saison : « " + gift[1].n + " » !"); }
@@ -1900,9 +2234,9 @@ function endDay() {
   if (festival()) morning.push("Demain, c'est la " + festival() + " : plus de clients et +20 % de pourboires !");
   else if (S.weather === "pluie") morning.push("Il pleuvra demain : les villageois viendront se mettre à l'abri au café (+2 clients).");
   else if (S.weather === "neige") morning.push("Il neigera demain : parfait pour un chocolat chaud (+1 client).");
-  const newIn = onIsland() ? { creperie: "la crêperie", glacier: "chez le glacier", animplage: "l'animalerie", surf: "Playa & Co", souvenirs: "la boutique de souvenirs" } : { librairie: "la librairie", brocante: "la brocante", refuge: "l'animalerie" };
+  const newIn = onGivre() ? { chocolaterie: "la chocolaterie", auberge: "l'auberge", animneige: "l'animalerie", skishop: "la boutique de ski" } : onIsland() ? { creperie: "la crêperie", glacier: "chez le glacier", animplage: "l'animalerie", surf: "Playa & Co", souvenirs: "la boutique de souvenirs" } : { librairie: "la librairie", brocante: "la brocante", refuge: "l'animalerie" };
   Object.keys(newIn).forEach((tab) => { if (shopCatalogAll(tab).some((x) => UNLOCK[x.id] === S.day)) morning.push("Nouveautés à " + newIn[tab] + " !"); });
-  Object.keys(PROJECTS).forEach((id) => { if (projDay(id) === S.day) morning.push((onIsland() ? "Nouveau projet sur l'île : « " : "Nouveau projet au village : « ") + PROJECTS[id].n + " » ! Regarde la carte."); });
+  Object.keys(PROJECTS).forEach((id) => { if (projDay(id) === S.day) morning.push((txt("Nouveau projet sur l'île : « ", "Nouveau projet au village : « ")) + PROJECTS[id].n + " » ! Regarde la carte."); });
   // points et pièces du lanceur Mes Jeux
   if (window.MesJeux && summaryData.served > 0 && !TEST) {
     const lignes = [[30, "Journée au café terminée"]];
@@ -1939,6 +2273,7 @@ function viewSummary() {
 // ---------- Le grand départ vers l'île ----------
 function viewDepart() {
   const pick = ui.departPick && S.cats.includes(ui.departPick) ? ui.departPick : null;
+  if (ui.departDest === "givre") return viewDepartGivre(pick);
   return `
   <svg width="1280" height="720" viewBox="0 0 1280 720" aria-hidden="true" style="position:absolute;inset:0">
     <rect width="1280" height="420" fill="#F7D9B5"/><circle cx="1000" cy="300" r="90" fill="#F2B37A"/>
@@ -1969,6 +2304,60 @@ function viewDepart() {
     <button class="btn green" data-a="embark" ${pick ? "" : "disabled"}>${pick ? "Embarquer avec " + CATS[pick].n + " →" : "Choisis un animal"}</button>
     <button class="btn light small" data-a="village">Pas encore, je reste un peu à Bruyère</button>
   </div>`;
+}
+function viewDepartGivre(pick) {
+  return `
+  <svg width="1280" height="720" viewBox="0 0 1280 720" aria-hidden="true" style="position:absolute;inset:0">
+    <rect width="1280" height="720" fill="#CFE0EC"/>
+    <path d="M-20 420 L180 180 L320 320 L520 120 L700 330 L900 160 L1100 330 L1300 220 V720 H-20Z" fill="#9FB4C8"/>
+    <path d="M180 180 L150 216 L176 210 L196 226 L214 206 Z M520 120 L480 166 L510 158 L528 176 L548 154 L572 170Z M900 160 L866 200 L890 194 L908 210 L928 190 L950 204Z" fill="#FFFFFF"/>
+    <path d="M-20 470 Q300 420 640 460 T1300 440 V720 H-20Z" fill="#F4F8FB"/>
+    <path d="M0 610 H1280 M0 628 H1280" stroke="#8A6B5A" stroke-width="4"/>${Array.from({ length: 40 }, (_, i) => `<path d="M${i * 34} 604 v30" stroke="#A97C5A" stroke-width="6"/>`).join("")}
+    <g transform="translate(560 500)"><animateTransform attributeName="transform" type="translate" values="560 500;560 497;560 500" dur="1s" repeatCount="indefinite"/>
+      <rect x="0" y="40" width="140" height="64" rx="10" fill="#4C6F94"/><rect x="110" y="0" width="34" height="50" fill="#3E3433"/><path d="M104 0 h46 l-6 -10 h-34z" fill="#3E3433"/>
+      <rect x="16" y="54" width="22" height="20" rx="4" fill="#F7D98A"/><circle cx="30" cy="110" r="14" fill="#3E3433"/><circle cx="100" cy="110" r="14" fill="#3E3433"/>
+      <rect x="-190" y="44" width="176" height="60" rx="8" fill="#C9677A"/>${[0, 1, 2, 3].map((k) => `<rect x="${-176 + k * 40}" y="56" width="28" height="22" rx="4" fill="#DDEEF6"/>`).join("")}<circle cx="-160" cy="110" r="12" fill="#3E3433"/><circle cx="-40" cy="110" r="12" fill="#3E3433"/>
+      <g fill="#FFFFFF" opacity=".8"><circle cx="127" cy="-20" r="12"><animate attributeName="cy" values="-20;-70" dur="2.5s" repeatCount="indefinite"/><animate attributeName="opacity" values=".9;0" dur="2.5s" repeatCount="indefinite"/></circle><circle cx="135" cy="-40" r="16"><animate attributeName="cy" values="-36;-90" dur="2.5s" begin="1.2s" repeatCount="indefinite"/><animate attributeName="opacity" values=".9;0" dur="2.5s" begin="1.2s" repeatCount="indefinite"/></circle></g>
+    </g>
+    ${Array.from({ length: 40 }, (_, i) => `<circle cx="${(i * 97) % 1280}" cy="${(i * 53) % 720}" r="2" fill="#FFFFFF"><animate attributeName="cy" values="${(i * 53) % 720 - 720};${(i * 53) % 720}" dur="${7 + i % 5}s" repeatCount="indefinite"/></circle>`).join("")}
+  </svg>
+  ${pick ? `<div style="position:absolute;left:428px;top:500px">${catSVG(pick, 50)}</div>` : ""}
+  <div class="panel" style="position:absolute;left:40px;top:36px;width:600px;display:flex;flex-direction:column;gap:12px;padding:22px 26px">
+    <p style="margin:0;font-family:var(--font-title);font-weight:600;font-size:16px;letter-spacing:.08em;text-transform:uppercase;color:#4C6F94">L'île aux Coquillages est magnifique</p>
+    <h1 style="font-size:44px;line-height:1">Direction le Mont Givre !</h1>
+    <p style="margin:0;font-size:17px;line-height:1.5">À la gare de Bruyère, un train à vapeur siffle. Il part pour le Mont Givre, un village de montagne sous la neige, où un vieux café-refuge attend quelqu'un pour rallumer son poêle.</p>
+    <p style="margin:0;font-size:15px;line-height:1.5;font-weight:700;color:var(--ink2)">Tu emportes ta bourse (${S.coins} pièces) et un compagnon. Sur place, tu commences avec trois recettes de montagne. Le train te ramène à Bruyère quand tu veux.</p>
+  </div>
+  <div class="panel" style="position:absolute;right:40px;top:36px;width:440px;max-height:440px;display:flex;flex-direction:column;gap:12px;padding:22px">
+    <h2 style="font-size:22px">Choisis ton compagnon de voyage</h2>
+    <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;overflow:auto;padding:4px">
+      ${S.cats.map((id) => `<button data-a="departpick" data-id="${id}" aria-pressed="${pick === id}" style="display:flex;flex-direction:column;align-items:center;gap:2px;padding:10px 6px;border-radius:16px;border:3px solid ${pick === id ? "#4C6F94" : "transparent"};background:${pick === id ? "#fff" : "#E6EFF5"}">${catSVG(id, 48)}<b style="font-family:var(--font-title);font-size:15px">${CATS[id].n}</b></button>`).join("")}
+    </div>
+    <button class="btn green" data-a="embark" ${pick ? "" : "disabled"}>${pick ? "Monter dans le train avec " + CATS[pick].n + " →" : "Choisis un animal"}</button>
+    <button class="btn light small" data-a="village">Pas encore, je reste à Bruyère</button>
+  </div>`;
+}
+function givreWelcomeModal() {
+  const c = S.companion;
+  return `<div class="modal-bg"><div class="panel modal" role="dialog" aria-label="Bienvenue au Mont Givre" style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px;padding:30px;background:#F6FAFC;width:620px">
+    ${c ? catSVG(c, 90) : ""}
+    <span style="font-size:13px;font-weight:800;letter-spacing:.08em;color:#4C6F94">LE MONT GIVRE</span>
+    <h1 style="font-size:30px">Bienvenue à la montagne !</h1>
+    <p style="margin:0;font-size:16px;line-height:1.5">Le café-refuge sent encore le bois et le chocolat${c ? ", et " + esc(CATS[c].n) + " s'est déjà roulé en boule près du poêle" : ""}. Fais tes courses à l'<b>Épicerie du Col</b>, cuisine tes recettes de montagne et ouvre le café.</p>
+    <p class="muted" style="margin:0;font-weight:700">Chaque matin, regarde la <b>boîte aux lettres</b> : quelqu'un y glisse de drôles de cartes postales, signées « A. »…</p>
+    <button class="btn green" data-a="closemodal">C'est parti !</button></div></div>`;
+}
+function auroraModal() {
+  return `<div class="modal-bg"><div class="panel modal" role="dialog" aria-label="Les aurores sont revenues" style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px;padding:0 0 28px;background:#1F2A44;color:#F6EEDF;width:640px;overflow:hidden">
+    <svg width="640" height="170" viewBox="0 0 640 170" aria-hidden="true"><rect width="640" height="170" fill="#1F2A44"/>${auroraBands(640, 120)}<path d="M0 170 L120 110 L220 150 L340 80 L470 150 L560 110 L640 140 V170Z" fill="#E6EFF5"/>${Array.from({ length: 30 }, (_, i) => `<circle cx="${(i * 71) % 640}" cy="${(i * 37) % 90}" r="1.4" fill="#fff" opacity=".8"/>`).join("")}</svg>
+    <span style="font-size:13px;font-weight:800;letter-spacing:.08em;color:#8FD3B0">AU SOMMET DU MONT GIVRE</span>
+    <h1 style="font-size:30px;color:#F6EEDF">Les aurores sont revenues !</h1>
+    <p style="margin:0 28px;font-size:16px;line-height:1.5">La cabine d'Henri te dépose au sommet. Il fait nuit, il fait froid… et soudain, le ciel s'allume de vert et de violet. En bas, tout le village sort pour regarder. Assise sur la neige, une petite chatte blanche t'attendait : c'est elle, « A. », qui glissait les cartes postales sous ta porte.</p>
+    <div class="row" style="background:#2C3A5C;border-radius:16px;padding:12px 16px;text-align:left;margin:0 28px">${catSVG("aurore", 64)}<div><b style="font-family:var(--font-title);font-size:20px">Aurore rejoint ton café !</b><div style="font-weight:700;color:#C9D7E3">Et le village t'offre 300 pièces pour fêter ça.</div></div></div>
+    <button class="btn green" data-a="closemodal">Merci, Aurore !</button></div></div>`;
+}
+function auroraBands(w, h) {
+  return [["#8FD3B0", 0, 6], ["#B49CE0", 18, 8], ["#7FC6D3", 36, 7]].map(([c, dy, dur]) => `<path d="M0 ${h * .5 + dy} C${w * .2} ${h * .1 + dy} ${w * .4} ${h * .8 + dy} ${w * .6} ${h * .35 + dy} S${w * .9} ${h * .2 + dy} ${w} ${h * .45 + dy}" stroke="${c}" stroke-width="${18 - dy / 6}" fill="none" opacity=".55" stroke-linecap="round"><animate attributeName="opacity" values=".2;.65;.2" dur="${dur}s" repeatCount="indefinite"/></path>`).join("");
 }
 function islandWelcomeModal() {
   const c = S.companion;
@@ -2004,6 +2393,16 @@ function projectIcon(id, size = 70) {
     moulin: `<rect x="26" y="30" width="18" height="30" fill="#F6EEDF"/><path d="M24 32 L35 18 L46 32Z" fill="#A97C5A"/><g transform="translate(35 24)" stroke="#6B4A33" stroke-width="5" stroke-linecap="round"><path d="M0 0 L-18 -14 M0 0 L18 14 M0 0 L14 -18 M0 0 L-14 18"/></g>`,
     gare: `<rect x="10" y="26" width="50" height="26" rx="3" fill="#F6EEDF"/><path d="M6 28 L35 12 L64 28Z" fill="${c}"/><circle cx="35" cy="22" r="4" fill="#FBF5EA"/><rect x="18" y="34" width="10" height="18" fill="#8A5A3B"/><rect x="40" y="34" width="12" height="9" fill="#BFD8E0"/><path d="M0 58 h70 M0 62 h70" stroke="#6B4A33" stroke-width="2"/>`,
   }[id];
+  const givreArt = onGivre() ? {
+    pont: `<path d="M8 60 L62 14" stroke="#4A3326" stroke-width="2"/><rect x="24" y="30" width="22" height="18" rx="4" fill="${c}"/><rect x="28" y="34" width="6" height="6" fill="#DDEEF6"/><rect x="37" y="34" width="6" height="6" fill="#DDEEF6"/><path d="M35 30 v-6" stroke="#4A3326" stroke-width="2"/>`,
+    lanternes: `<path d="M6 24 Q35 44 64 24" stroke="#4A3326" stroke-width="2" fill="none"/>${[14, 26, 38, 50, 60].map((x, i) => `<circle cx="${x}" cy="${30 + (i === 2 ? 4 : i % 2 * 2)}" r="4" fill="${["#E06A6A", "#F2C46D", "#8FC79A", "#9CC3D2", "#E06A6A"][i]}"/>`).join("")}`,
+    fontaine: `<ellipse cx="35" cy="44" rx="26" ry="10" fill="#BFE0EE" stroke="#fff" stroke-width="3"/><circle cx="35" cy="26" r="5" fill="#F2C9A0"/><rect x="31" y="31" width="8" height="10" rx="3" fill="${c}"/><path d="M28 46 h6 M36 46 h6" stroke="#3E3433" stroke-width="2"/>`,
+    jardin: `<path d="M14 58 V38 L26 28 L38 38 V58Z M36 58 V42 L48 32 L60 42 V58Z" fill="#A97C5A"/><path d="M12 39 L26 27 L40 39 M34 43 L48 31 L62 43" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round"/><rect x="21" y="46" width="10" height="12" rx="5" fill="#4A3326"/><rect x="43" y="48" width="10" height="10" rx="5" fill="#4A3326"/>`,
+    kiosque: `<path d="M8 20 Q30 40 20 60" stroke="#E3ECF3" stroke-width="10" fill="none" stroke-linecap="round"/><rect x="30" y="40" width="28" height="7" rx="2" fill="${c}"/><path d="M28 50 H60 q4 0 4 -4" stroke="#8A5A3B" stroke-width="2" fill="none"/><circle cx="42" cy="34" r="5" fill="#F2C9A0"/>`,
+    terrasse: `<ellipse cx="30" cy="48" rx="16" ry="5" fill="#8A5A3B"/><rect x="28" y="48" width="4" height="10" fill="#6B4A33"/><path d="M52 24 v34" stroke="#3E3433" stroke-width="3"/><path d="M46 24 h12 l-3 -8 h-6z" fill="#E0A63A"/><circle cx="52" cy="14" r="7" fill="#F29A3A" opacity=".6"/>`,
+    moulin: `<rect x="14" y="30" width="42" height="28" fill="${c === "#6F9468" ? "#B5404A" : c}"/><path d="M8 32 L35 14 L62 32Z" fill="#8A5A3B"/><rect x="28" y="40" width="14" height="18" fill="#FBF5EA"/><path d="M28 40 l14 18 M42 40 l-14 18" stroke="#B5404A" stroke-width="2"/>`,
+    gare: `<rect x="34" y="34" width="26" height="8" rx="3" fill="#C9677A"/><path d="M32 44 H62 q4 0 4 -4" stroke="#8A5A3B" stroke-width="2" fill="none"/>${[10, 22].map((x) => `<ellipse cx="${x}" cy="44" rx="7" ry="4" fill="#9A9490"/><circle cx="${x - 6}" cy="40" r="3.5" fill="#9A9490"/>`).join("")}<path d="M16 44 H34" stroke="#4A3326"/>`,
+  }[id] : null;
   const isle = onIsland() ? {
     pont: `<rect x="0" y="44" width="70" height="20" fill="#9FDCDD"/><rect x="10" y="36" width="54" height="8" rx="2" fill="${c}"/>${[16, 30, 44, 58].map((x) => `<rect x="${x}" y="44" width="4" height="14" fill="#6B4A33"/>`).join("")}`,
     lanternes: `<path d="M8 22 Q35 40 62 22" stroke="#4A3326" stroke-width="2" fill="none"/>${[16, 30, 44, 56].map((x, i) => `<circle cx="${x}" cy="${30 + (i === 1 || i === 2 ? 4 : 0)}" r="6" fill="${["#E06A6A", "#F2C46D", "#9CC3D2", "#E9A9B0"][i]}"/>`).join("")}`,
@@ -2014,13 +2413,13 @@ function projectIcon(id, size = 70) {
     moulin: `<path d="M30 62 Q34 40 30 20" stroke="#A97C5A" stroke-width="5" fill="none"/><path d="M30 20 q-18 -4 -24 8 M30 20 q-6 -16 -20 -14 M30 20 q12 -14 26 -8 M30 20 q18 2 22 14" stroke="#5E9C62" stroke-width="6" fill="none" stroke-linecap="round"/><circle cx="34" cy="26" r="4" fill="#8A6448"/>`,
     gare: `<rect x="0" y="48" width="70" height="22" fill="#9FDCDD"/><path d="M8 42 H62 L56 54 H14Z" fill="${c}"/><rect x="20" y="30" width="26" height="12" rx="2" fill="#FBF5EA"/><rect x="24" y="33" width="6" height="5" fill="#9CC3D2"/><rect x="34" y="33" width="6" height="5" fill="#9CC3D2"/><rect x="40" y="20" width="4" height="10" fill="#E06A6A"/>`,
   }[id] : null;
-  return `<svg width="${size}" height="${size}" viewBox="0 0 70 70" aria-hidden="true"><circle cx="35" cy="35" r="35" fill="${onIsland() ? "#F6E4B9" : "#F3E9D6"}"/>${isle || art}</svg>`;
+  return `<svg width="${size}" height="${size}" viewBox="0 0 70 70" aria-hidden="true"><circle cx="35" cy="35" r="35" fill="${txt("#F6E4B9", "#F3E9D6")}"/>${givreArt || isle || art}</svg>`;
 }
 function viewProjects() {
   return `
   <div style="position:absolute;inset:0;background:#EFE1C6"></div>
-  <div class="hud"><div><span class="pill dark">${onIsland() ? "Projets de l'île" : "Projets du village"} · ${Object.keys(PROJECTS).filter(projDone).length} terminé(s)</span></div><div>${coinPill()}<button class="btn light small" data-a="village">${onIsland() ? "← Plage" : "← Village"}</button></div></div>
-  <p style="position:absolute;left:28px;top:76px;margin:0;font-weight:800;color:var(--ink2)">${onIsland() ? "L'argent du café fait revivre la plage. Chaque projet change l'île… et ton café." : "L'argent du café fait revivre Bruyère. Chaque projet change le village… et ton café."}</p>
+  <div class="hud"><div><span class="pill dark">${txt("Projets de l'île", "Projets du village")} · ${Object.keys(PROJECTS).filter(projDone).length} terminé(s)</span></div><div>${coinPill()}<button class="btn light small" data-a="village">${txt("← Plage", "← Village")}</button></div></div>
+  <p style="position:absolute;left:28px;top:76px;margin:0;font-weight:800;color:var(--ink2)">${txt("L'argent du café fait revivre la plage. Chaque projet change l'île… et ton café.", "L'argent du café fait revivre Bruyère. Chaque projet change le village… et ton café.")}</p>
   <div class="grid" style="position:absolute;left:24px;right:24px;top:106px;bottom:20px;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;overflow:auto;padding:4px;align-content:start">
     ${Object.entries(PROJECTS).filter(([id]) => projVisible(id)).map(([id, P]) => { const got = S.projects[id] || 0, done = projDone(id), open = projOpen(id);
       return `<div class="card" style="gap:8px;min-height:250px;${done ? "background:#F1F7EE" : ""}${!open ? "opacity:.6" : ""}">
@@ -2036,7 +2435,7 @@ function viewProjects() {
     ${(() => { const h = Object.keys(PROJECTS).find((id) => !projVisible(id)); return h ? `<div class="card" style="align-items:center;justify-content:center;text-align:center;border:3px dashed var(--line);background:#FBF5EA;box-shadow:none;min-height:240px">
       <svg width="64" height="64" viewBox="0 0 70 70" aria-hidden="true"><circle cx="35" cy="35" r="35" fill="#F3E9D6"/><text x="35" y="47" text-anchor="middle" font-size="34" font-weight="800" fill="#C9B48E" font-family="sans-serif">?</text></svg>
       <b style="font-family:var(--font-title);font-size:17px">Prochain projet</b>
-      <span class="muted" style="font-weight:700;font-size:14px">${onIsland() ? "Les voisins en discutent…" : "Les villageois en discutent…"} Annonce dans ${projDay(h) - S.day} jour(s).</span></div>` : ""; })()}
+      <span class="muted" style="font-weight:700;font-size:14px">${txt("Les voisins en discutent…", "Les villageois en discutent…")} Annonce dans ${projDay(h) - S.day} jour(s).</span></div>` : ""; })()}
   </div>`;
 }
 function projectDoneModal(id, extra = "") {
@@ -2047,7 +2446,7 @@ function projectDoneModal(id, extra = "") {
     <h1 style="font-size:30px">${P.n}</h1>
     <p style="margin:0;font-size:16px">${esc(P.d)}</p>
     <p style="margin:0;font-weight:800;color:var(--ok)">${esc(P.fx)}</p>
-    <p class="muted" style="margin:0;font-weight:700">${onIsland() ? "Toute la plage est venue applaudir. Regarde la carte !" : "Tout le village est venu applaudir. Regarde la carte !"}</p>
+    <p class="muted" style="margin:0;font-weight:700">${txt("Toute la plage est venue applaudir. Regarde la carte !", "Tout le village est venu applaudir. Regarde la carte !")}</p>
     ${extra ? `<p style="margin:0;font-weight:800;color:#8A5A3B;background:#F6E4B9;border-radius:12px;padding:8px 12px">${esc(extra)}</p>` : ""}
     ${!onIsland() && Object.keys(PROJECTS).every(projDone) ? `<p style="margin:0;font-weight:800;color:#2F5A80;background:#E7F1FB;border-radius:12px;padding:8px 12px">Bruyère est comme neuve ! Un bateau t'attend : une nouvelle aventure commence sur l'île aux Coquillages.</p>` : ""}
     <button class="btn green" data-a="closemodal">Formidable !</button></div></div>`;
@@ -2057,7 +2456,7 @@ function projectDoneModal(id, extra = "") {
 function viewFriends() {
   return `
   <div style="position:absolute;inset:0;background:#EFE1C6"></div>
-  <div class="hud"><div><span class="pill dark">${onIsland() ? "Carnet des voisins" : "Carnet des villageois"}</span></div><div><button class="btn light small" data-a="village">${onIsland() ? "← Plage" : "← Village"}</button></div></div>
+  <div class="hud"><div><span class="pill dark">${txt("Carnet des voisins", "Carnet des villageois")}</span></div><div><button class="btn light small" data-a="village">${txt("← Plage", "← Village")}</button></div></div>
   <p style="position:absolute;left:28px;top:76px;margin:0;font-weight:800;color:var(--ink2)">Sers à chacun son plat préféré : votre amitié grandit trois fois plus vite.</p>
   <div class="grid" style="position:absolute;left:24px;right:24px;top:106px;bottom:20px;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;overflow:auto;padding:4px;align-content:start">
     ${VILLAGERS.map((v) => { const h = hearts(v.n), seen = (S.stories || {})[v.n] || 0, favKnown = h >= 1, nextAt = STORY_AT[seen];
@@ -2074,11 +2473,11 @@ function viewFriends() {
 // ---------- Album ----------
 function viewAlbum() {
   // à Bruyère : les animaux de Bruyère ; sur l'île : le compagnon et les animaux de l'île
-  const ids = onIsland() ? [...new Set([S.companion, ...S.cats.filter((c) => !CATS[c].isl), ...Object.keys(CATS).filter((c) => CATS[c].isl === "coq")])].filter(Boolean) : Object.keys(CATS).filter((c) => !CATS[c].isl);
-  if (onIsland() && ui.albumTab === "msgs") return viewBottles();
+  const ids = away() ? [...new Set([S.companion, ...S.cats.filter((c) => CATS[c].isl !== S.island), ...Object.keys(CATS).filter((c) => CATS[c].isl === S.island)])].filter(Boolean) : Object.keys(CATS).filter((c) => !CATS[c].isl);
+  if (away() && ui.albumTab === "msgs") return viewBottles();
   return `
   <div style="position:absolute;inset:0;background:#EFE1C6"></div>
-  <div class="hud"><div><span class="pill dark">Album des animaux · ${ids.filter((c) => S.cats.includes(c)).length} / ${ids.length}</span>${onIsland() ? `<button class="pill" data-a="albumtab" data-tab="msgs" style="border:0">Messages en bouteille (${(S.bottles || []).length})</button>` : ""}</div><div><button class="btn light small" data-a="village">${onIsland() ? "← Plage" : "← Village"}</button></div></div>
+  <div class="hud"><div><span class="pill dark">Album des animaux · ${ids.filter((c) => S.cats.includes(c)).length} / ${ids.length}</span>${away() ? `<button class="pill" data-a="albumtab" data-tab="msgs" style="border:0">${onGivre() ? "Cartes postales" : "Messages en bouteille"} (${(S.bottles || []).length})</button>` : ""}</div><div><button class="btn light small" data-a="village">${txt("← Plage", "← Village")}</button></div></div>
   <div class="grid" style="position:absolute;left:24px;right:24px;top:96px;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px;bottom:16px;overflow:auto">
     ${ids.map((id) => { const c = CATS[id], have = S.cats.includes(id);
       return `<div class="card" style="align-items:center;text-align:center;justify-content:flex-start;gap:6px;padding:10px">
@@ -2097,23 +2496,23 @@ function viewAlbum() {
 function viewBottles() {
   const got = (S.bottles || []).slice().sort((a, b) => a - b);
   return `
-  <div style="position:absolute;inset:0;background:#F6E4B9"></div>
-  <div class="hud"><div><button class="pill" data-a="albumtab" data-tab="pets" style="border:0">Album des animaux</button><span class="pill dark">Messages en bouteille · ${got.length} / ${LETTERS.length}</span></div><div><button class="btn light small" data-a="village">← Plage</button></div></div>
+  <div style="position:absolute;inset:0;background:${onGivre() ? "#E6EFF5" : "#F6E4B9"}"></div>
+  <div class="hud"><div><button class="pill" data-a="albumtab" data-tab="pets" style="border:0">Album des animaux</button><span class="pill dark">${onGivre() ? "Cartes postales" : "Messages en bouteille"} · ${got.length} / ${LETTERS.length}</span></div><div><button class="btn light small" data-a="village">← Plage</button></div></div>
   <div class="grid" style="position:absolute;left:24px;right:24px;top:96px;bottom:16px;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;overflow:auto;align-content:start;padding:4px">
-    ${LETTERS.map((L, i) => got.includes(i) ? `<div class="card" style="background:#FBF0D2;gap:8px"><span class="muted" style="font-weight:800;font-size:12px">MESSAGE DE ${esc(L.from.toUpperCase())}</span><p style="margin:0;font-size:16px;line-height:1.45;font-family:Georgia,serif">${esc(L.text)}</p></div>`
-      : `<div class="card" style="align-items:center;justify-content:center;text-align:center;border:3px dashed var(--line);background:#FBF5EA;box-shadow:none;min-height:120px"><b style="font-family:var(--font-title);font-size:16px">Bouteille pas encore trouvée</b><span class="muted" style="font-size:13px;font-weight:700">Guette la plage chaque matin…</span></div>`).join("")}
+    ${LETTERS.map((L, i) => got.includes(i) ? `<div class="card" style="background:#FBF0D2;gap:8px"><span class="muted" style="font-weight:800;font-size:12px">${onGivre() ? "CARTE POSTALE DE " : "MESSAGE DE "}${esc(L.from.toUpperCase())}</span><p style="margin:0;font-size:16px;line-height:1.45;font-family:Georgia,serif">${esc(L.text)}</p></div>`
+      : `<div class="card" style="align-items:center;justify-content:center;text-align:center;border:3px dashed var(--line);background:#FBF5EA;box-shadow:none;min-height:120px"><b style="font-family:var(--font-title);font-size:16px">${onGivre() ? "Carte pas encore reçue" : "Bouteille pas encore trouvée"}</b><span class="muted" style="font-size:13px;font-weight:700">${onGivre() ? "Regarde la boîte aux lettres chaque matin…" : "Guette la plage chaque matin…"}</span></div>`).join("")}
   </div>`;
 }
 
 // ---------- Modale lettre ----------
 function letterModal() {
-  const L = LETTERS[(S.day - 1) % LETTERS.length], isle = onIsland();
-  return `<div class="modal-bg"><div class="panel modal" role="dialog" aria-label="${isle ? "Message en bouteille" : "Lettre"}" style="display:flex;flex-direction:column;gap:14px;padding:28px;background:${isle ? "#F6E7C4" : "#FFFBF2"}">
-    <span class="muted" style="font-weight:800;font-size:13px">${isle ? "MESSAGE EN BOUTEILLE · " : "LETTRE DE "}${esc(L.from.toUpperCase())}</span>
+  const L = LETTERS[(S.day - 1) % LETTERS.length], isle = away(), pc = onGivre();
+  return `<div class="modal-bg"><div class="panel modal" role="dialog" aria-label="${pc ? "Carte postale" : isle ? "Message en bouteille" : "Lettre"}" style="display:flex;flex-direction:column;gap:14px;padding:28px;background:${pc ? "#F6FAFC" : isle ? "#F6E7C4" : "#FFFBF2"}">
+    <span class="muted" style="font-weight:800;font-size:13px">${pc ? "CARTE POSTALE DE " : isle ? "MESSAGE EN BOUTEILLE · " : "LETTRE DE "}${esc(L.from.toUpperCase())}</span>
     <p style="margin:0;font-size:18px;line-height:1.5;font-family:Georgia,serif">${esc(L.text)}</p>
     ${L.coins ? `<b style="color:var(--ok)">+${L.coins} pièces</b>` : ""}${L.rep ? `<b style="color:var(--ok)">+${L.rep} réputation</b>` : ""}
-    ${isle ? `<p class="muted" style="margin:0;font-size:13px;font-weight:700">Le message est rangé dans l'album, page « Messages en bouteille ».</p>` : ""}
-    <div class="row" style="justify-content:flex-end"><button class="btn green" data-a="closemodal">${isle ? "Ranger le message" : "Ranger la lettre"}</button></div></div></div>`;
+    ${isle ? `<p class="muted" style="margin:0;font-size:13px;font-weight:700">${pc ? "La carte est rangée dans l'album, page « Cartes postales »." : "Le message est rangé dans l'album, page « Messages en bouteille »."}</p>` : ""}
+    <div class="row" style="justify-content:flex-end"><button class="btn green" data-a="closemodal">${pc ? "Ranger la carte" : isle ? "Ranger le message" : "Ranger la lettre"}</button></div></div></div>`;
 }
 
 // ---------- Modale « Comment jouer » ----------
@@ -2134,6 +2533,7 @@ function helpModal() {
     <div style="background:#F3E9D6;border-radius:14px;padding:12px 16px;font-size:14px;line-height:1.5">
       <b>Astuces :</b> répare le pont pour acheter de nouvelles recettes à la <b>Librairie</b>. La <b>déco</b> de la brocante augmente les pourboires, ses <b>jouets</b> gardent les chats heureux, et certains objets attirent de nouveaux chats. Chaque <b>saison</b> apporte ses produits à l'épicerie et une recette offerte ; la <b>pluie</b> amène du monde, et le 6e jour de chaque saison, c'est la <b>fête</b> ! De nouveaux objets et recettes arrivent au fil des jours. Le bouton haut-parleur en haut coupe le son. Lis la <b>lettre</b> du jour à la poste. Va dire bonjour à <b>Papi Jules</b>, qui pêche au bord de la rivière. Donne des pièces pour <b>réparer le pont</b> : l'autre rive cache une boulangerie, une librairie (nouvelles recettes) et une poissonnerie.
     </div>
+    ${onGivre() ? `<div style="background:#E6EFF5;border-radius:14px;padding:12px 16px;font-size:14px;line-height:1.5"><b>Au Mont Givre :</b> c'est toujours l'hiver ! Les ingrédients sont à l'<b>Épicerie du Col</b> et à la <b>Fromagerie</b>, les recettes à la <b>Chocolaterie</b> et à l'<b>Auberge du Col</b>, la déco à la <b>Boutique de ski</b>. Chaque matin, une <b>carte postale</b> peut arriver dans la boîte aux lettres. Le <b>train</b> de la gare te ramène à Bruyère quand tu veux.</div>` : ""}
     ${onIsland() ? `<div style="background:#E7F1FB;border-radius:14px;padding:12px 16px;font-size:14px;line-height:1.5"><b>Sur l'île aux Coquillages :</b> c'est toujours l'été ! Les ingrédients sont à l'<b>Épicerie de la Plage</b>, les recettes à la <b>Crêperie du Phare</b> et au <b>Glacier</b>, la déco chez <b>Playa &amp; Co</b> et aux <b>Souvenirs</b>. Chaque matin, une <b>bouteille à la mer</b> peut s'échouer sur la plage. Le <b>bateau</b> du ponton te ramène à Bruyère quand tu veux.</div>` : ""}
     <div style="background:#FFF4E0;border-radius:14px;padding:10px 16px;font-size:14px;line-height:1.5"><b>Les chiens</b> rapportent parfois une petite trouvaille : quand une bulle dorée apparaît au-dessus d'un chien, touche-le !</div>
     <div class="row" style="justify-content:flex-end"><button class="btn green" data-a="closemodal">C'est parti !</button></div>
@@ -2169,25 +2569,34 @@ function julesModal() {
 function act(a, el, isKey = false) {
   const id = el.dataset.id;
   switch (a) {
-    case "new": clearSave(); applyIsland("bruyere"); S = TEST ? testGame() : newGame(); save(); saveMeta({ cur: "bruyere", coq: false }); go("village"); ui.modal = TEST ? null : helpModal; render(); if (TEST) toast("Mode test : Bruyère est terminée, le bateau pour l'île t'attend !"); break;
+    case "new": clearSave(); applyIsland("bruyere"); S = TEST ? testGame() : newGame(); save(); saveMeta({ cur: "bruyere", coq: false, coqDone: TEST }); go("village"); ui.modal = TEST ? null : helpModal; render(); if (TEST) toast("Mode test : Bruyère est terminée. Le bateau pour l'île et le train pour le Mont Givre t'attendent !"); break;
     case "help": ui.modal = helpModal; render(); break;
     case "launcher": location.href = "../"; break;
     case "continue": S = null; openIsland(loadMeta().cur); go("village"); break;
     case "village": go("village"); break;
-    case "depart": if (cafe) { toast("Termine d'abord ta journée au café !"); break; } ui.departPick = null; go("depart"); break;
+    case "depart": if (cafe) { toast("Termine d'abord ta journée au café !"); break; } ui.departPick = null; ui.departDest = el.dataset.dest || "coq"; go("depart"); break;
     case "departpick": ui.departPick = id; sfx(isDog(id) ? "bark" : "purr"); render(); break;
     case "embark": {
       const comp = ui.departPick; if (!comp || !S.cats.includes(comp)) break;
-      const purse = S.coins; S.coins = 0; save(); const m = loadMeta(); m.coq = true; m.cur = "coq"; saveMeta(m);
-      localStorage.removeItem(islandKey("coq"));
-      applyIsland("coq"); S = newGame("coq", comp); S.coins = purse; S.recipes.forEach((r) => { S.showcase[r] = 0; }); save();
-      cafe = null; ui.cook = null; ui.kitchenSel = S.recipes[0]; ui.screen = "village"; ui.modal = islandWelcomeModal; sfx("done"); render(); break;
+      const dest = ui.departDest === "givre" ? "givre" : "coq";
+      const purse = S.coins; S.coins = 0; save(); const m = loadMeta(); m[dest] = true; m.cur = dest; saveMeta(m);
+      localStorage.removeItem(islandKey(dest));
+      applyIsland(dest); S = newGame(dest, comp); S.coins = purse; S.recipes.forEach((r) => { S.showcase[r] = 0; }); save();
+      cafe = null; ui.cook = null; ui.kitchenSel = S.recipes[0]; ui.screen = "village"; ui.modal = dest === "givre" ? givreWelcomeModal : islandWelcomeModal; sfx("done"); render(); break;
     }
-    case "toisland": case "tobruyere": {
+    case "toisland": case "tobruyere": case "togivre": {
       if (cafe || ui.cook) { toast("Termine d'abord ta journée au café !"); break; }
-      const dest = a === "toisland" ? "coq" : "bruyere", purse = S.coins; S.coins = 0;
+      const from = S.island, dest = a === "toisland" ? "coq" : a === "togivre" ? "givre" : "bruyere", purse = S.coins; S.coins = 0;
       openIsland(dest); S.coins += purse; save(); sfx("bell");
-      go("village"); toast(dest === "coq" ? "Le bateau accoste sur l'île aux Coquillages." : "Te revoilà à Bruyère ! Papi Jules agite son chapeau sur le quai."); break;
+      go("village"); toast(dest === "coq" ? "Le bateau accoste sur l'île aux Coquillages." : dest === "givre" ? "Tchou tchou ! Le train arrive au Mont Givre." : from === "givre" ? "Le train entre en gare de Bruyère. Papi Jules t'attend sur le quai." : "Te revoilà à Bruyère ! Papi Jules agite son chapeau sur le quai."); break;
+    }
+    case "sommet": {
+      const aCards = LETTERS.map((L, i) => L.from === "A." ? i : -1).filter((i) => i >= 0), read = aCards.filter((i) => (S.bottles || []).includes(i)).length;
+      if (S.aurora) { toast("Chaque soir, les aurores dansent au-dessus du sommet. Aurore aime les regarder depuis la fenêtre du café."); break; }
+      if (!projDone("pont")) { toast("Le téléphérique est en panne. Henri dit qu'il faut le réparer (projet « Rouvrir le téléphérique »)."); break; }
+      if (read < 3) { toast("Là-haut, le ciel est tout noir… Les cartes postales de « A. » parlent du sommet : lis-en encore (" + read + " / 3)."); break; }
+      S.aurora = true; S.coins += 300; if (!S.cats.includes("aurore")) { S.cats.push("aurore"); S.mood.aurore = 90; }
+      save(); sfx("done"); ui.modal = auroraModal; render(); break;
     }
     case "grotte": toast(S.treasure ? "La grotte est calme. Doublon y fait parfois la sieste au frais." : (S.mapPieces || 0) >= 4 ? "D'après la carte, ce n'est pas ici… regarde plutôt l'îlot !" : "Il fait tout noir… On entend comme un drôle de bruit, tout au fond."); break;
     case "treasure": if ((S.mapPieces || 0) < 4 || S.treasure) break;
@@ -2230,7 +2639,7 @@ function act(a, el, isKey = false) {
     }
     case "projects": go("projects"); break;
     case "bouquet": if (S.bouquet) { toast("Le bouquet embaume déjà le café."); break; } if (S.coins < 15) { toast("Pas assez de pièces."); break; } S.coins -= 15; S.bouquet = true; save(); render(); toast("Bouquet installé : +10 % de pourboires aujourd'hui"); break;
-    case "letter": if (S.letterRead) { toast(onIsland() ? "Pas de bouteille aujourd'hui." : "Pas de nouvelle lettre aujourd'hui."); break; } { const li = (S.day - 1) % LETTERS.length, L = LETTERS[li]; S.letterRead = true; if (onIsland()) { S.bottles = S.bottles || []; if (!S.bottles.includes(li)) S.bottles.push(li); sfx("swish"); } S.coins += L.coins || 0; S.rep += L.rep || 0; save(); ui.modal = letterModal; render(); } break;
+    case "letter": if (S.letterRead) { toast(txt("Pas de bouteille aujourd'hui.", "Pas de nouvelle lettre aujourd'hui.")); break; } { const li = (S.day - 1) % LETTERS.length, L = LETTERS[li]; S.letterRead = true; if (away()) { S.bottles = S.bottles || []; if (!S.bottles.includes(li)) S.bottles.push(li); sfx("swish"); } S.coins += L.coins || 0; S.rep += L.rep || 0; save(); ui.modal = letterModal; render(); } break;
     case "closemodal": ui.modal = null; render(); break;
     case "jules": {
       ui.modal = julesModal;
