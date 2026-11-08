@@ -90,9 +90,9 @@ const ITEMS = {
   rhubarbe: { n: "Rhubarbe",        p: 9,  c: "#E9A9B0", shop: "epicerie", season: "Printemps" },
   fraises:  { n: "Fraises",         p: 10, c: "#E06A6A", shop: "epicerie", season: "Printemps" },
   sureau:   { n: "Fleurs de sureau",p: 14, c: "#DCEBD6", shop: "epicerie", season: "Printemps" },
-  peches:   { n: "Pêches",          p: 10, c: "#F5B38A", shop: "epicerie", season: "Été" },
-  menthe:   { n: "Menthe fraîche",  p: 8,  c: "#8FC79A", shop: "epicerie", season: "Été" },
-  framboises:{ n: "Framboises",     p: 12, c: "#D9506A", shop: "epicerie", season: "Été" },
+  peches:   { n: "Pêches",          p: 10, c: "#F5B38A", shop: "epicerie", season: "Été", also: ["epiplage"] },
+  menthe:   { n: "Menthe fraîche",  p: 8,  c: "#8FC79A", shop: "epicerie", season: "Été", also: ["epiplage"] },
+  framboises:{ n: "Framboises",     p: 12, c: "#D9506A", shop: "epicerie", season: "Été", also: ["epiplage"] },
   potiron:  { n: "Potiron",         p: 9,  c: "#E8893A", shop: "epicerie", season: "Automne" },
   chataignes:{ n: "Châtaignes",     p: 11, c: "#8A5A3B", shop: "epicerie", season: "Automne" },
   figues:   { n: "Figues",          p: 12, c: "#7A4F7A", shop: "epicerie", season: "Automne" },
@@ -124,6 +124,16 @@ const ITEMS = {
   coco:     { n: "Noix de coco",    p: 9,  c: "#8A6448", shop: "epiplage" },
   ananas:   { n: "Ananas",          p: 10, c: "#E8B930", shop: "epiplage" },
   mangue:   { n: "Mangues",         p: 11, c: "#F29A3A", shop: "epiplage" },
+  pasteque: { n: "Pastèque",        p: 9,  c: "#E8606A", shop: "epiplage" },
+  citronvert:{ n: "Citrons verts",  p: 9,  c: "#9CC85A", shop: "epiplage" },
+  laitcoco: { n: "Lait de coco",    p: 10, c: "#F4EDE2", shop: "epiplage" },
+  passion:  { n: "Fruits de la passion", p: 13, c: "#8C5E9E", shop: "epiplage" },
+  sucrecanne:{ n: "Sucre de canne", p: 7,  c: "#D9B56A", shop: "epiplage" },
+  // Poissonnerie du Port
+  sardinef: { n: "Sardines fraîches", p: 10, c: "#9CB4C2", shop: "poissport" },
+  calamar:  { n: "Calamars",        p: 14, c: "#F1E1D6", shop: "poissport" },
+  dorade:   { n: "Dorade",          p: 16, c: "#C9B9A8", shop: "poissport" },
+  moules:   { n: "Moules",          p: 12, c: "#3E4A5A", shop: "poissport" },
   // Animalerie : tout pour les chats
   croquettes:{ n: "Croquettes",     p: 12, c: "#C99A6B", shop: "animalerie", also: ["animplage"], cat: true, fx: 40 },
   sardines: { n: "Sardines pour chats", p: 10, c: "#B9C6CC", shop: "animalerie", also: ["animplage"], cat: true, fx: 50 },
@@ -131,6 +141,8 @@ const ITEMS = {
   poisson:  { n: "Poisson pour chats", p: 18, c: "#9CC3D2", shop: "animalerie", also: ["animplage"], cat: true, fx: 70 },
   crevettes:{ n: "Crevettes pour chats", p: 26, c: "#F2A08A", shop: "animalerie", also: ["animplage"], cat: true, fx: 90 },
   croqchien:{ n: "Croquettes pour chiens", p: 12, c: "#B5774F", shop: "animalerie", also: ["animplage"], cat: true, dog: true, fx: 40 },
+  croqpoisson:{ n: "Croquettes au poisson", p: 15, c: "#9CC3D2", shop: "animplage", cat: true, fx: 55 },
+  biscuitchien:{ n: "Biscuits pour chiens", p: 16, c: "#D9A55B", shop: "animplage", cat: true, dog: true, fx: 55 },
   os:       { n: "Os à mâcher",     p: 20, c: "#F6EEDF", shop: "animalerie", also: ["animplage"], cat: true, dog: true, fx: 70 },
 };
 
@@ -148,6 +160,18 @@ const RECIPES = {
   sorbetananas:{ n: "Sorbet ananas",  c: "#E8B930", isl: "coq", needs: { ananas: 1, miel: 1 }, steps: ["Mélanger", "Façonner"], yield: 6, price: 15, book: 70, shop: "glacier", d: "Frais comme une vague." },
   glacemangue:{ n: "Glace mangue",    c: "#F29A3A", isl: "coq", needs: { mangue: 1, creme: 1 }, steps: ["Mélanger", "Façonner"], yield: 6, price: 16, book: 80, shop: "glacier", d: "Douce et parfumée." },
   coupetropicale:{ n: "Coupe tropicale", c: "#F5C6CF", isl: "coq", needs: { mangue: 1, banane: 1, creme: 1 }, steps: ["Garnir les coupes", "Fouetter la crème"], yield: 4, price: 24, book: 100, shop: "glacier", d: "La star de la plage." },
+  sorbetpasteque:{ n: "Sorbet pastèque", c: "#E8606A", isl: "coq", needs: { pasteque: 1, sucrecanne: 1 }, steps: ["Mélanger", "Façonner"], yield: 6, price: 15, book: 60, shop: "glacier", d: "Rose, frais, avec de fausses graines en chocolat." },
+  glacepassion:{ n: "Glace passion",   c: "#8C5E9E", isl: "coq", needs: { passion: 1, creme: 1, sucrecanne: 1 }, steps: ["Fouetter la crème", "Façonner"], yield: 6, price: 18, book: 90, shop: "glacier", d: "Acidulée et parfumée." },
+  granite:  { n: "Granité citron vert", c: "#9CC85A", isl: "coq", needs: { citronvert: 1, sucrecanne: 1 }, steps: ["Presser les citrons", "Façonner"], yield: 6, price: 13, book: 50, shop: "glacier", d: "Le plus rafraîchissant de la plage." },
+  milkshake:{ n: "Milk-shake coco",    c: "#F4EDE2", isl: "coq", needs: { laitcoco: 1, lait: 1, vanille: 1 }, steps: ["Mélanger"], yield: 4, price: 17, book: 70, shop: "glacier", d: "Doux comme une sieste au soleil." },
+  bananasplit:{ n: "Banana split",     c: "#F2D45C", isl: "coq", needs: { banane: 1, creme: 1, cacao: 1 }, steps: ["Garnir les coupes", "Fouetter la crème"], yield: 4, price: 23, book: 110, shop: "glacier", d: "Le dessert des grands jours." },
+  crepecoco:{ n: "Crêpes banane-coco", c: "#F3D9A0", isl: "coq", needs: { farine: 1, oeufs: 1, laitcoco: 1, banane: 1 }, steps: ["Fouetter la pâte", "Cuire à la poêle"], yield: 6, price: 18, book: 70, shop: "creperie", d: "La spécialité de la crêperie." },
+  limonade: { n: "Limonade citron vert-menthe", c: "#BFE3A0", isl: "coq", needs: { citronvert: 1, menthe: 1, sucrecanne: 1 }, steps: ["Presser les citrons", "Mélanger"], yield: 6, price: 14, book: 50, shop: "creperie", d: "Pétillante et toute verte." },
+  lassi:    { n: "Lassi mangue",       c: "#F2B35A", isl: "coq", needs: { mangue: 1, lait: 1, miel: 1 }, steps: ["Mélanger"], yield: 4, price: 16, book: 60, shop: "creperie", d: "Onctueux et doré." },
+  sardinesgr:{ n: "Sardines grillées",  c: "#9CB4C2", isl: "coq", needs: { sardinef: 2, citronvert: 1 }, steps: ["Garnir les brochettes", "Griller au four"], yield: 4, price: 19, book: 70, shop: "creperie", d: "L'odeur des soirs d'été sur le port." },
+  calamars: { n: "Calamars à la plancha", c: "#F1E1D6", isl: "coq", needs: { calamar: 1, citron: 1, beurre: 1 }, steps: ["Cuire à la poêle"], yield: 4, price: 22, book: 90, shop: "creperie", d: "La recette de Paco." },
+  moulescreme:{ n: "Moules à la crème", c: "#3E4A5A", isl: "coq", needs: { moules: 2, creme: 1 }, steps: ["Chauffer le bouillon", "Mélanger"], yield: 4, price: 24, book: 100, shop: "creperie", d: "On les mange avec les doigts." },
+  doradefour:{ n: "Dorade au four",     c: "#C9B9A8", isl: "coq", needs: { dorade: 1, citronvert: 1, beurre: 1 }, steps: ["Garnir de citron", "Cuire au four"], yield: 4, price: 26, book: 120, shop: "creperie", d: "Le plat des grandes occasions." },
   // --- recettes de saison (la première de chaque saison est offerte par Madame Rose)
   pecheT:  { n: "Tarte aux pêches",    c: "#F5B38A", season: "Été", gift: true, needs: { peches: 2, farine: 1, beurre: 1 }, steps: ["Pétrir la pâte", "Garnir de pêches", "Cuire au four"], yield: 4, price: 24, book: 0, shop: "saison", d: "Le goût de l'été." },
   theglace:{ n: "Thé glacé à la menthe", c: "#8FC79A", season: "Été", needs: { menthe: 1, citron: 1, miel: 1 }, steps: ["Chauffer l'eau", "Laisser infuser"], yield: 6, price: 15, book: 60, shop: "librairie", d: "Pour les après-midis brûlants." },
@@ -203,6 +227,10 @@ const UNLOCK = {
   // île aux Coquillages
   perle: 4, corail: 6, coquille: 2, galet: 3, mousse: 8, bigorneau: 9, brochettes: 4, sorbetananas: 3, glacemangue: 6, coupetropicale: 9,
   transats: 3, hamac: 5, maquette: 4, lampephare: 8,
+  passion: 4, calamar: 3, dorade: 6, moules: 5, sucrecanne: 1,
+  granite: 2, sorbetpasteque: 1, milkshake: 4, glacepassion: 7, bananasplit: 10,
+  limonade: 2, lassi: 3, sardinesgr: 3, crepecoco: 5, calamars: 6, moulescreme: 8, doradefour: 11,
+  palmierpot: 2, raphia: 4, paddle: 7, etoiles: 2, filet: 5, carillon: 7, aquatropic: 10, coussinbouee: 3, biscuitchien: 2,
 };
 const unlocked = (id) => S.day >= (UNLOCK[id] || 1);
 const DECOR = {
@@ -228,6 +256,14 @@ const DECOR = {
   bocal:      { n: "Bocal de coquillages",  p: 25, c: "#DDEEF2", d: "+5 % de pourboires", tip: 0.05, shop: "souvenirs" },
   maquette:   { n: "Maquette de voilier",   p: 70, c: "#C9677A", d: "+5 % de pourboires", tip: 0.05, shop: "souvenirs" },
   lampephare: { n: "Lampe en forme de phare", p: 90, c: "#F7DFA0", d: "+10 % de pourboires", tip: 0.10, shop: "souvenirs" },
+  palmierpot: { n: "Palmier en pot",        p: 45, c: "#5E9C62", d: "+5 % de pourboires", tip: 0.05, shop: "surf" },
+  raphia:     { n: "Tapis en raphia",       p: 50, c: "#D9B56A", d: "+5 % de pourboires", tip: 0.05, shop: "surf" },
+  paddle:     { n: "Paddle au mur",         p: 65, c: "#5FA9B4", d: "+5 % de pourboires", tip: 0.05, shop: "surf" },
+  etoiles:    { n: "Étoiles de mer murales", p: 30, c: "#F29A3A", d: "+5 % de pourboires", tip: 0.05, shop: "souvenirs" },
+  filet:      { n: "Filet de pêcheur",      p: 40, c: "#C9A27A", d: "+5 % de pourboires", tip: 0.05, shop: "souvenirs" },
+  carillon:   { n: "Carillon de coquillages", p: 80, c: "#F5C6CF", d: "+10 % de pourboires et un joli tintement", tip: 0.10, shop: "souvenirs" },
+  aquatropic: { n: "Aquarium tropical",     p: 160, c: "#5FA8C4", d: "Jouet géant : les animaux restent heureux bien plus longtemps.", toy: 0.30, shop: "souvenirs" },
+  coussinbouee:{ n: "Coussin bouée",        p: 35, c: "#E06A6A", d: "Jouet : les animaux restent heureux plus longtemps.", toy: 0.12, shop: "animplage" },
   balle:      { n: "Balle en caoutchouc", p: 25, c: "#C9677A", d: "Jouet : les chiens restent joyeux plus longtemps.", toy: 0.1, shop: "animalerie", also: ["animplage"] },
   aquarium:   { n: "Aquarium",            p: 150, c: "#86B3C6", d: "Jouet géant ! Et un chat curieux pourrait venir…", toy: 0.30 },
 };
@@ -978,7 +1014,7 @@ function viewIsland() {
   ${festival() ? `<svg width="960" height="60" viewBox="0 0 960 60" aria-hidden="true" style="position:absolute;left:0;top:64px;pointer-events:none"><path d="M0 10 Q240 40 480 10 T960 10" stroke="#8A5A3B" stroke-width="2" fill="none"/>${Array.from({length:24},(_,i)=>`<path d="M${20+i*40} ${14+Math.sin(i/3.8*Math.PI)*-10+12} l10 18 l10 -18z" fill="${["#E9A9B0","#F2C46D","#8FAF8A","#9CC3D2"][i%4]}"/>`).join("")}</svg>` : ""}
   <button class="hot" data-a="${cafe ? "opencafe" : "kitchen"}" style="left:316px;top:198px"><b>Ton café</b><small>${cafe ? "Service en pause" : "Rentrer cuisiner"}</small></button>
   <button class="hot main" data-a="shop" data-tab="epiplage" style="left:562px;top:242px"><b>Épicerie de la Plage</b><small>Ingrédients</small></button>
-  <button class="hot" data-a="shop" data-tab="surf" style="left:66px;top:226px"><b>Boutique de surf</b><small>Déco</small></button>
+  <button class="hot" data-a="shop" data-tab="surf" style="left:76px;top:226px"><b>Playa &amp; Co</b><small>Déco de plage</small></button>
   <button class="hot" data-a="shop" data-tab="animplage" style="left:96px;top:418px"><b>Animalerie de la Plage</b><small style="color:#2F7A84">Nourriture et animaux</small></button>
   <button class="hot" data-a="shop" data-tab="souvenirs" style="left:386px;top:372px"><b>Souvenirs</b><small>Déco</small></button>
   <button class="hot" data-a="shop" data-tab="creperie" style="left:550px;top:442px"><b>Crêperie du Phare</b><small>Recettes</small></button>
@@ -993,7 +1029,7 @@ function viewIsland() {
 function mapAside() {
   return `
   <aside class="panel" style="position:absolute;right:24px;top:18px;bottom:24px;width:290px;display:flex;flex-direction:column;gap:12px">
-    <div class="between"><h2 style="font-size:21px">Garde-manger</h2>${coinPill()}</div>
+    <div class="between"><h2 style="font-size:20px;white-space:nowrap">Garde-manger</h2>${coinPill()}</div>
     <div class="grid" style="grid-template-columns:1fr 1fr;gap:6px;font-size:13px;font-weight:700;max-height:150px;overflow:auto">
       ${Object.keys(ITEMS).filter((k) => qty(k) > 0).map((k) => `<div class="row" style="background:#fff;border-radius:10px;padding:6px 8px;gap:6px"><span class="dot" style="background:${ITEMS[k].c}"></span><span style="flex:1">${ITEMS[k].n}</span><b>${qty(k)}</b></div>`).join("") || `<div class="muted">Vide : passe à l'épicerie !</div>`}
     </div>
@@ -1039,7 +1075,7 @@ const SHOPS = {
   glacier:      { n: "Glacier de Marina", who: "Marina", c: "#C9677A", hair: "rose", hello: "Mes recettes de glaces sont à toi ! Avec ça, toute la plage fera la queue devant ton café." },
   creperie:     { n: "Crêperie du Phare", who: "Gaëlle", c: "#B5653A", hair: "carre", hello: "Crêpes, gaufres, punch des îles… Toutes les recettes de la crêperie, pour ton café !" },
   poissport:    { n: "Poissonnerie du Port", who: "Paco", c: "#4C6F94", hair: "casquette", hello: "Thon, cabillaud, crevettes, saumon : tout vient de ma pêche de ce matin ! Papi Jules m'a écrit : je dois bien m'occuper de toi." },
-  surf:         { n: "Boutique de surf", who: "Lou", c: "#E06A6A", hair: "long", hello: "Planches, transats, hamac… de quoi donner un air de vacances à ton café !" },
+  surf:         { n: "Playa & Co", who: "Lou", c: "#E06A6A", hair: "long", hello: "Bienvenue chez Playa & Co ! Planches, transats, hamac, palmiers… toute la déco de plage pour donner un air de vacances à ton café." },
   souvenirs:    { n: "Souvenirs de l'île", who: "Capitaine Albert", c: "#8C5E9E", hair: "court", hello: "Coquillages, maquettes de bateau… Chaque objet a une histoire. Demande-moi, je te les raconte toutes !" },
   poissonnerie: { n: "Poissonnerie du Quai", who: "Papi Jules", c: "#4C6F94", hair: "casquette", hello: "Depuis que le pont est réparé, je ne pêche plus au bord de l'eau : je vends ma pêche ici : saumon, truite fumée, crevettes, thon, cabillaud… Les recettes sont à la librairie. Et si tu fais la soupe de ma Jeanne, je viendrai la goûter !" },
 };
@@ -1317,7 +1353,7 @@ const CAT_SPOTS = [
   { x: 780, y: 490, floor: true }, { x: 244, y: 222 }, { x: 1170, y: 392 }, { x: 1000, y: 490, floor: true }, { x: 70, y: 444, floor: true },
   { x: 272, y: 486, req: "panier", floor: true }, { x: 176, y: 440, req: "fauteuil", floor: true }, { x: 1000, y: 112, req: "aquarium" },
   { x: 440, y: 520, floor: true }, { x: 1206, y: 520, floor: true }, { x: 160, y: 520, floor: true },
-  { x: 682, y: 270, req: "hamac" },
+  { x: 682, y: 270, req: "hamac" }, { x: 1000, y: 108, req: "aquatropic" }, { x: 446, y: 506, req: "coussinbouee", floor: true },
 ];
 const nowS = () => performance.now() / 1000;
 function catSpots(id) { return CAT_SPOTS.map((p, i) => ({ ...p, i })).filter((p) => (!p.req || S.decor.includes(p.req)) && (!id || !isDog(id) || p.floor)); }
@@ -1711,12 +1747,20 @@ function viewCafe() {
     <!-- déco de l'île -->
     ${deco("guirlandecoq") ? `<path d="M0 26 Q160 70 320 26 T640 26 T960 26 T1280 26" stroke="#C9A27A" stroke-width="2" fill="none"/>${Array.from({ length: 16 }, (_, i) => `<path transform="translate(${40 + i * 80} ${34 + (i % 2) * 8})" d="M0 14 q-10 -14 0 -16 q10 2 0 16z" fill="${["#F5C6CF", "#FBF5EA", "#F2C46D"][i % 3]}" stroke="#E9A9B0" stroke-width="1.5"/>`).join("")}` : ""}
     ${deco("hamac") ? `<path d="M610 300 Q710 352 810 300" stroke="#C9A27A" stroke-width="3" fill="none"/><path d="M620 302 Q710 360 800 302 Q710 336 620 302Z" fill="#F2C46D"/><path d="M640 316 Q710 346 780 316" stroke="#E06A6A" stroke-width="3" fill="none"/>` : ""}
-    ${deco("boueedeco") ? `<g transform="translate(980 240)"><circle r="24" fill="none" stroke="#E06A6A" stroke-width="12"/><path d="M-24 0 h-6 M24 0 h6 M0 -24 v-6 M0 24 v6" stroke="#FFFFFF" stroke-width="12"/><circle r="24" fill="none" stroke="#FBF5EA" stroke-width="2" stroke-dasharray="10 28"/></g>` : ""}
+    ${deco("boueedeco") ? `<g transform="translate(1000 288)"><circle r="24" fill="none" stroke="#E06A6A" stroke-width="12"/><path d="M-24 0 h-6 M24 0 h6 M0 -24 v-6 M0 24 v6" stroke="#FFFFFF" stroke-width="12"/><circle r="24" fill="none" stroke="#FBF5EA" stroke-width="2" stroke-dasharray="10 28"/></g>` : ""}
     ${deco("bocal") ? `<g transform="translate(470 228)"><rect x="0" y="6" width="34" height="44" rx="10" fill="#DDEEF2" opacity=".85" stroke="#9CC3D2" stroke-width="2"/><rect x="4" y="0" width="26" height="8" rx="3" fill="#C9A27A"/><path d="M8 44 q-6 -10 2 -12 q8 2 -2 12z M22 46 q-6 -10 2 -12 q8 2 -2 12z" fill="#F5C6CF"/><path d="M12 30 l3 6 l6 0 l-5 4 l2 6 l-6 -4 l-6 4 l2 -6 l-5 -4 l6 0z" fill="#F29A3A"/></g>` : ""}
     ${deco("maquette") ? `<g transform="translate(1116 96)"><path d="M0 40 H70 L60 54 H10Z" fill="#C9677A"/><rect x="34" y="0" width="4" height="40" fill="#6B4A33"/><path d="M38 2 L64 36 H38Z" fill="#FBF5EA"/><path d="M34 8 L14 36 H34Z" fill="#F6EEDF"/><rect x="26" y="54" width="20" height="8" fill="#8A5A3B"/></g>` : ""}
     ${deco("lampephare") ? `<g transform="translate(1106 330)"><path d="M10 140 L16 30 H34 L40 140Z" fill="#FBF5EA"/><path d="M13 60 h24 M12 100 h26" stroke="#E06A6A" stroke-width="10"/><rect x="12" y="10" width="26" height="22" rx="4" fill="#F7DFA0"/><path d="M8 10 L25 -4 L42 10Z" fill="#E06A6A"/><ellipse cx="25" cy="22" rx="70" ry="60" fill="#FFE9A8" opacity=".2"/><ellipse cx="25" cy="142" rx="22" ry="5" fill="#8A5A3B"/></g>` : ""}
     ${deco("planche") ? `<g transform="translate(1216 360) rotate(6)"><ellipse cx="16" cy="70" rx="16" ry="72" fill="#E06A6A"/><path d="M16 0 V142" stroke="#FBF5EA" stroke-width="4"/><ellipse cx="16" cy="70" rx="16" ry="72" fill="none" stroke="#B76A55" stroke-width="2"/></g>` : ""}
     ${deco("transats") ? `<g transform="translate(250 470)"><path d="M0 70 L30 0 M60 70 L46 30" stroke="#A97C5A" stroke-width="5" stroke-linecap="round"/><path d="M8 52 L34 2 L50 8 L66 60Z" fill="#9CC3D2"/><path d="M14 40 L56 46 M22 24 L52 30" stroke="#FBF5EA" stroke-width="5"/></g>` : ""}
+    ${deco("raphia") ? `<ellipse cx="860" cy="632" rx="400" ry="70" fill="#D9B56A" opacity=".8"/><ellipse cx="860" cy="632" rx="360" ry="56" fill="none" stroke="#C49A4A" stroke-width="4" stroke-dasharray="3 7"/><ellipse cx="860" cy="632" rx="290" ry="40" fill="none" stroke="#C49A4A" stroke-width="4" stroke-dasharray="3 7"/>` : ""}
+    ${deco("filet") ? `<path d="M150 0 Q255 70 360 0" stroke="#C9A27A" stroke-width="3" fill="none"/><g stroke="#C9A27A" stroke-width="1.5" fill="none" opacity=".9">${Array.from({ length: 9 }, (_, i) => `<path d="M${162 + i * 22} 0 l12 ${16 + Math.sin(i / 8 * Math.PI) * 30} M${184 + i * 22} 0 l-12 ${16 + Math.sin(i / 8 * Math.PI) * 30}"/>`).join("")}</g>${[190, 255, 320].map((x, i) => `<circle cx="${x}" cy="${[28, 36, 26][i]}" r="7" fill="${["#E06A6A", "#F2C46D", "#FBF5EA"][i]}"/>`).join("")}` : ""}
+    ${deco("carillon") ? `<g transform="translate(530 0)"><path d="M0 0 V60" stroke="#A97C5A" stroke-width="2"/><rect x="-26" y="58" width="52" height="5" rx="2" fill="#A97C5A"/>${[-20, -7, 7, 20].map((x, i) => `<path d="M${x} 63 V${78 + i % 2 * 12}" stroke="#C9A27A" stroke-width="1.5"/><path transform="translate(${x} ${90 + i % 2 * 12})" d="M0 8 q-7 -10 0 -12 q7 2 0 12z" fill="${["#F5C6CF", "#FBF5EA", "#F2C46D", "#F5C6CF"][i]}"><animateTransform attributeName="transform" type="rotate" values="-8;8;-8" dur="${2 + i * .3}s" additive="sum" repeatCount="indefinite"/></path>`).join("")}</g>` : ""}
+    ${deco("etoiles") ? [[872, 196, "#F29A3A"], [906, 222, "#F5C6CF"], [878, 254, "#F2C46D"]].map(([x, y, c]) => `<path transform="translate(${x} ${y})" d="M0 -14 l4 9 l10 1 l-8 7 l3 10 l-9 -5 l-9 5 l3 -10 l-8 -7 l10 -1z" fill="${c}" stroke="#C47A3E" stroke-width="1.2"/>`).join("") : ""}
+    ${deco("aquatropic") ? `<g transform="translate(956 160)"><rect x="-6" y="62" width="112" height="10" rx="3" fill="#6B4A33"/><rect width="100" height="62" rx="6" fill="#7FC6D3" stroke="#5FA8C4" stroke-width="3"/><rect x="3" y="46" width="94" height="13" fill="#F3DCA8"/><path d="M16 46 q-6 -16 2 -28 M80 46 q6 -14 -2 -26" stroke="#E06A6A" stroke-width="4" fill="none" stroke-linecap="round"/><g><animateTransform attributeName="transform" type="translate" values="0 0;40 4;0 0" dur="7s" repeatCount="indefinite"/><path d="M26 22 q8 -8 16 0 q-8 8 -16 0z M42 22 l6 -5 v10z" fill="#F29A3A"/><path d="M30 18 v8" stroke="#FFFFFF" stroke-width="2"/></g><g><animateTransform attributeName="transform" type="translate" values="0 0;-30 -4;0 0" dur="9s" repeatCount="indefinite"/><path d="M60 34 q6 -6 12 0 q-6 6 -12 0z M72 34 l5 -4 v8z" fill="#F2D45C"/></g></g>` : ""}
+    ${deco("paddle") ? `<g transform="translate(1078 156)"><ellipse cx="11" cy="76" rx="11" ry="78" fill="#5FA9B4"/><path d="M11 0 V152" stroke="#FBF5EA" stroke-width="3"/><path d="M-4 30 L26 120" stroke="#6B4A33" stroke-width="3"/><ellipse cx="26" cy="124" rx="5" ry="10" fill="#6B4A33"/></g>` : ""}
+    ${deco("palmierpot") ? `<g transform="translate(866 330)"><path d="M22 120 Q26 70 18 40" stroke="#A97C5A" stroke-width="6" fill="none"/><path d="M18 40 q-26 -4 -34 10 M18 40 q-10 -22 -30 -20 M18 40 q16 -22 36 -14 M18 40 q26 2 32 20" stroke="#5E9C62" stroke-width="7" fill="none" stroke-linecap="round"/><path d="M2 106 h40 l-5 28 h-30z" fill="#D9826B"/><rect x="0" y="102" width="44" height="8" rx="3" fill="#B76A55"/></g>` : ""}
+    ${deco("coussinbouee") ? `<g transform="translate(470 540)"><ellipse rx="40" ry="14" fill="#E06A6A"/><path d="M-40 0 h12 M28 0 h12 M-8 -14 l-4 -0 M-2 12 h6" stroke="#FFFFFF" stroke-width="10"/><ellipse rx="18" ry="5" fill="#C99A6B"/></g>` : ""}
     ${deco("pelote") ? `<g transform="translate(1180 560)"><circle r="14" fill="#E9A9B0"/><path d="M-10 -8 q10 8 20 0 M-12 2 q12 8 24 0 M-6 10 q8 -20 0 -24" stroke="#C9677A" stroke-width="2" fill="none"/><path d="M12 6 q20 10 30 -4" stroke="#E9A9B0" stroke-width="2" fill="none"/></g>` : ""}
     ${seatsX.map((x, i) => cafeTable(x + 50, 545, cloths[i], deco("bougies"))).join("")}
   </svg>
@@ -1816,7 +1860,7 @@ function endDay() {
   if (festival()) morning.push("Demain, c'est la " + festival() + " : plus de clients et +20 % de pourboires !");
   else if (S.weather === "pluie") morning.push("Il pleuvra demain : les villageois viendront se mettre à l'abri au café (+2 clients).");
   else if (S.weather === "neige") morning.push("Il neigera demain : parfait pour un chocolat chaud (+1 client).");
-  const newIn = onIsland() ? { creperie: "la crêperie", glacier: "chez le glacier", animplage: "l'animalerie", surf: "la boutique de surf", souvenirs: "la boutique de souvenirs" } : { librairie: "la librairie", brocante: "la brocante", refuge: "l'animalerie" };
+  const newIn = onIsland() ? { creperie: "la crêperie", glacier: "chez le glacier", animplage: "l'animalerie", surf: "Playa & Co", souvenirs: "la boutique de souvenirs" } : { librairie: "la librairie", brocante: "la brocante", refuge: "l'animalerie" };
   Object.keys(newIn).forEach((tab) => { if (shopCatalogAll(tab).some((x) => UNLOCK[x.id] === S.day)) morning.push("Nouveautés à " + newIn[tab] + " !"); });
   Object.keys(PROJECTS).forEach((id) => { if (projDay(id) === S.day) morning.push((onIsland() ? "Nouveau projet sur l'île : « " : "Nouveau projet au village : « ") + PROJECTS[id].n + " » ! Regarde la carte."); });
   // points et pièces du lanceur Mes Jeux
@@ -2050,7 +2094,7 @@ function helpModal() {
     <div style="background:#F3E9D6;border-radius:14px;padding:12px 16px;font-size:14px;line-height:1.5">
       <b>Astuces :</b> répare le pont pour acheter de nouvelles recettes à la <b>Librairie</b>. La <b>déco</b> de la brocante augmente les pourboires, ses <b>jouets</b> gardent les chats heureux, et certains objets attirent de nouveaux chats. Chaque <b>saison</b> apporte ses produits à l'épicerie et une recette offerte ; la <b>pluie</b> amène du monde, et le 6e jour de chaque saison, c'est la <b>fête</b> ! De nouveaux objets et recettes arrivent au fil des jours. Le bouton haut-parleur en haut coupe le son. Lis la <b>lettre</b> du jour à la poste. Va dire bonjour à <b>Papi Jules</b>, qui pêche au bord de la rivière. Donne des pièces pour <b>réparer le pont</b> : l'autre rive cache une boulangerie, une librairie (nouvelles recettes) et une poissonnerie.
     </div>
-    ${onIsland() ? `<div style="background:#E7F1FB;border-radius:14px;padding:12px 16px;font-size:14px;line-height:1.5"><b>Sur l'île aux Coquillages :</b> c'est toujours l'été ! Les ingrédients sont à l'<b>Épicerie de la Plage</b>, les recettes à la <b>Crêperie du Phare</b> et au <b>Glacier</b>, la déco à la <b>Boutique de surf</b> et aux <b>Souvenirs</b>. Chaque matin, une <b>bouteille à la mer</b> peut s'échouer sur la plage. Le <b>bateau</b> du ponton te ramène à Bruyère quand tu veux.</div>` : ""}
+    ${onIsland() ? `<div style="background:#E7F1FB;border-radius:14px;padding:12px 16px;font-size:14px;line-height:1.5"><b>Sur l'île aux Coquillages :</b> c'est toujours l'été ! Les ingrédients sont à l'<b>Épicerie de la Plage</b>, les recettes à la <b>Crêperie du Phare</b> et au <b>Glacier</b>, la déco chez <b>Playa &amp; Co</b> et aux <b>Souvenirs</b>. Chaque matin, une <b>bouteille à la mer</b> peut s'échouer sur la plage. Le <b>bateau</b> du ponton te ramène à Bruyère quand tu veux.</div>` : ""}
     <div style="background:#FFF4E0;border-radius:14px;padding:10px 16px;font-size:14px;line-height:1.5"><b>Les chiens</b> rapportent parfois une petite trouvaille : quand une bulle dorée apparaît au-dessus d'un chien, touche-le !</div>
     <div class="row" style="justify-content:flex-end"><button class="btn green" data-a="closemodal">C'est parti !</button></div>
   </div></div>`;
