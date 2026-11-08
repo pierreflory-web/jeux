@@ -38,6 +38,12 @@
   .toast{position:absolute;left:50%;bottom:28px;transform:translateX(-50%);background:var(--ink);color:var(--cream);padding:12px 22px;border-radius:999px;font-weight:800;z-index:50;animation:pop .25s ease-out}
   @keyframes pop{from{transform:translate(-50%,20px);opacity:0}to{transform:translate(-50%,0);opacity:1}}
   @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+  @keyframes zzz{0%{opacity:0;transform:translate(0,0) scale(.7)}30%{opacity:1}100%{opacity:0;transform:translate(14px,-26px) scale(1.1)}}
+  @keyframes hop{0%,100%{transform:translateY(0)}40%{transform:translateY(-16px)}60%{transform:translateY(-16px)}}
+  @keyframes heartUp{0%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-30px)}}
+  @keyframes flutter{0%{transform:translate(0,0)}25%{transform:translate(16px,-10px)}50%{transform:translate(0,-20px)}75%{transform:translate(-16px,-10px)}100%{transform:translate(0,0)}}
+  @keyframes ballBounce{0%,100%{transform:translate(0,0)}50%{transform:translate(10px,-18px)}}
+  @keyframes bannerIn{from{transform:translate(-50%,-30px);opacity:0}to{transform:translate(-50%,0);opacity:1}}
   @keyframes fallRain{to{transform:translate(-40px,var(--h)) rotate(12deg)}}
   @keyframes fallSnow{50%{margin-left:14px}to{transform:translateY(var(--h))}}
   @keyframes squish{0%{transform:scale(1,1)}40%{transform:scale(1.08,.9)}100%{transform:scale(1,1)}}
@@ -884,11 +890,77 @@ let S = null;               // état sauvegardé
 let ui = { screen: "title", shopTab: "epicerie", cart: {}, kitchenSel: "tarte", cook: null, modal: null };
 let cafe = null;            // état temporaire du service
 
+// ---------- Souvenirs (succès) ----------
+const ACH = [
+  { id: "first",   n: "Premier café servi",   d: "Servir ton premier client",       ic: "cup",    t: () => achStat("served") >= 1 },
+  { id: "cent",    n: "Cent sourires",        d: "Servir 100 clients",              ic: "heart",  t: () => achStat("served") >= 100 },
+  { id: "chef",    n: "Apprenti chef",        d: "Connaître 10 recettes",           ic: "book",   t: () => S.recipes.length >= 10 },
+  { id: "famille", n: "La grande famille",    d: "10 animaux au café",              ic: "paw",    t: () => S.cats.length >= 10 },
+  { id: "chien",   n: "Bon chien !",          d: "Une trouvaille rapportée",        ic: "coin",   t: () => Object.keys(S.dogCoins || {}).length > 0 || (S.mapPieces || 0) > 0 },
+  { id: "amis",    n: "Meilleurs amis",       d: "8 cœurs avec un voisin",          ic: "star",   t: () => VILLAGERS.some((v) => hearts(v.n) >= 8) },
+  { id: "pont",    n: "Le vieux pont",        d: "Réparer le pont de Bruyère",      ic: "bridge", t: () => S.island === "bruyere" && projDone("pont") },
+  { id: "bruyere", n: "Bruyère comme neuve",  d: "Finir les 8 projets de Bruyère",  ic: "house",  t: () => S.island === "bruyere" && Object.keys(PROJECTS).every(projDone) },
+  { id: "ile",     n: "Larguez les amarres",  d: "Arriver sur l'île",               ic: "boat",   t: () => S.island === "coq" },
+  { id: "tresor",  n: "Le trésor de l'îlot",  d: "Trouver le coffre de l'îlot",     ic: "chest",  t: () => !!S.treasure, secret: "Un secret de l'île…" },
+  { id: "givre",   n: "Tchou tchou !",        d: "Arriver au Mont Givre",           ic: "train",  t: () => S.island === "givre" },
+  { id: "aurore",  n: "Les aurores",          d: "Faire revenir les aurores",       ic: "aurora", t: () => !!S.aurora, secret: "Un secret de la montagne…" },
+  { id: "riche",   n: "Petite fortune",       d: "Avoir 1000 pièces",               ic: "coin",   t: () => S.coins >= 1000 },
+  { id: "fete",    n: "Jour de fête",         d: "Ouvrir le café un jour de fête",  ic: "flag",   t: () => ui.screen === "cafe" && !!cafe && !!festival() },
+  { id: "deco",    n: "Décorateur",           d: "Acheter 10 objets de déco",       ic: "lamp",   t: () => S.decor.length >= 10 },
+  { id: "gourmand",n: "Gourmand",             d: "Cuisiner 50 fournées",            ic: "cake",   t: () => achStat("batches") >= 50 },
+];
+const ACH_ICON = {
+  cup: `<path d="M-12 -6 h20 v10 a10 10 0 0 1 -20 0z" fill="#FBF5EA"/><path d="M8 -2 q8 0 8 6 q0 6 -8 6" stroke="#FBF5EA" stroke-width="3" fill="none"/>`,
+  heart: `<path d="M0 10 C-14 0 -12 -12 -4 -12 C0 -12 0 -8 0 -8 C0 -8 0 -12 4 -12 C12 -12 14 0 0 10z" fill="#FBF5EA"/>`,
+  book: `<path d="M-14 -10 h12 q2 0 2 2 v18 q0 -2 -2 -2 h-12z M14 -10 h-12 q-2 0 -2 2 v18 q0 -2 2 -2 h12z" fill="#FBF5EA"/>`,
+  paw: `<circle cy="4" r="7" fill="#FBF5EA"/><circle cx="-9" cy="-5" r="3.5" fill="#FBF5EA"/><circle cx="-3" cy="-10" r="3.5" fill="#FBF5EA"/><circle cx="3" cy="-10" r="3.5" fill="#FBF5EA"/><circle cx="9" cy="-5" r="3.5" fill="#FBF5EA"/>`,
+  coin: `<circle r="11" fill="#F2C46D" stroke="#FBF5EA" stroke-width="3"/><path d="M0 -5 v10" stroke="#C99A3E" stroke-width="3" stroke-linecap="round"/>`,
+  star: `<path d="M0 -13 l4 8 l9 1 l-7 6 l2 9 l-8 -5 l-8 5 l2 -9 l-7 -6 l9 -1z" fill="#FBF5EA"/>`,
+  bridge: `<path d="M-15 6 Q0 -12 15 6" stroke="#FBF5EA" stroke-width="5" fill="none"/><path d="M-16 8 h32" stroke="#FBF5EA" stroke-width="3"/>`,
+  house: `<path d="M-12 12 v-12 l12 -10 l12 10 v12z" fill="#FBF5EA"/>`,
+  boat: `<path d="M-14 4 h28 l-5 8 h-18z" fill="#FBF5EA"/><path d="M0 4 v-16 l10 14z" fill="#FBF5EA"/>`,
+  chest: `<rect x="-13" y="-2" width="26" height="14" rx="2" fill="#FBF5EA"/><path d="M-13 -1 Q0 -16 13 -1Z" fill="#FBF5EA"/><rect x="-3" y="0" width="6" height="6" fill="#C99A3E"/>`,
+  train: `<rect x="-13" y="-8" width="20" height="14" rx="3" fill="#FBF5EA"/><rect x="7" y="-12" width="6" height="18" fill="#FBF5EA"/><circle cx="-7" cy="9" r="3" fill="#FBF5EA"/><circle cx="5" cy="9" r="3" fill="#FBF5EA"/>`,
+  aurora: `<path d="M-15 2 C-8 -12 0 8 6 -4 S14 -10 16 -2" stroke="#8FD3B0" stroke-width="4" fill="none"/><path d="M-15 8 C-8 -6 0 14 6 2 S14 -4 16 4" stroke="#B49CE0" stroke-width="3" fill="none"/>`,
+  flag: `<path d="M-8 12 v-24" stroke="#FBF5EA" stroke-width="3"/><path d="M-8 -12 h18 l-5 6 l5 6 h-18z" fill="#FBF5EA"/>`,
+  lamp: `<path d="M-10 -2 h20 l-6 -12 h-8z" fill="#FBF5EA"/><path d="M0 -2 v12 M-6 12 h12" stroke="#FBF5EA" stroke-width="3"/>`,
+  cake: `<rect x="-12" y="-2" width="24" height="12" rx="2" fill="#FBF5EA"/><path d="M-12 -2 q6 -6 12 0 q6 -6 12 0" fill="#FBF5EA"/>`,
+  q: `<text y="7" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="22" fill="#B5A184">?</text>`,
+};
+const achStat = (k) => ((loadMeta().stats || {})[k] || 0);
+function bumpStat(k, n = 1) { const m = loadMeta(); m.stats = m.stats || {}; m.stats[k] = (m.stats[k] || 0) + n; saveMeta(m); }
+let banner = null;
+function checkAch() {
+  if (!S) return;
+  const m = loadMeta(); m.ach = m.ach || [];
+  const got = ACH.filter((a) => !m.ach.includes(a.id) && (() => { try { return a.t(); } catch (e) { return false; } })());
+  if (!got.length) return;
+  got.forEach((a) => m.ach.push(a.id)); saveMeta(m);
+  banner = { id: got[got.length - 1].id, start: performance.now(), until: performance.now() + 4500 }; sfx("ding");
+}
+function achMedal(a, got, size = 52) {
+  const circ = got ? "#D9826B" : "#CDBFA8";
+  return `<svg width="${size}" height="${size}" viewBox="-26 -26 52 52" aria-hidden="true"><circle r="24" fill="${a.secret && !got ? "#E3D5BE" : circ}"/>${got ? `<circle r="24" fill="none" stroke="#F2C46D" stroke-width="3"/>` : ""}${a.secret && !got ? ACH_ICON.q : ACH_ICON[a.ic]}</svg>`;
+}
+function bannerHTML() {
+  if (!banner || performance.now() > banner.until) { banner = null; return ""; }
+  const a = ACH.find((x) => x.id === banner.id);
+  return `<div role="status" style="position:absolute;left:50%;top:84px;transform:translate(-50%,0);z-index:30;display:flex;gap:12px;align-items:center;padding:10px 18px 10px 12px;border-radius:18px;background:#FFFBF2;box-shadow:0 5px 0 #D8C7A8,0 10px 30px rgba(74,51,38,.18);animation:bannerIn .35s ease-out both;animation-delay:-${Math.min(0.35, (performance.now() - banner.start) / 1000).toFixed(2)}s">${achMedal(a, true, 44)}<div><div style="font-size:12px;font-weight:800;letter-spacing:.06em;color:var(--sage)">NOUVEAU SOUVENIR</div><b style="font-family:var(--font-title);font-size:18px">${esc(a.n)}</b></div></div>`;
+}
+function viewAch() {
+  const m = loadMeta(), got = m.ach || [];
+  return `
+  <div style="position:absolute;inset:0;background:#EFE1C6"></div>
+  <div class="hud"><div><button class="pill" data-a="albumtab" data-tab="pets" style="border:0">Album des animaux</button><span class="pill dark">Souvenirs · ${got.length} / ${ACH.length}</span>${away() ? `<button class="pill" data-a="albumtab" data-tab="msgs" style="border:0">${onGivre() ? "Cartes postales" : "Messages en bouteille"}</button>` : ""}</div><div><button class="btn light small" data-a="village">${txt("← Plage", "← Village")}</button></div></div>
+  <div class="grid" style="position:absolute;left:24px;right:24px;top:96px;bottom:16px;grid-template-columns:repeat(8,minmax(0,1fr));gap:10px;align-content:start;overflow:auto;padding:4px">
+    ${ACH.map((a) => { const g = got.includes(a.id), hid = a.secret && !g; return `<div class="card" style="align-items:center;text-align:center;gap:4px;padding:12px 6px;${g ? "" : "background:#F6EEDF;box-shadow:none;opacity:.85"}">${achMedal(a, g, 60)}<b style="font-family:var(--font-title);font-size:15px;line-height:1.15;color:${g ? "var(--ink)" : "#8A7660"}">${hid ? "???" : esc(a.n)}</b><span class="muted" style="font-size:12px;font-weight:700;line-height:1.25">${hid ? esc(a.secret) : esc(a.d)}</span></div>`; }).join("")}
+  </div>`;
+}
 function noteDone() {
   if (S && S.island === "coq" && Object.keys(PROJECTS).every(projDone)) { const m = loadMeta(); if (!m.coqDone) { m.coqDone = true; saveMeta(m); } }
 }
 function save() {
-  noteDone(); if (!S) return; try { localStorage.setItem(islandKey(S.island || "bruyere"), JSON.stringify(S)); } catch (e) {} }
+  noteDone(); checkAch(); if (!S) return; try { localStorage.setItem(islandKey(S.island || "bruyere"), JSON.stringify(S)); } catch (e) {} }
 function load(id = loadMeta().cur) { try { const r = localStorage.getItem(islandKey(id)); return r ? JSON.parse(r) : null; } catch (e) { return null; } }
 function clearSave() { try { localStorage.removeItem(SAVE_KEY); localStorage.removeItem(islandKey("coq")); localStorage.removeItem(META_KEY); } catch (e) {} }
 function openIsland(id) {
@@ -1143,7 +1215,7 @@ function render() {
   autoSave();
   if (ui.screen !== "cafe") stopCafe();
   const views = { depart: viewDepart, projects: viewProjects, friends: viewFriends, title: viewTitle, village: () => onGivre() ? viewGivre() : onIsland() ? viewIsland() : viewVillage(), shop: viewShop, kitchen: viewKitchen, cafe: viewCafe, album: viewAlbum, summary: viewSummary };
-  $stage.innerHTML = views[ui.screen]() + soundButton() + (ui.modal ? ui.modal() : "");
+  $stage.innerHTML = views[ui.screen]() + soundButton() + bannerHTML() + (ui.modal ? ui.modal() : "");
   if (ui.screen === "cafe" && cafe) animateCats();
   syncCookTimer();
 }
@@ -1553,7 +1625,7 @@ function advanceCook() {
   const c = ui.cook, r = RECIPES[c.id];
   c.i++; c.prog = 0; c.taps = 0; c.ovenIn = false; c.stirring = false; c.ang = 0;
   if (c.i >= allSteps(r).length) {
-    S.showcase[c.id] = (S.showcase[c.id] || 0) + r.yield; ui.cook = null; save();
+    S.showcase[c.id] = (S.showcase[c.id] || 0) + r.yield; ui.cook = null; bumpStat("batches"); save();
     sfx("done"); toast(r.n + " en vitrine (+" + r.yield + ")");
   } else sfx("step");
   render();
@@ -1736,7 +1808,7 @@ function moveCats(dt) {
   if (cafe.moveCd > 0) return;
   cafe.moveCd = 2 + Math.random() * 3;
   const t = nowS();
-  const idle = Object.keys(cafe.cp).filter((id) => (S.mood[id] ?? 60) >= 30 && !catPos(cafe.cp[id], t).moving);
+  const idle = Object.keys(cafe.cp).filter((id) => (S.mood[id] ?? 60) >= 30 && !catPos(cafe.cp[id], t).moving && !(cafe.act && cafe.act[id] && cafe.act[id].k === "sleep"));
   if (!idle.length) return;
   const id = idle[Math.floor(Math.random() * idle.length)], c = cafe.cp[id];
   const used = new Set(Object.values(cafe.cp).map((o) => o.spot));
@@ -1772,6 +1844,34 @@ function animateCats() {
     el.style.left = c.tx + "px"; el.style.top = c.ty + "px";
     if (el.animate) el.animate(frames, { duration: rem * 1000, easing: "linear", fill: "backwards" });
   });
+}
+
+// ---------- Les animaux vivent leur vie ----------
+// Ils dorment quand le café est calme, s'étirent, jouent s'il y a des jouets, rêvassent, et réclament quand ils ont faim.
+// L'écran est redessiné 5 fois par seconde : un délai négatif garde les animations CSS en continu.
+const ph = (dur) => `animation-delay:-${((performance.now() / 1000) % dur).toFixed(2)}s`;
+function lifeTick(dt) {
+  cafe.act = cafe.act || {}; cafe.hearts = cafe.hearts || {};
+  const t = nowS(), calm = !cafe.seats.some(Boolean), toys = toyFactor() < 1;
+  Object.keys(cafe.cp || {}).forEach((id) => {
+    const a = cafe.act[id];
+    if (catPos(cafe.cp[id], t).moving) { delete cafe.act[id]; return; }
+    if (a && a.until > t) return;
+    delete cafe.act[id];
+    if ((S.mood[id] ?? 60) < 40 || Math.random() > dt / 6) return;
+    const r = Math.random();
+    const k = calm && r < 0.55 ? "sleep" : r < 0.2 ? "sleep" : r < 0.45 ? "stretch" : toys && r < 0.75 ? "play" : "dream";
+    cafe.act[id] = { k, until: t + ({ sleep: 7 + Math.random() * 6, stretch: 2.4, play: 5, dream: 6 })[k] };
+  });
+}
+function lifeExtras(id, m, moving) {
+  const a = !moving && cafe.act && cafe.act[id], t = nowS(), out = [];
+  if (a && a.k === "sleep") out.push(`<span aria-hidden="true" style="position:absolute;left:44px;top:-8px;font-family:var(--font-title);font-weight:700;color:#6E8FB0;pointer-events:none">${[0, 0.8, 1.6].map((d, i) => `<span style="position:absolute;left:${i * 6}px;top:${-i * 6}px;font-size:${12 + i * 4}px;animation:zzz 2.4s linear infinite;animation-delay:-${(((performance.now() / 1000) + 2.4 - d) % 2.4).toFixed(2)}s">z</span>`).join("")}</span>`);
+  if (a && a.k === "play") out.push(`<svg aria-hidden="true" width="18" height="18" viewBox="-9 -9 18 18" style="position:absolute;left:50px;top:40px;pointer-events:none;animation:ballBounce .7s ease-in-out infinite;${ph(0.7)}"><circle r="8" fill="#E06A6A"/><path d="M-7 -2 q7 5 14 0" stroke="#fff" stroke-width="2" fill="none"/></svg>`);
+  if (a && a.k === "dream") out.push(`<svg aria-hidden="true" width="18" height="16" viewBox="0 0 18 16" style="position:absolute;left:40px;top:-14px;pointer-events:none;animation:flutter 3s ease-in-out infinite;${ph(3)}"><path d="M9 8 q-8 -10 -2 -14 q6 2 2 14 q8 -10 14 -6 q-2 8 -14 6z" fill="#F2C46D" transform="translate(-4 6)"/></svg>`);
+  if (m < 40 && !(cafe.gift && cafe.gift[id])) out.push(`<svg aria-hidden="true" width="40" height="34" viewBox="-20 -17 40 34" style="position:absolute;left:9px;top:-34px;pointer-events:none;animation:bob 1s ease-in-out infinite;${ph(1)}"><path d="M-16 -14 h32 a3 3 0 0 1 3 3 v16 a3 3 0 0 1 -3 3 h-12 l-4 6 l-4 -6 h-12 a3 3 0 0 1 -3 -3 v-16 a3 3 0 0 1 3 -3z" fill="#fff" stroke="#D9826B" stroke-width="2.5"/><ellipse cx="0" cy="1" rx="10" ry="4" fill="#D9826B"/><path d="M-8 -1 q8 -10 16 0" fill="#C99A6B"/></svg>`);
+  if (cafe.hearts && (cafe.hearts[id] || 0) > t) out.push(`<span aria-hidden="true" style="position:absolute;left:0;top:-6px;width:58px;pointer-events:none;color:var(--terra);font-weight:800">${[[8, 14, 0], [30, 18, .3], [44, 12, .6]].map(([x, sz, d]) => `<span style="position:absolute;left:${x}px;font-size:${sz}px;animation:heartUp 1.6s ease-out forwards;animation-delay:-${Math.max(0, 1.6 - (cafe.hearts[id] - t) - d).toFixed(2)}s">♥</span>`).join("")}</span>`);
+  return out.join("");
 }
 
 // ---------- Les chiens rapportent des trouvailles ----------
@@ -1847,7 +1947,7 @@ function tickCafe() {
   cafe.time += dt;
   // humeur des chats
   S.cats.forEach((c) => { S.mood[c] = Math.max(0, (S.mood[c] ?? 60) - dt * CAT_HUNGER * toyFactor()); });
-  ensureCatPositions(); moveCats(dt); dogFindsTick(dt);
+  ensureCatPositions(); moveCats(dt); lifeTick(dt); dogFindsTick(dt);
   // patience
   cafe.seats.forEach((cl, i) => {
     if (!cl) return;
@@ -1892,7 +1992,7 @@ function serve(i) {
   S.showcase[dish]--;
   const price = Math.round(RECIPES[dish].price * (cl.v.tourist ? 1.5 : 1));
   const tip = swapped ? 0 : Math.round(price * (0.1 + catBonus() + decorBonus()) * (0.5 + cl.patience / 2));
-  S.coins += price + tip; cafe.earned += price; cafe.tips += tip; cafe.served++; S.servedTotal++; S.rep++;
+  S.coins += price + tip; cafe.earned += price; cafe.tips += tip; cafe.served++; S.servedTotal++; S.rep++; bumpStat("served");
   cl.leaving = 1.6; cl.msg = swapped ? "Bon, je vais goûter ça alors !" : tip >= 4 ? "Délicieux ! Merci beaucoup !" : "Merci, c'était bon !";
   cl.paid = `+${price + tip}`;
   // amitié (pas pour les touristes)
@@ -1915,7 +2015,7 @@ function pet(id) {
   if (cafe && cafe.gift && cafe.gift[id]) { collectGift(id); return; }
   const now = performance.now();
   if (cafe && cafe.petCd[id] && now - cafe.petCd[id] < 2500) { toast(CATS[id].n + (isDog(id) ? " court après sa queue, réessaie dans un instant." : " fait sa toilette, réessaie dans un instant.")); return; }
-  if (cafe) cafe.petCd[id] = now;
+  if (cafe) { cafe.petCd[id] = now; cafe.hearts = cafe.hearts || {}; cafe.hearts[id] = nowS() + 1.6; if (cafe.act) delete cafe.act[id]; }
   S.mood[id] = Math.min(100, (S.mood[id] ?? 60) + 15);
   if (isDog(id)) { sfx("bark"); toast(CATS[id].n + " remue la queue et aboie joyeusement !"); }
   else { sfx("purr"); toast(CATS[id].n + " ronronne…"); }
@@ -2167,7 +2267,7 @@ function viewCafe() {
   ${(() => { ensureCatPositions(); const t = nowS(); return Object.entries(cafe.cp).map(([id, c]) => { const m = S.mood[id] ?? 60, p = catPos(c, t), flip = p.moving && c.tx < c.x;
     if (p.moving) { p.x = Math.round(p.x); p.y = Math.round(p.y); }
     return `<button data-a="pet" data-id="${id}" data-cat="${id}" aria-label="${cafe.gift && cafe.gift[id] ? CATS[id].n + " t'a rapporté quelque chose : touche-le" : "Caresser " + CATS[id].n}" title="${CATS[id].n} · ${moodWord(m)}" style="position:absolute;left:${p.x}px;top:${p.y}px;border:0;background:none;padding:0;z-index:2">
-      <span style="display:block;${flip ? "transform:scaleX(-1);" : ""}"><span style="display:block;${p.moving ? "animation:bob .45s ease-in-out infinite;" : ""}">${catSVG(id, 58, m < 30 && !p.moving)}</span></span>${m > 75 ? `<span style="position:absolute;right:-6px;top:-6px;font-size:13px;font-weight:800;color:var(--terra)">♥</span>` : ""}${cafe.gift && cafe.gift[id] ? giftBubble(cafe.gift[id]) : ""}</button>`; }).join(""); })()}
+      <span style="display:block;${flip ? "transform:scaleX(-1);" : ""}"><span style="display:block;transform-origin:50% 100%;${p.moving ? "animation:bob .45s ease-in-out infinite;" : cafe.act && cafe.act[id] ? ({ stretch: `animation:squish 1.2s ease-in-out infinite;${ph(1.2)}`, play: `animation:hop .7s ease-in-out infinite;${ph(0.7)}` })[cafe.act[id].k] || "" : ""}">${catSVG(id, 58, !p.moving && cafe.act && cafe.act[id] && cafe.act[id].k === "sleep")}</span></span>${lifeExtras(id, m, p.moving)}${m > 75 ? `<span style="position:absolute;right:-6px;top:-6px;font-size:13px;font-weight:800;color:var(--terra)">♥</span>` : ""}${cafe.gift && cafe.gift[id] ? giftBubble(cafe.gift[id]) : ""}</button>`; }).join(""); })()}
   <div style="position:absolute;left:24px;right:24px;bottom:16px;display:flex;gap:14px;align-items:stretch;z-index:4">
     <div class="panel" style="flex:1;padding:10px 14px;display:flex;gap:10px;align-items:center">
       <b style="font-family:var(--font-title);font-size:17px;margin-right:4px">Vitrine</b>
@@ -2478,9 +2578,10 @@ function viewAlbum() {
   // à Bruyère : les animaux de Bruyère ; sur l'île : le compagnon et les animaux de l'île
   const ids = away() ? [...new Set([S.companion, ...S.cats.filter((c) => CATS[c].isl !== S.island), ...Object.keys(CATS).filter((c) => CATS[c].isl === S.island)])].filter(Boolean) : Object.keys(CATS).filter((c) => !CATS[c].isl);
   if (away() && ui.albumTab === "msgs") return viewBottles();
+  if (ui.albumTab === "ach") return viewAch();
   return `
   <div style="position:absolute;inset:0;background:#EFE1C6"></div>
-  <div class="hud"><div><span class="pill dark">Album des animaux · ${ids.filter((c) => S.cats.includes(c)).length} / ${ids.length}</span>${away() ? `<button class="pill" data-a="albumtab" data-tab="msgs" style="border:0">${onGivre() ? "Cartes postales" : "Messages en bouteille"} (${(S.bottles || []).length})</button>` : ""}</div><div><button class="btn light small" data-a="village">${txt("← Plage", "← Village")}</button></div></div>
+  <div class="hud"><div><span class="pill dark">Album des animaux · ${ids.filter((c) => S.cats.includes(c)).length} / ${ids.length}</span><button class="pill" data-a="albumtab" data-tab="ach" style="border:0">Souvenirs (${(loadMeta().ach || []).length} / ${ACH.length})</button>${away() ? `<button class="pill" data-a="albumtab" data-tab="msgs" style="border:0">${onGivre() ? "Cartes postales" : "Messages en bouteille"} (${(S.bottles || []).length})</button>` : ""}</div><div><button class="btn light small" data-a="village">${txt("← Plage", "← Village")}</button></div></div>
   <div class="grid" style="position:absolute;left:24px;right:24px;top:96px;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px;bottom:16px;overflow:auto">
     ${ids.map((id) => { const c = CATS[id], have = S.cats.includes(id);
       return `<div class="card" style="align-items:center;text-align:center;justify-content:flex-start;gap:6px;padding:10px">
@@ -2608,7 +2709,7 @@ function act(a, el, isKey = false) {
     case "showmap": ui.modal = () => mapModal(null); render(); break;
     case "albumtab": ui.albumTab = el.dataset.tab; render(); break;
     case "tovillage": go("village"); toast("Le service est en pause pendant ta balade."); break;
-    case "album": go("album"); break;
+    case "album": ui.albumTab = "pets"; go("album"); break;
     case "friends": go("friends"); break;
     case "sound": toggleSound(); render(); break;
     case "kitchen": { const during = ui.screen === "cafe" && cafe; go("kitchen"); if (during) toast("Le service est en pause pendant que tu cuisines."); break; }
