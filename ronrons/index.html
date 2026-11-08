@@ -1009,7 +1009,7 @@ function mapAside() {
       : `<b style="font-family:var(--font-title);font-size:16px">${onIsland() ? "L'île prépare un nouveau projet…" : "Le village prépare un nouveau projet…"}</b><span class="muted" style="font-size:12px;font-weight:700">${(() => { const h = ids.find((id) => !projVisible(id)); return h ? "Il sera annoncé dans " + (projDay(h) - S.day) + " jour(s)." : ""; })()}</span><button class="btn light small" data-a="projects">Voir les projets</button>`}
     </div>`; })()}
     <div style="font-size:14px" class="muted">Animaux au café : <b style="color:var(--ink)">${S.cats.map((c) => CATS[c].n).join(", ")}</b></div>
-    ${onIsland() && (S.mapPieces || 0) > 0 && !S.treasure ? `<div class="row" style="gap:8px;background:#F6E4B9;border-radius:12px;padding:8px 10px;font-size:13px;font-weight:800"><svg width="26" height="20" viewBox="0 0 26 20" aria-hidden="true"><rect x="1" y="1" width="24" height="18" fill="#EBD9A8" stroke="#A88A52" stroke-width="1.5"/><path d="M15 6 l5 5 M20 6 l-5 5" stroke="#E06A6A" stroke-width="2"/></svg>Bouts de carte : ${S.mapPieces} / 4</div>` : ""}
+    ${onIsland() && (S.mapPieces || 0) > 0 && !S.treasure ? `<div class="row" data-a="showmap" role="button" tabindex="0" aria-label="Voir tes bouts de carte" style="cursor:pointer;gap:8px;background:#F6E4B9;border-radius:12px;padding:8px 10px;font-size:13px;font-weight:800;box-shadow:0 3px 0 #D8C7A8"><svg width="26" height="20" viewBox="0 0 26 20" aria-hidden="true"><rect x="1" y="1" width="24" height="18" fill="#EBD9A8" stroke="#A88A52" stroke-width="1.5"/><path d="M15 6 l5 5 M20 6 l-5 5" stroke="#E06A6A" stroke-width="2"/></svg>Bouts de carte : ${S.mapPieces} / 4 <span style="margin-left:auto;color:#8A5A3B">Voir</span></div>` : ""}
     <div style="margin-top:auto;display:flex;flex-direction:column;gap:8px">
       <div class="row" style="gap:6px"><button class="btn light small" data-a="album" style="flex:1;padding:8px 4px">Animaux</button><button class="btn light small" data-a="friends" style="flex:1;padding:8px 4px">${onIsland() ? "Voisins" : "Villageois"}</button><button class="btn light small" data-a="help" style="flex:1;padding:8px 4px">Aide</button></div>
       ${cafe ? `<button class="btn green" data-a="opencafe">Retour au café →</button>` : `<button class="btn green" data-a="kitchen">Rentrer cuisiner →</button>`}
@@ -1406,12 +1406,33 @@ function addMapPiece() {
   S.mapPieces = Math.min(4, (S.mapPieces || 0) + 1);
   return S.mapPieces >= 4 ? "La carte est complète ! Une croix est dessinée sur l'îlot, au bout du banc de sable…" : "Un mystérieux bout de carte… (" + S.mapPieces + " / 4)";
 }
+function mapModal(from) {
+  const n = S.mapPieces || 0;
+  const piece = (i) => { const x = (i % 2) * 120, y = Math.floor(i / 2) * 90, got = i < n;
+    return got ? `<g transform="translate(${x} ${y})"><rect width="118" height="88" fill="#EBD9A8" stroke="#A88A52" stroke-width="2"/>${[
+      `<path d="M10 70 Q30 30 60 40 T110 20" stroke="#5FA8C4" stroke-width="6" fill="none" opacity=".6"/><path d="M20 60 l12 -6 l12 4 l12 -8" stroke="#A44E2C" stroke-width="3" fill="none" stroke-dasharray="5 4"/>`,
+      `<path d="M0 60 l14 -4 l14 6 l14 -8 l14 4" stroke="#A44E2C" stroke-width="3" fill="none" stroke-dasharray="5 4"/><g transform="translate(76 18)"><rect x="0" y="10" width="10" height="40" fill="#FBF5EA"/><path d="M0 22 h10 M0 36 h10" stroke="#E06A6A" stroke-width="5"/><path d="M-2 10 L5 2 L12 10Z" fill="#E06A6A"/></g>`,
+      `<path d="M0 20 Q40 50 70 40" stroke="#A44E2C" stroke-width="3" fill="none" stroke-dasharray="5 4"/><path d="M60 70 q20 -30 40 -10" stroke="#5FA8C4" stroke-width="6" fill="none" opacity=".6"/>`,
+      `<ellipse cx="70" cy="56" rx="34" ry="14" fill="#F6E4B9" stroke="#A88A52" stroke-width="1.5"/><path d="M0 30 Q30 40 60 50" stroke="#A44E2C" stroke-width="3" fill="none" stroke-dasharray="5 4"/><path d="M62 42 l16 16 M78 42 l-16 16" stroke="#E06A6A" stroke-width="5" stroke-linecap="round"/>`][i]}</g>`
+      : `<g transform="translate(${x} ${y})"><rect width="118" height="88" fill="#F3E9D6" stroke="#D8C7A8" stroke-width="2" stroke-dasharray="6 5"/><text x="59" y="56" text-anchor="middle" font-size="30" font-weight="800" fill="#C9B48E" font-family="sans-serif">?</text></g>`; };
+  return `<div class="modal-bg"><div class="panel modal" role="dialog" aria-label="Bouts de carte" style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px;padding:28px;background:#FFFBF2;width:560px">
+    ${from ? catSVG(from, 64) : ""}
+    <span style="font-size:13px;font-weight:800;letter-spacing:.08em;color:#8A5A3B">${from ? esc(CATS[from].n.toUpperCase()) + " T'A RAPPORTÉ UN BOUT DE CARTE" : "TES BOUTS DE CARTE"}</span>
+    <svg width="242" height="182" viewBox="-1 -1 242 182" aria-label="${n} bouts de carte sur 4">${[0, 1, 2, 3].map(piece).join("")}</svg>
+    <h2 style="font-size:24px">${n} / 4</h2>
+    <p style="margin:0;font-size:16px;line-height:1.5">${n >= 4 ? "La carte est complète ! La croix est sur l'îlot, au bout du banc de sable. Va voir sur la carte de l'île…" : "Un vieux bout de carte, tout abîmé par l'eau de mer. Il en manque encore " + (4 - n) + ". Les chiens et les projets de l'île en trouveront peut-être d'autres…"}</p>
+    <button class="btn green" data-a="closemodal">${n >= 4 ? "Allons creuser !" : "Je le garde précieusement"}</button></div></div>`;
+}
 function collectGift(id, quiet = false) {
   const g = cafe && cafe.gift && cafe.gift[id]; if (!g) return;
   delete cafe.gift[id];
   S.dogCoins = S.dogCoins || {};
   let msg;
-  if (g.type === "map") msg = CATS[id].n + " t'a rapporté quelque chose. " + addMapPiece();
+  if (g.type === "map") {
+    addMapPiece();
+    if (quiet) { cafe.mapFrom = id; return; }
+    sfx("bark"); setTimeout(() => sfx("done"), 200); ui.modal = () => mapModal(id); render(); return;
+  }
   else {
     S.coins += g.n; S.dogCoins[id] = (S.dogCoins[id] || 0) + g.n; cafe.dogCoins = (cafe.dogCoins || 0) + g.n;
     msg = g.type === "shell" ? CATS[id].n + " t'a rapporté un coquillage rare ! Le capitaine Albert te l'achète " + g.n + " pièces." : "Wouf ! " + CATS[id].n + " t'a rapporté " + g.n + " pièce" + (g.n > 1 ? "s" : "") + " !";
@@ -1781,6 +1802,7 @@ function endDay() {
   if (projDone("lanternes")) { S.rep += 1; morning.push(onIsland() ? "Les lampions ont attiré du monde sur la plage : +1 réputation." : "Les lanternes ont attiré du monde sur la place : +1 réputation."); }
   if (projDone("moulin") && onIsland()) { S.pantry.coco = qty("coco") + 2; S.pantry.banane = qty("banane") + 1; morning.push("La cocoteraie t'a donné 2 noix de coco et des bananes."); }
   else if (projDone("moulin")) { S.pantry.farine = qty("farine") + 2; S.pantry.miel = qty("miel") + 1; morning.push("Le meunier t'a livré 2 farines et 1 pot de miel."); }
+  if (cafe.mapFrom) morning.push(CATS[cafe.mapFrom].n + " t'a rapporté un mystérieux bout de carte (" + S.mapPieces + " / 4). Regarde-le depuis la carte de l'île !");
   const found = cafe.dogCoins || 0;
   if (found) morning.push("Tes chiens t'ont rapporté " + found + " pièce" + (found > 1 ? "s" : "") + " aujourd'hui. Wouf !");
   summaryData.morning = morning;
@@ -2087,6 +2109,7 @@ function act(a, el, isKey = false) {
     case "treasure": if ((S.mapPieces || 0) < 4 || S.treasure) break;
       S.treasure = true; S.coins += 250; if (!S.cats.includes("doublon")) { S.cats.push("doublon"); S.mood.doublon = 90; }
       save(); sfx("done"); ui.modal = treasureModal; render(); break;
+    case "showmap": ui.modal = () => mapModal(null); render(); break;
     case "albumtab": ui.albumTab = el.dataset.tab; render(); break;
     case "tovillage": go("village"); toast("Le service est en pause pendant ta balade."); break;
     case "album": go("album"); break;
