@@ -1852,7 +1852,7 @@ function viewDepart() {
     <p style="margin:0;font-family:var(--font-title);font-weight:600;font-size:16px;letter-spacing:.08em;text-transform:uppercase;color:var(--sage)">Les 8 projets de Bruyère sont terminés</p>
     <h1 style="font-size:44px;line-height:1">Le village te dit merci !</h1>
     <p style="margin:0;font-size:17px;line-height:1.5">Papi Jules a préparé son bateau, et il reste une place à bord pour un de tes animaux. L'île aux Coquillages t'attend : du sable fin, un vieux café de plage à rouvrir et de nouveaux voisins à rencontrer.</p>
-    <p style="margin:0;font-size:15px;line-height:1.5;font-weight:700;color:var(--ink2)">Tu pars sans rien d'autre : 50 pièces, trois recettes de plage… et ton compagnon. Tu pourras revenir à Bruyère en bateau quand tu veux.</p>
+    <p style="margin:0;font-size:15px;line-height:1.5;font-weight:700;color:var(--ink2)">Tu emportes ta bourse (${S.coins} pièces) et ton compagnon. Sur place, tu commences avec trois recettes de plage. Tu pourras revenir à Bruyère en bateau quand tu veux : ton argent voyage toujours avec toi.</p>
   </div>
   <div class="panel" style="position:absolute;right:40px;top:36px;width:440px;max-height:600px;display:flex;flex-direction:column;gap:12px;padding:22px">
     <h2 style="font-size:22px">Choisis ton compagnon de voyage</h2>
@@ -2072,14 +2072,15 @@ function act(a, el, isKey = false) {
     case "departpick": ui.departPick = id; sfx(isDog(id) ? "bark" : "purr"); render(); break;
     case "embark": {
       const comp = ui.departPick; if (!comp || !S.cats.includes(comp)) break;
-      save(); const m = loadMeta(); m.coq = true; m.cur = "coq"; saveMeta(m);
+      const purse = S.coins; S.coins = 0; save(); const m = loadMeta(); m.coq = true; m.cur = "coq"; saveMeta(m);
       localStorage.removeItem(islandKey("coq"));
-      applyIsland("coq"); S = newGame("coq", comp); S.recipes.forEach((r) => { S.showcase[r] = 0; }); save();
+      applyIsland("coq"); S = newGame("coq", comp); S.coins = purse; S.recipes.forEach((r) => { S.showcase[r] = 0; }); save();
       cafe = null; ui.cook = null; ui.kitchenSel = S.recipes[0]; ui.screen = "village"; ui.modal = islandWelcomeModal; sfx("done"); render(); break;
     }
     case "toisland": case "tobruyere": {
       if (cafe || ui.cook) { toast("Termine d'abord ta journée au café !"); break; }
-      const dest = a === "toisland" ? "coq" : "bruyere"; openIsland(dest); sfx("bell");
+      const dest = a === "toisland" ? "coq" : "bruyere", purse = S.coins; S.coins = 0;
+      openIsland(dest); S.coins += purse; save(); sfx("bell");
       go("village"); toast(dest === "coq" ? "Le bateau accoste sur l'île aux Coquillages." : "Te revoilà à Bruyère ! Papi Jules agite son chapeau sur le quai."); break;
     }
     case "grotte": toast(S.treasure ? "La grotte est calme. Doublon y fait parfois la sieste au frais." : (S.mapPieces || 0) >= 4 ? "D'après la carte, ce n'est pas ici… regarde plutôt l'îlot !" : "Il fait tout noir… On entend comme un drôle de bruit, tout au fond."); break;
