@@ -20,6 +20,8 @@
     font-size:30px; padding:10px 0; cursor:pointer;
   }
   .mj-cell:active { transform: scale(.93); }
+  .mj-grid.g8 { gap:4px; }
+  .mj-grid.g8 .mj-cell { border-radius:8px; font-size:22px; padding:5px 0; line-height:1.2; }
   .mj-simon { width:120px; height:120px; border-radius:22px; border:3px solid #00000055; cursor:pointer; opacity:.55; }
   .mj-simon.allume { opacity:1; transform:scale(1.06); box-shadow:0 0 26px #ffffff88; }
   .mj-clavier { display:flex; flex-wrap:wrap; gap:7px; justify-content:center; max-width:420px; margin:14px auto 0; }
@@ -124,14 +126,14 @@
     const PAIRES = [["🍏","🍐"],["🌛","🌜"],["😀","😄"],["🐢","🐊"],["🌷","🌹"],["⭐","🌟"],["🐶","🐺"],["🍩","🍪"],["🐤","🐥"],["🌝","🌕"]];
     const rnd = rngDuJour(2);
     const manches = melange(PAIRES, rnd).slice(0, 3);
-    const tailles = [12, 16, 20];
+    const tailles = [64, 64, 64]; // grille 8 × 8
     let m = 0;
     function manche() {
       const [base, lintrus] = rnd() < 0.5 ? manches[m] : [manches[m][1], manches[m][0]];
       const n = tailles[m];
       const pos = Math.floor(rnd() * n);
       zone.innerHTML = `<p class="mj-head">Manche ${m + 1}/3 — trouve l'intrus !</p>
-        <div class="mj-grid" style="grid-template-columns:repeat(4,1fr);" id="mjG"></div>`;
+        <div class="mj-grid g8" style="grid-template-columns:repeat(8,1fr);" id="mjG"></div>`;
       const g = zone.querySelector("#mjG");
       for (let i = 0; i < n; i++) {
         const b = document.createElement("button");
