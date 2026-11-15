@@ -933,14 +933,81 @@ function sendTo(f,item){if(FAM&&ME&&window.MesJeux&&MesJeux.villeEnvoi)MesJeux.v
 function vbld(i){const f=friends().find(x=>x.id===VISIT),p=f.plots[i];if(!p)return;if(p.c>=70)return toast(`${bName(p)} de ${f.owner} est en parfait état.`);if(S.daily.helps>=2)return toast('Tu as déjà donné tes 2 coups de main aujourd’hui.');p.c=100;S.daily.helps++;gain('p',5);sendTo(f,{fix:i});save();renderAll();toast(`Tu as réparé ${bName(p)} ! +5 dollars pour toi et ${f.owner}.`)}
 
 /* ---------- Marchand ---------- */
+/* Pedro change d’articles à chaque passage : 1 pièce rare (si tu ne l’as pas déjà) + 3 articles du jour, dont une promo.
+   Le stock est tiré de la date (mêmes articles du jour pour toute la famille), puis gardé toute la journée dans S.pedro. */
+const PEDRO_RARE=[
+  {id:'dog',name:'Chien de garde',d:'Fait fuir 1 bandit sur 3',cost:{p:40},g:'un chien de garde',own:()=>S.guardDog,give:()=>{S.guardDog=true},msg:'Ton chien garde la ville !'},
+  {id:'lantern',name:'Lanterne magique',d:'Décoration rare qui brille la nuit',cost:{m:3},g:'une lanterne magique',own:()=>S.lantern,give:()=>{S.lantern=true},msg:'La lanterne brille à l’entrée de la ville.'},
+  {id:'plan',name:'Plan : Kiosque à musique',d:'Débloque un bâtiment exclusif',cost:{p:60},g:'le plan du kiosque',own:()=>S.planKiosque,give:()=>{S.planKiosque=true},msg:'Le Kiosque est disponible dans Bâtir.'},
+];
+const PEDRO_DAILY=[
+  {id:'bois',name:'Fagot de bois',d:'15 bois, livrés d’un coup',cost:{p:30},g:'un fagot de bois',give:{b:15},ico:'b'},
+  {id:'pierre',name:'Caisse de pierre',d:'10 pierres fraîches de la carrière',cost:{p:20},g:'une caisse de pierre',give:{pi:10},ico:'pi'},
+  {id:'foin',name:'Botte de foin',d:'10 foin bien secs',cost:{p:20},g:'une botte de foin',give:{f:10},ico:'f'},
+  {id:'magie',name:'Fiole de magie',d:'1 magie, tout juste brassée',cost:{p:30},g:'une fiole de magie',give:{m:1},ico:'m'},
+  {id:'colis',name:'Colis surprise',d:'Une ressource au hasard (8 à 25). Pedro garde le secret !',cost:{p:30},g:'un colis surprise'},
+];
+const PEDRO_ALL=[...PEDRO_RARE,...PEDRO_DAILY];
+const PEDRO_PROMO=.7;
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function pedroGenerate(){
+  const day=today(),r=mulberry32(day*7919+17),r2=mulberry32(day*104729+5);
+  r();r();r2();r2();
+  const rares=PEDRO_RARE.filter(x=>!x.own());
+  const rare=rares.length?rares[Math.floor(r2()*rares.length)]:null;
+  const pool=PEDRO_DAILY.slice();
+  for(let i=pool.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]]}
+  const daily=pool.slice(0,rare?3:4);
+  return {day,rare:rare?rare.id:null,daily:daily.map(x=>x.id),promo:daily[Math.floor(r()*daily.length)].id,bought:[]};
+}
+function pedroToday(){
+  const P=S.pedro;
+  if(!P||P.day!==today()||!Array.isArray(P.daily)||!Array.isArray(P.bought))S.pedro=pedroGenerate();
+  return S.pedro;
+}
+const pedroItems=P=>[P.rare,...P.daily].map(id=>PEDRO_ALL.find(x=>x.id===id)).filter(Boolean);
+const pedroCost=(it,P)=>{const c={...it.cost};if(P.promo===it.id&&c.p)c.p=Math.round(c.p*PEDRO_PROMO);return c};
+function pedroIcon(it){
+  let svg;
+  switch(it.id){
+    case 'dog':svg=`<svg viewBox="-20 -30 40 34">${P('M-10 0v-12q0-6 6-6h10l4-8 4 2-2 8v16z','#BA7517','stroke-width="1.6"')}<circle cx="11" cy="-24" r="1.4" fill="${K}"/>${P('M-10-8q-8-2-6-10','none','stroke-width="2.5"')}</svg>`;break;
+    case 'lantern':svg=`<svg viewBox="-18 -72 36 76">${Ln(0,0,0,-46,K,2.5)}<circle cy="-52" r="14" fill="#AFA9EC" opacity=".5"/>${R(-6,-58,12,12,'#CECBF6')}</svg>`;break;
+    case 'plan':svg=thumb('kiosque',1);break;
+    case 'colis':svg=`<svg viewBox="-20 -34 40 38">${R(-14,-22,28,22,'#BA7517')}${Ln(-14,-12,14,-12,K,1.5)}${R(-3,-22,6,22,'#A32D2D','stroke-width="1.5"')}${P('M0-22q-8-10-12-4q4 6 12 4q8 2 12-4q-4-6-12 4z','#D4537E','stroke-width="1.5"')}</svg>`;break;
+    default:svg=resIcon(it.ico);
+  }
+  return `<div class="tb" style="width:48px;height:48px;flex:none">${svg}</div>`;
+}
+function pedroGazette(){
+  const P=pedroToday(),list=pedroItems(P).map(it=>it.g+(P.promo===it.id?' (−30 %)':''));
+  if(list.length<2)return 'Le marchand ambulant déballe sa charrette jusqu’à ce soir.';
+  return `Au programme : ${list.slice(0,-1).join(', ')} et ${list[list.length-1]}. Il repart ce soir !`;
+}
 function merchantSheet(){
-  const offers=[{k:'dog',name:'Chien de garde',d:'Fait fuir 1 bandit sur 3',cost:{p:40},own:S.guardDog},{k:'lantern',name:'Lanterne magique',d:'Décoration rare qui brille la nuit',cost:{m:3},own:S.lantern},{k:'plan',name:'Plan : Kiosque à musique',d:'Débloque un bâtiment exclusif',cost:{p:60},own:S.planKiosque}];
-  let h=`<div class="row"><div class="tb" style="width:90px;height:94px;flex:none">${`<svg viewBox="-40 -80 80 84">${prop('wagon',0,0,false).replace('#FAEEDA','#F5C4B3')}</svg>`}</div><div class="grow"><b>« Hola amigo ! »</b><p class="muted">Pedro repart ce soir. Ses offres changent à chaque passage.</p></div></div>`;
-  h+=offers.map(o=>`<div class="card row"><div class="grow"><b>${o.name}</b><div class="muted">${o.d}</div><div>${o.own?'':costHTML(o.cost)}</div></div>${o.own?'<span class="chip">Acheté ✓</span>':`<button class="btn small primary" data-act="buy" data-k="${o.k}">Acheter</button>`}</div>`).join('');
+  const P=pedroToday();
+  let h=`<div class="row"><div class="tb" style="width:90px;height:94px;flex:none">${`<svg viewBox="-40 -80 80 84">${prop('wagon',0,0,false).replace('#FAEEDA','#F5C4B3')}</svg>`}</div><div class="grow"><b>« Hola amigo ! »</b><p class="muted">Pedro repart ce soir. Ses articles changent à chaque passage.</p></div></div>`;
+  h+=pedroItems(P).map(it=>{
+    const rare=PEDRO_RARE.includes(it),promo=P.promo===it.id,done=rare?it.own():P.bought.includes(it.id),c=pedroCost(it,P);
+    const chips=(rare?'<span class="chip">Pièce rare</span> ':'')+(promo?'<span class="chip" style="background:#A32D2D;color:#fff">−30 %</span>':'');
+    const price=(promo?`<span class="cost" style="background:#F1EFE8;color:#5F5E5A;text-decoration:line-through">${resIcon('p')}${it.cost.p}</span>`:'')+costHTML(c);
+    return `<div class="card row">${pedroIcon(it)}<div class="grow"><b>${it.name}</b> ${chips}<div class="muted">${it.d}</div>${done?'':`<div>${price}</div>`}</div>${done?`<span class="chip">${rare?'Acheté ✓':'Pris aujourd’hui ✓'}</span>`:`<button class="btn small primary" data-act="buy" data-k="${it.id}">Acheter</button>`}</div>`;
+  }).join('');
   h+=`<h3>Échange du jour</h3><div class="card row"><div class="grow"><b>3 bois → 1 pierre</b><div class="muted">Une fois par passage</div></div>${S.daily.swap?'<span class="chip">Fait ✓</span>':'<button class="btn small" data-act="swap">Échanger</button>'}</div>`;
   return h;
 }
-function buy(k){const cost={dog:{p:40},lantern:{m:3},plan:{p:60}}[k];if(!canPay(cost))return toast('Pas assez de ressources.');pay(cost);if(k==='dog')S.guardDog=true;if(k==='lantern')S.lantern=true;if(k==='plan')S.planKiosque=true;save();renderAll();refreshSheet();toast({dog:'Ton chien garde la ville !',lantern:'La lanterne brille à l’entrée de la ville.',plan:'Le Kiosque est disponible dans Bâtir.'}[k])}
+function buy(k){
+  const P=pedroToday(),it=PEDRO_ALL.find(x=>x.id===k);
+  if(!it||(k!==P.rare&&!P.daily.includes(k)))return;
+  const rare=PEDRO_RARE.includes(it);
+  if(rare?it.own():P.bought.includes(k))return toast('Tu as déjà pris celui-là aujourd’hui.');
+  const c=pedroCost(it,P);if(!canPay(c))return toast('Pas assez de ressources.');
+  pay(c);let msg;
+  if(rare){it.give();msg=it.msg}
+  else{P.bought.push(k);
+    if(it.id==='colis'){const r=rnd(['b','pi','f']),n=8+Math.floor(Math.random()*18);gain(r,n);msg=`Le colis contenait ${n} ${RES_NAME[r]} !`}
+    else{Object.entries(it.give).forEach(([r,v])=>gain(r,v));msg='Merci amigo ! '+Object.entries(it.give).map(([r,v])=>`+${v} ${RES_NAME[r]}`).join(', ')}}
+  save();renderAll();refreshSheet();toast(msg);
+}
 
 /* ---------- Jours, bandits, Gazette ---------- */
 function processDays(n){
@@ -951,7 +1018,7 @@ function processDays(n){
     if(cand.length&&Math.random()<.3){const p=S.plots[rnd(cand)];p.c=Math.max(30,p.c-15);ev.push({ic:'🌪',h:'Tempête de sable',t:`Le vent a abîmé : ${bName(p)}. Un coup de marteau et il n’y paraîtra plus.`})}
   } else ev.push({ic:'🏖',h:'Fermé pour vacances',t:'Rien ne s’abîme et aucun bandit ne s’approche.'});
   const td=dayKey(t);
-  if(has('gare')||td%3===0){S.merchantDay=td;ev.push({ic:'🛒',h:'Pedro est en ville',t:'Le marchand ambulant déballe sa charrette jusqu’à ce soir.'})}
+  if(has('gare')||td%3===0){S.merchantDay=td;ev.push({ic:'🛒',h:'Pedro est en ville',t:pedroGazette()})}
   if(has('train')){const g=rnd([{p:60},{b:30},{pi:30},{f:30},{m:8}]);Object.entries(g).forEach(([r,v])=>S.res[r]+=v);ev.push({ic:'🚂',h:'Le train est passé',t:'Il a livré un colis surprise : '+Object.entries(g).map(([r,v])=>`${v} ${RES_NAME[r]}`).join(', ')+'.'})}
   S.daily=freshDaily();
   let raid=false;
@@ -1023,7 +1090,7 @@ function settingsSheet(){
   <h3>Version</h3><div class="card row"><div class="grow"><b>Version ${VERSION}</b><div class="muted">${NEWVER?'Une nouvelle version est disponible.':'Recharge le jeu pour être sûr d’avoir la dernière version.'}</div></div><button class="btn small ${NEWVER?'green':'primary'}" data-act="update">Mettre à jour</button></div>
   <a class="btn full" href="../" style="text-decoration:none">← Retour à Mes Jeux</a>
   ${DEV?`<h3>Outils de test</h3>
-  <div class="btns" style="flex-wrap:wrap"><button class="btn small" data-act="dev" data-v="day">⏩ Avancer d’1 jour</button><button class="btn small" data-act="dev" data-v="day3">⏩ 3 jours (absence)</button><button class="btn small" data-act="dev" data-v="hour">⏩ +6 heures</button><button class="btn small" data-act="dev" data-v="raid">Attaque maintenant</button><button class="btn small" data-act="dev" data-v="merchant">Faire venir Pedro</button><button class="btn small" data-act="dev" data-v="rich">+500 de tout</button><button class="btn small" data-act="dev" data-v="beginner">${S.noBeginner?'Rétablir':'Retirer'} la protection débutant</button><button class="btn small red" data-act="dev" data-v="reset">Tout recommencer</button></div>`:''}`;
+  <div class="btns" style="flex-wrap:wrap"><button class="btn small" data-act="dev" data-v="day">⏩ Avancer d’1 jour</button><button class="btn small" data-act="dev" data-v="day3">⏩ 3 jours (absence)</button><button class="btn small" data-act="dev" data-v="hour">⏩ +6 heures</button><button class="btn small" data-act="dev" data-v="raid">Attaque maintenant</button><button class="btn small" data-act="dev" data-v="merchant">Faire venir Pedro</button><button class="btn small" data-act="dev" data-v="pedro">Nouveau stock chez Pedro</button><button class="btn small" data-act="dev" data-v="rich">+500 de tout</button><button class="btn small" data-act="dev" data-v="beginner">${S.noBeginner?'Rétablir':'Retirer'} la protection débutant</button><button class="btn small red" data-act="dev" data-v="reset">Tout recommencer</button></div>`:''}`;
 }
 function dev(v){
   if(v==='day'){S.offset+=DAY;tick(true)}
@@ -1031,6 +1098,7 @@ function dev(v){
   if(v==='hour'){S.offset+=6*HOUR;tick(true);toast('6 heures passent…')}
   if(v==='raid'){closeSheet();S.gazette=S.gazette&&S.gazette.day===today()?S.gazette:{day:today(),ev:[]};raidPrompt();return}
   if(v==='merchant'){S.merchantDay=today();closeSheet();toast('Pedro arrive en ville !')}
+  if(v==='pedro'){S.pedro=null;S.merchantDay=today();closeSheet();toast('Pedro a changé son stock !')}
   if(v==='rich'){RES.forEach(r=>S.res[r]+=500);flashRes(RES,'flash')}
   if(v==='beginner'){S.noBeginner=!S.noBeginner}
   if(v==='reset'){if(!confirm('Effacer ta ville et tout recommencer ?'))return;S=freshState();closeSheet()}
