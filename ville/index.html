@@ -278,11 +278,24 @@ const LKEY=()=>KEY+(ME?'_'+ME.id:'');
 function slim(){const o={...S};delete o.friends;return o}
 function save(){S.savedAt=Date.now();try{localStorage.setItem(LKEY(),JSON.stringify(S))}catch(e){}if(ME&&REMOTE){clearTimeout(saveTimer);saveTimer=setTimeout(pushRemote,1500)}}
 async function pushRemote(keep){clearTimeout(saveTimer);if(!ME||!REMOTE)return;try{await sb(`/players?id=eq.${ME.id}`,{method:'PATCH',body:JSON.stringify({ville:slim()}),keepalive:!!keep})}catch(e){}}
+/* Si un décalage de temps du mode test (?dev=1) a été enregistré, on ramène les dates dans le présent. */
+function fixClock(){
+  if(DEV||!S)return;
+  const t=realNow(),td=dayKey(t);
+  S.offset=0;
+  if(S.created>t)S.created=t;
+  if(S.lastDay>td)S.lastDay=td;
+  if(S.merchantDay>td)S.merchantDay=td;
+  if(S.vacationUntil>t+14*DAY)S.vacationUntil=t+14*DAY;
+  (S.plots||[]).forEach(p=>{if(p){if(p.last>t)p.last=t;if(p.born>t)delete p.born}});
+  (S.posters||[]).forEach(p=>{if(p.hunt){if(p.hunt.start>t)p.hunt.start=t;if(p.hunt.end>t+24*HOUR)p.hunt.end=t+24*HOUR}});
+}
 function load(){try{const s=JSON.parse(localStorage.getItem(LKEY()));if(s&&s.v===1)return s}catch(e){}return null}
 async function loadRemote(){
   if(!ME)return;
   try{const r=(await sb(`/players?select=ville,ville_gains&id=eq.${ME.id}`))[0];if(!r)return;REMOTE=true;
     if(r.ville&&r.ville.v===1&&(!S||(r.ville.savedAt||0)>(S.savedAt||0))){const fr=S&&S.friends;S=r.ville;S.friends=fr||makeFriends();while(S.plots.length<26)S.plots.push(null)}
+    fixClock();
     if(!S.name||S.name==='Rocky Creek'&&!S.plots.some(Boolean)&&ME.pseudo)S.name='Ville de '+ME.pseudo;
     if(r.ville_gains&&r.ville_gains.length){await sb(`/players?id=eq.${ME.id}`,{method:'PATCH',body:JSON.stringify({ville_gains:[]})});mergeGains(r.ville_gains)}
     save();
@@ -294,13 +307,13 @@ function mergeGains(list){
   S.caps=S.caps||{};const got={p:0,b:0,pi:0,f:0,m:0},ev=[];let games=0;
   list.forEach(it=>{
     if(it.r){games++;const c=S.caps[it.d]=S.caps[it.d]||{p:0,b:0,pi:0,f:0,m:0};
-      Object.entries(it.r).forEach(([r,v])=>{const n=Math.max(0,Math.min(v,CAPS[r]-c[r]));c[r]+=n;S.res[r]+=n;got[r]+=n})}
-    if(it.u&&!S.unlocks[it.u]){S.unlocks[it.u]=true;if(it.u==='prison'){const m=S.posters.find(p=>p.id==='mac');if(m)m.captured=true;ev.push({ic:'🤠',h:'Mac Blain est sous les verrous !',t:'Tu l’as capturé dans La Traque : la Prison est disponible dans Bâtir.',poster:'mac'})}}
-    if(it.anneaux){S.anneaux=(S.anneaux||0)+it.anneaux;if(S.anneaux>=500&&!S.unlocks.sorciere){S.unlocks.sorciere=true;ev.push({ic:'🧙',h:'500 anneaux !',t:'La Tour de la sorcière est disponible dans Bâtir.'})}}
+      Object.entries(it.r).forEach(([r,v])=>{if(!RES.includes(r))return;const n=Math.max(0,Math.min(Math.floor(+v)||0,CAPS[r]-c[r]));c[r]+=n;S.res[r]+=n;got[r]+=n})}
+    if(it.u==='prison'&&!S.unlocks.prison){S.unlocks.prison=true;{const m=S.posters.find(p=>p.id==='mac');if(m)m.captured=true;ev.push({ic:'🤠',h:'Mac Blain est sous les verrous !',t:'Tu l’as capturé dans La Traque : la Prison est disponible dans Bâtir.',poster:'mac'})}}
+    if(it.anneaux){S.anneaux=(S.anneaux||0)+Math.max(0,Math.min(Math.floor(+it.anneaux)||0,300));if(S.anneaux>=500&&!S.unlocks.sorciere){S.unlocks.sorciere=true;ev.push({ic:'🧙',h:'500 anneaux !',t:'La Tour de la sorcière est disponible dans Bâtir.'})}}
     if(it.like){S.likes=(S.likes||0)+(has('opera')?2:1);ev.push({ic:'♥',h:`${esc(it.from)} aime ta ville`,t:'Un like de plus pour ta ville !'})}
-    if(it.fix!=null){const p=S.plots[it.fix];if(p){p.c=100;S.res.p+=5;ev.push({ic:'🔧',h:`${esc(it.from)} t’a donné un coup de main`,t:`${bName(p)} est réparé, et tu gagnes 5 dollars.`})}}
-    if(it.vote){if(S.contest&&S.contest.week===it.vote){S.contest.votes=(S.contest.votes||0)+1;ev.push({ic:'🗳️',h:`${esc(it.from)} a voté pour ton affiche`,t:`Ton affiche a maintenant ${S.contest.votes} vote${S.contest.votes>1?'s':''} au concours.`})}}
-    if(it.gift){Object.entries(it.gift).forEach(([r,v])=>S.res[r]+=v);ev.push({ic:'🎁',h:`Un cadeau de ${esc(it.from)}`,t:Object.entries(it.gift).map(([r,v])=>`${v} ${RES_NAME[r]}`).join(', ')+' pour ta ville !'})}
+    if(it.fix!=null){const p=Number.isInteger(+it.fix)?S.plots[+it.fix]:null;if(p&&p.t&&BUILD[p.t]){p.c=100;S.res.p+=5;ev.push({ic:'🔧',h:`${esc(it.from)} t’a donné un coup de main`,t:`${bName(p)} est réparé, et tu gagnes 5 dollars.`})}}
+    if(it.vote){const C=S.contest&&S.contest.week===it.vote?S.contest:(S.contestPrev&&S.contestPrev.week===it.vote?S.contestPrev:null);if(C){C.votes=(C.votes||0)+1;ev.push({ic:'🗳️',h:`${esc(it.from)} a voté pour ton affiche`,t:`Ton affiche a maintenant ${C.votes} vote${C.votes>1?'s':''} au concours.`})}}
+    if(it.gift&&typeof it.gift==='object'){const gl=[];Object.entries(it.gift).forEach(([r,v])=>{const n=RES.includes(r)?Math.max(0,Math.min(Math.floor(+v)||0,50)):0;if(n){S.res[r]+=n;gl.push(`${n} ${RES_NAME[r]}`)}});if(gl.length)ev.push({ic:'🎁',h:`Un cadeau de ${esc(it.from)}`,t:gl.join(', ')+' pour ta ville !'})}
   });
   Object.keys(S.caps).sort().slice(0,-3).forEach(k=>delete S.caps[k]);
   const gl=Object.entries(got).filter(([r,v])=>v>0);
@@ -309,10 +322,30 @@ function mergeGains(list){
   if(ev.length){const td=today();if(!S.gazette||S.gazette.day!==td)S.gazette={day:td,ev:[]};S.gazette.ev.unshift(...ev);setTimeout(showGazette,300)}
   flashRes(RES,'flash');
 }
+/* ---------- Nettoyage de ce qui vient des autres villes (n'importe quel joueur peut écrire dans la base) ---------- */
+const HEXC=/^#[0-9A-Fa-f]{3,8}$/;
+const cint=(x,min,max,def)=>{x=Math.floor(+x);return Number.isFinite(x)?Math.max(min,Math.min(max,x)):def};
+const ctext=(x,n)=>typeof x==='string'?x.slice(0,n):'';
+const cid=x=>typeof x==='string'&&/^[\w-]{1,40}$/.test(x)?x:'';
+function cleanContest(c){return c&&typeof c==='object'&&/^\d{4}-\d{2}-\d{2}$/.test(c.week)&&cid(c.posterId)?{week:c.week,posterId:c.posterId,votes:cint(c.votes,0,9999,0)}:null}
+function cleanPoster(p){
+  if(!p||typeof p!=='object'||p.kind!=='perso'||!cid(p.id))return null;
+  const f=p.face&&typeof p.face==='object'?p.face:{},O=FACE_OPTS;
+  const ok=(list,v,def)=>list.some(o=>(Array.isArray(o)?o[0]:o)===v)?v:def,col=(v,def)=>typeof v==='string'&&HEXC.test(v)?v:def;
+  return {id:p.id,kind:'perso',author:ctext(p.author,30),name:ctext(p.name,20)||'Bandit',crime:ctext(p.crime,80),reward:cint(p.reward,0,1000000,5000),paper:ok(O.paper,p.paper,'vieilli'),stamp:O.stamp.includes(p.stamp)?p.stamp:'MORT OU VIF',captured:!!p.captured,
+    face:{shape:ok(O.shape,f.shape,'rond'),skin:col(f.skin,'#F0B48F'),eyes:ok(O.eyes,f.eyes,'normal'),stache:ok(O.stache,f.stache,'aucune'),hair:col(f.hair,'#412402'),hat:ok(O.hat,f.hat,'aucun'),hatColor:col(f.hatColor,'#633806'),acc:ok(O.acc,f.acc,'aucun')}};
+}
+function cleanPlots(a){const out=[];for(let i=0;i<26;i++){const p=Array.isArray(a)?a[i]:null;
+  if(p&&typeof p==='object'&&typeof p.t==='string'&&Object.prototype.hasOwnProperty.call(BUILD,p.t))out.push({t:p.t,l:cint(p.l,1,BUILD[p.t].levels.length,1),c:cint(p.c,0,100,100),last:0});else out.push(null)}return out}
+function cleanFam(r){
+  const v=r.ville;if(!v||typeof v!=='object')return null;
+  return {id:r.id,owner:ctext(r.pseudo,30)||'Joueur',avatar:ctext(r.avatar,16),name:ctext(v.name,18)||'Ville sans nom',level:cint(v.level,1,MAXL,1),likes:cint(v.likes,0,999999,0),sky:'day',plots:cleanPlots(v.plots),
+    posters:(Array.isArray(v.posters)?v.posters:[]).map(cleanPoster).filter(Boolean).slice(-60),contest:cleanContest(v.contest),contestPrev:cleanContest(v.contestPrev)};
+}
 async function loadFamily(){
   if(!ME||!REMOTE){FAM=null;return}
   try{const rows=await sb('/players?select=id,pseudo,avatar,ville&ville=not.is.null');
-    FAM=rows.filter(r=>r.id!==ME.id&&r.ville&&r.ville.v===1).map(r=>({id:r.id,owner:r.pseudo,avatar:r.avatar,name:r.ville.name,level:r.ville.level,likes:r.ville.likes||0,sky:'day',plots:r.ville.plots,posters:(r.ville.posters||[]).filter(p=>p.kind==='perso'),contest:r.ville.contest||null}));
+    FAM=rows.filter(r=>r&&r.id!==ME.id&&r.ville&&r.ville.v===1).map(cleanFam).filter(Boolean);
     contestReward();
   }catch(e){FAM=null}
 }
@@ -325,7 +358,7 @@ function entries(w){
   const list=[];
   const mine=S.contest&&S.contest.week===w?S.contest:(S.contestPrev&&S.contestPrev.week===w?S.contestPrev:null);
   if(mine){const p=S.posters.find(x=>x.id===mine.posterId);if(p)list.push({id:ME?ME.id:'moi',owner:ME?ME.pseudo:'Toi',me:true,votes:mine.votes||0,poster:p})}
-  (FAM||[]).forEach(f=>{const c=f.contest;if(c&&c.week===w){const p=f.posters.find(x=>x.id===c.posterId);if(p)list.push({id:f.id,owner:f.owner,votes:c.votes||0,poster:p})}});
+  (FAM||[]).forEach(f=>{const c=[f.contest,f.contestPrev].find(x=>x&&x.week===w);if(c){const p=f.posters.find(x=>x.id===c.posterId);if(p)list.push({id:f.id,owner:f.owner,votes:c.votes||0,poster:p})}});
   return list.sort((a,b)=>b.votes-a.votes);
 }
 function contestReward(){
@@ -345,7 +378,7 @@ function contestSheet(){
   h+=mine?`<p class="muted">Ton affiche est inscrite. Tu peux en changer depuis ton mur.</p>`:`<button class="btn primary full" data-act="contestPick">Inscrire une de mes affiches</button>`;
   h+=`<h3>Les affiches en compétition</h3>`;
   if(!list.length)h+=`<p class="muted">Aucune affiche inscrite pour l’instant. Sois le premier !</p>`;
-  else h+=`<div class="posters" style="grid-template-columns:1fr 1fr">${list.map(e=>`<div style="text-align:center">${posterSVG(e.poster)}<div style="color:#FAEEDA;font-weight:800;font-size:13px;margin:4px 0">${esc(e.owner)} · ${e.votes} ♥</div>${e.me?'<span class="chip">Toi</span>':voted===e.id?'<span class="chip">Ton vote ✓</span>':voted?'':`<button class="btn small green" data-act="vote" data-id="${e.id}">Voter</button>`}</div>`).join('')}</div>`;
+  else h+=`<div class="posters" style="grid-template-columns:1fr 1fr">${list.map(e=>`<div style="text-align:center">${posterSVG(e.poster)}<div style="color:#FAEEDA;font-weight:800;font-size:13px;margin:4px 0">${esc(e.owner)} · ${e.votes} ♥</div>${e.me?'<span class="chip">Toi</span>':voted===e.id?'<span class="chip">Ton vote ✓</span>':voted?'':`<button class="btn small green" data-act="vote" data-id="${esc(e.id)}">Voter</button>`}</div>`).join('')}</div>`;
   if(!FAM)h+=`<p class="muted">${ME?'Les affiches de la famille n’ont pas pu être chargées.':'Connecte-toi sur Mes Jeux pour voir et voter pour les affiches de la famille.'}</p>`;
   const lw=weekId(-1),last=entries(lw);
   if(last.length&&last[0].votes>0)h+=`<h3>Gagnant de la semaine dernière</h3><div class="card row"><div class="tb" style="width:90px;height:127px;flex:none">${posterSVG(last[0].poster)}</div><div class="grow"><b>${esc(last[0].owner)}</b><div class="muted">« ${themeOf(lw)} » · ${last[0].votes} vote${last[0].votes>1?'s':''}</div></div></div>`;
@@ -636,7 +669,7 @@ function closeSheet(){CUR=null;EDIT=null;document.getElementById('sheet').classL
 function refreshSheet(){if(CUR){const b=document.getElementById('sheetBody'),st=b.scrollTop;b.innerHTML=CUR.fn();b.scrollTop=st}}
 function openModal(html){document.getElementById('modalBody').innerHTML=html;document.getElementById('modal').classList.remove('hidden')}
 function closeModal(){document.getElementById('modal').classList.add('hidden')}
-function toast(msg,undo){const t=document.createElement('div');t.className='toast';t.innerHTML=`<span>${msg}</span>`+(undo?'<button>Annuler</button>':'');if(undo)t.querySelector('button').onclick=()=>{undo();t.remove()};document.getElementById('toast').appendChild(t);setTimeout(()=>t.remove(),undo?6000:2600)}
+function toast(msg,undo){const t=document.createElement('div');t.className='toast';const sp=document.createElement('span');sp.textContent=msg;t.appendChild(sp);if(undo)t.insertAdjacentHTML('beforeend','<button>Annuler</button>');if(undo)t.querySelector('button').onclick=()=>{undo();t.remove()};document.getElementById('toast').appendChild(t);setTimeout(()=>t.remove(),undo?6000:2600)}
 function flashRes(rs,cls){setTimeout(()=>rs.forEach(r=>{const e=document.getElementById('res-'+r);if(e){e.classList.remove('flash','lose');void e.offsetWidth;e.classList.add(cls)}}),20)}
 
 /* ---------- Bâtir ---------- */
@@ -925,7 +958,7 @@ function visitSheet(){
   const list=friends();
   let h=`<p class="muted">Va voir la ville de ta famille : aime-la, aide à réparer, offre un cadeau. Les visites ne volent jamais rien.</p>`;
   if(!list.length)h+=`<div class="card">Personne d’autre n’a encore de ville. Invite la famille à ouvrir « Ma Ville » dans Mes Jeux !</div>`;
-  h+=list.map(f=>{const first=f.plots.find(Boolean);return `<button class="card row" style="width:100%;text-align:left" data-act="visit" data-id="${f.id}"><div class="tb" style="width:70px;height:70px;flex:none">${first?thumb(first.t,first.l):''}</div><div class="grow"><b style="font-size:17px">${esc(f.name)}</b><div class="muted">chez ${esc(f.owner)} · ${LEVEL_NAMES[f.level]} · ♥ ${f.likes}</div>${f.plots.some(p=>p&&p.c<70)?'<span class="chip" style="background:#FCEBEB;color:#791F1F">a besoin d’aide</span>':''}</div><span style="font-size:22px">›</span></button>`}).join('');
+  h+=list.map(f=>{const first=f.plots.find(Boolean);return `<button class="card row" style="width:100%;text-align:left" data-act="visit" data-id="${esc(f.id)}"><div class="tb" style="width:70px;height:70px;flex:none">${first?thumb(first.t,first.l):''}</div><div class="grow"><b style="font-size:17px">${esc(f.name)}</b><div class="muted">chez ${esc(f.owner)} · ${LEVEL_NAMES[f.level]} · ♥ ${f.likes}</div>${f.plots.some(p=>p&&p.c<70)?'<span class="chip" style="background:#FCEBEB;color:#791F1F">a besoin d’aide</span>':''}</div><span style="font-size:22px">›</span></button>`}).join('');
   if(!FAM)h+=`<p class="muted"><span class="sim">exemple</span> ${ME?'La sauvegarde en ligne n’est pas encore activée : ce sont des villes d’exemple.':'Connecte-toi sur Mes Jeux pour visiter les vraies villes de ta famille.'}</p>`;
   return h;
 }
@@ -1155,7 +1188,7 @@ const ACT={
   contest:()=>{closeModal();openSheet('Concours d’affiches',contestSheet)},
   contestPick:()=>openSheet('Inscrire une affiche',contestPickSheet),
   contestEnter:d=>{const w=weekId();if(S.contest&&S.contest.week!==w)S.contestPrev=S.contest;const keep=S.contest&&S.contest.week===w?S.contest.votes||0:0;S.contest={week:w,posterId:d.id,votes:keep};save();closeModal();openSheet('Concours d’affiches',contestSheet);toast('Ton affiche est inscrite au concours !');if(ME&&window.MesJeux&&keep===0)MesJeux.evenement('🖼️',`${ME.pseudo} participe au concours d’affiches « ${themeOf(w)} »`)},
-  vote:d=>{const w=weekId();if(S.voted&&S.voted.week===w)return toast('Tu as déjà voté cette semaine.');const f=(FAM||[]).find(x=>x.id===d.id);if(!f)return;S.voted={week:w,id:d.id};f.contest.votes=(f.contest.votes||0)+1;sendTo(f,{vote:w});save();refreshSheet();toast(`Ton vote pour l’affiche de ${f.owner} est envoyé !`)},
+  vote:d=>{const w=weekId();if(S.voted&&S.voted.week===w)return toast('Tu as déjà voté cette semaine.');const f=(FAM||[]).find(x=>x.id===d.id);if(!f||!f.contest||f.contest.week!==w)return;S.voted={week:w,id:d.id};f.contest.votes=(f.contest.votes||0)+1;sendTo(f,{vote:w});save();refreshSheet();toast(`Ton vote pour l’affiche de ${f.owner} est envoyé !`)},
   update:()=>reloadFresh(),
 };
 document.getElementById('app').addEventListener('click',e=>{
@@ -1184,6 +1217,7 @@ S=load()||freshState();
 if(!S.friends)S.friends=makeFriends();
 if(!S.caps)S.caps={};
 while(S.plots.length<26)S.plots.push(null);
+fixClock();
 renderAll();
 tick();
 loadRemote().then(()=>{renderAll();tick(true)});
