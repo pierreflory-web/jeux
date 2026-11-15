@@ -89,9 +89,9 @@
   function memory(zone, onFini) {
     const POOL = ["🤠","🐴","🌵","⭐","🎩","🐍","🦅","💰","🔫","🚂","🃏","🥃","🐄","🌪️","🏜️","🪕"];
     const rnd = rngDuJour(1);
-    const paires = melange(POOL, rnd).slice(0, 6);
+    const paires = melange(POOL, rnd).slice(0, 8);
     const cartes = melange(paires.concat(paires), rnd);
-    zone.innerHTML = `<p class="mj-head" id="mjInfo">Retrouve les 6 paires ! ⏱ <span id="mjT">0</span> s</p>
+    zone.innerHTML = `<p class="mj-head" id="mjInfo">Retrouve les 8 paires ! ⏱ <span id="mjT">0</span> s</p>
       <div class="mj-grid" style="grid-template-columns:repeat(4,1fr);" id="mjG"></div>`;
     const g = zone.querySelector("#mjG");
     let ouverte = null, verrou = false, trouvees = 0, secs = 0;
@@ -107,14 +107,14 @@
         const a = ouverte; ouverte = null;
         if (a.textContent === em) {
           a.classList.replace("vue", "ok"); b.classList.replace("vue", "ok");
-          if (++trouvees === 6) {
+          if (++trouvees === 8) {
             clearInterval(timer);
             fin(zone, `Bravo ! Toutes les paires en ${secs} s`);
             onFini(true);
           }
         } else {
           verrou = true;
-          setTimeout(() => { a.textContent = b.textContent = "★"; a.classList.remove("vue"); b.classList.remove("vue"); verrou = false; }, 750);
+          setTimeout(() => { a.textContent = b.textContent = "★"; a.classList.remove("vue"); b.classList.remove("vue"); verrou = false; }, 500);
         }
       };
       g.appendChild(b);
@@ -252,9 +252,9 @@
     for (let i = 0; i < 5; i++) {
       const t = Math.floor(rnd() * 3);
       let a, b, rep, txt;
-      if (t === 0) { a = 3 + Math.floor(rnd() * 40); b = 2 + Math.floor(rnd() * 30); rep = a + b; txt = `${a} + ${b}`; }
-      else if (t === 1) { a = 15 + Math.floor(rnd() * 40); b = 2 + Math.floor(rnd() * (a - 5)); rep = a - b; txt = `${a} − ${b}`; }
-      else { a = 2 + Math.floor(rnd() * 5); b = 2 + Math.floor(rnd() * 9); rep = a * b; txt = `${a} × ${b}`; }
+      if (t === 0) { a = 10 + Math.floor(rnd() * 80); b = 10 + Math.floor(rnd() * 60); rep = a + b; txt = `${a} + ${b}`; }
+      else if (t === 1) { a = 30 + Math.floor(rnd() * 70); b = 5 + Math.floor(rnd() * (a - 10)); rep = a - b; txt = `${a} − ${b}`; }
+      else { a = 3 + Math.floor(rnd() * 10); b = 3 + Math.floor(rnd() * 10); rep = a * b; txt = `${a} × ${b}`; }
       questions.push({ txt, rep });
     }
     let q = 0, saisie = "";
@@ -311,8 +311,8 @@
         if (--restant <= 0) {
           clearInterval(tic); clearInterval(spawn); fini = true;
           champ.innerHTML = "";
-          if (score >= 10) { fin(zone, `Gâchette d'or : ${score} points !`); onFini(true); }
-          else fin(zone, `Seulement ${score}/10… entraîne-toi !`, true, () => reflexe(zone, onFini));
+          if (score >= 15) { fin(zone, `Gâchette d'or : ${score} points !`); onFini(true); }
+          else fin(zone, `Seulement ${score}/15… entraîne-toi !`, true, () => reflexe(zone, onFini));
         }
         maj();
       }, 1000);
@@ -326,11 +326,11 @@
         c.style.top = 6 + rnd() * 80 + "%";
         c.onclick = () => { score += bombe ? -2 : 1; c.remove(); maj(); };
         champ.appendChild(c);
-        setTimeout(() => c.remove(), 1300);
+        setTimeout(() => c.remove(), 1000);
       }, 800);
       maj();
     };
-    const maj = () => { info.textContent = `⏱ ${restant} s — Score : ${score} (objectif 10)`; };
+    const maj = () => { info.textContent = `⏱ ${restant} s — Score : ${score} (objectif 15)`; };
   }
 
   // ——— 7. La Roue ———
